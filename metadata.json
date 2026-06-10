@@ -1,0 +1,6 @@
+{
+  "name": "RT Nexus",
+  "description": "RT Nexus is a premium multi-functional enterprise portal comprising an e-commerce marketplace (RT Shop), training institute (RTTI), broadcasting media network (MTTV), live classroom sandbox, role-based portals, advertising campaign builder, and interactive business solutions.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
