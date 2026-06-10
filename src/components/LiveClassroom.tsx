@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Video, Users, VideoOff, Mic, MicOff, Maximize2, Layers, Settings, Compass, MessageSquare, Send, Save, BookOpen, Clock, Activity, Cpu, Play, CheckCircle2 } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 
 interface LiveClassroomProps {
   theme?: 'light' | 'dark';
@@ -140,8 +141,17 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
 
   return (
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#111111] text-white' : 'bg-white text-gray-900'}`}>
-      <div className="max-w-7xl mx-auto">
-        
+    <div className="max-w-7xl mx-auto">
+
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Courses', onClick: () => { window.history.pushState({}, '', '/courses'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Live Classroom' },
+          ]}
+          theme={theme}
+        />
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>

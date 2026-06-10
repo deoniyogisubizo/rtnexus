@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @keyframes anim-glow {
   0%, 100% { box-shadow: 0 0 5px rgba(51, 115, 171, 0.15); }
   50% { box-shadow: 0 0 30px rgba(51, 115, 171, 0.6); }
@@ -30,6 +34,48 @@
   0% { opacity: 0.05; background-size: 100% 100%; }
   50% { opacity: 0.25; background-size: 150% 150%; }
   100% { opacity: 0.05; background-size: 100% 100%; }
+}
+
+@keyframes anim-loading-bar {
+  0% { transform: translateX(-100%); }
+  40% { transform: translateX(-20%); }
+  70% { transform: translateX(60%); }
+  100% { transform: translateX(200%); }
+}
+
+@keyframes anim-fade-in-up {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.animate-loading-bar {
+  animation: anim-loading-bar 1.2s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: anim-fade-in-up 0.4s ease-out both;
+}
+
+.animate-fade-in-up-delay-1 { animation-delay: 0.05s; }
+.animate-fade-in-up-delay-2 { animation-delay: 0.1s; }
+.animate-fade-in-up-delay-3 { animation-delay: 0.15s; }
+
+@keyframes anim-slide-down {
+  0% { opacity: 0; transform: translate(-50%, -10px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+
+@keyframes anim-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.animate-slideDown {
+  animation: anim-slide-down 0.3s ease-out;
+}
+
+.animate-fadeIn {
+  animation: anim-fade-in 0.2s ease-out;
 }
 
 .thin-scrollbar::-webkit-scrollbar {

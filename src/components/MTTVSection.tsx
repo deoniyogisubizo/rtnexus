@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Play, Calendar, Headset, Eye, FileText, ArrowUpRight, Search, Clock, Bell, Radio, Check } from 'lucide-react';
 import { Broadcast } from '../types';
 import { BROADCASTS } from '../data/mockData';
+import Breadcrumb from './Breadcrumb';
+
+const ITEMS_PER_PAGE = 4;
 
 interface MTTVSectionProps {
   searchQuery: string;
@@ -14,6 +17,7 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [subscribedEvent, setSubscribedEvent] = useState<string | null>(null);
   const [activeMedia, setActiveMedia] = useState<Broadcast | null>(BROADCASTS[0]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // Categories
   const categories = ['All', 'Live Events', 'Webinars', 'Podcasts', 'Tutorials'];
@@ -36,6 +40,13 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
     return matchesSearch && matchesCategory;
   });
 
+  const totalPages = Math.ceil(filteredMedia.length / ITEMS_PER_PAGE);
+  const paginatedMedia = filteredMedia.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, localSearch, selectedCategory]);
+
   const handleSubscribe = (eventTitle: string) => {
     setSubscribedEvent(eventTitle);
     setTimeout(() => setSubscribedEvent(null), 3000);
@@ -45,6 +56,15 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Broadcasts' },
+            ...(selectedCategory !== 'All' ? [{ label: selectedCategory } as { label: string; onClick?: () => void }] : []),
+          ]}
+          theme={theme}
+        />
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
@@ -138,7 +158,7 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
 
               {/* Feed Grid cards - Sharp corners mandated */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {filteredMedia.map((media) => (
+                {paginatedMedia.map((media) => (
                   <div 
                     key={media.id} 
                     onClick={() => setActiveMedia(media)}
@@ -168,6 +188,35 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
                   </div>
                 ))}
               </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-center gap-2 mt-8">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Prev
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button
+                      key={p}
+                      onClick={() => setCurrentPage(p)}
+                      className={`px-3 py-1.5 text-xs font-mono border transition-colors ${currentPage === p ? 'bg-[#3373AB] text-white border-[#3373AB]' : 'border-gray-200 hover:border-[#3373AB]'}`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Next
+                  </button>
+                </div>
+              )}
             </div>
 
           </div>

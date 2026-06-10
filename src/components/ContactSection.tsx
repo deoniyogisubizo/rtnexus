@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Mail, Phone, MapPin, Search, ChevronDown, Check, Send, MessageSquare, X, ShieldAlert, Bot } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 
 interface ContactSectionProps {
   theme?: 'light' | 'dark';
+  standalone?: boolean;
 }
 
-export default function ContactSection({ theme = 'light' }: ContactSectionProps) {
+export default function ContactSection({ theme = 'light', standalone }: ContactSectionProps) {
   const isDark = theme === 'dark';
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [kbQuery, setKbQuery] = useState('');
@@ -67,6 +69,16 @@ export default function ContactSection({ theme = 'light' }: ContactSectionProps)
     <section className={`w-full select-none py-12 px-6 font-sans relative ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         
+        {standalone && (
+          <Breadcrumb
+            segments={[
+              { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+              { label: 'Contact' },
+            ]}
+            theme={theme}
+          />
+        )}
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
           <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">SUPPORT & CONTACT SYSTEM</p>

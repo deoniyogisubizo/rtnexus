@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Target, Calculator, FileText, Check, Layers, Sparkles, Send } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 import { AdCampaignEstimate } from '../types';
 
 interface AdCenterProps {
@@ -48,6 +49,14 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Ad Center' },
+          ]}
+          theme={theme}
+        />
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
           <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold">BUSINESS ADVERTISING PORTAL</p>

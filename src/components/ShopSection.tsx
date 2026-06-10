@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, SlidersHorizontal, ShoppingCart, X, Check, ArrowRight } from 'lucide-react';
+import { Search, SlidersHorizontal, X, Check, ArrowRight, Loader2 } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { fetchProducts } from '../services/api';
 import { FEATURED_PRODUCTS, VENDORS } from '../data/mockData';
 import CartQuantityModal from './CartQuantityModal';
+import Breadcrumb from './Breadcrumb';
 import { searchAll } from '../utils/search';
 
 interface ShopSectionProps {
@@ -16,6 +17,8 @@ interface ShopSectionProps {
   onClearPreselectCategory?: () => void;
 }
 
+const ITEMS_PER_PAGE = 12;
+
 export default function ShopSection({ addToCart, searchQuery, cartItems, theme = 'light', onViewProduct, preselectCategory, onClearPreselectCategory }: ShopSectionProps) {
   const isDark = theme === 'dark';
   const [products, setProducts] = useState<Product[]>(FEATURED_PRODUCTS);
@@ -27,6 +30,13 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   const [sortBy, setSortBy] = useState<string>('featured');
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
+
+  function handleCardClick(productId: string, productName: string) {
+    setLoadingProduct(productName);
+    setTimeout(() => onViewProduct?.(productId), 350);
+  }
 
   useEffect(() => {
     fetchProducts().then(data => {
@@ -40,6 +50,10 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
       onClearPreselectCategory?.();
     }
   }, [preselectCategory]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, localSearch, selectedCategory, selectedBrand, maxPrice, sortBy]);
 
   const categories = ['All', 'IoT Devices', 'Development Boards', 'Sensors', 'Robotics', 'Power Solutions', 'Electronics Components'];
   const brands = ['All', 'Nexus Embedded Corp', 'Silicon Ventures Ltd', 'Matrix Transducers', 'OmniDrive Robotics'];
@@ -65,6 +79,9 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     return 0; // featured
   });
 
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   const handleLocalAddToCart = (product: Product, quantity: number = 1) => {
     addToCart(product, quantity);
     setNotification(`Successfully added ${quantity}x "${product.name}" to the RT Escrow Basket.`);
@@ -77,6 +94,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     setSelectedBrand('All');
     setMaxPrice(100000);
     setSortBy('featured');
+    setCurrentPage(1);
   };
 
   function BigSearch() {
@@ -184,6 +202,15 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   return (
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
+
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Shop' },
+            ...(selectedCategory !== 'All' ? [{ label: selectedCategory } as { label: string; onClick?: () => void }] : []),
+          ]}
+          theme={theme}
+        />
         
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-4">
@@ -310,7 +337,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             {/* Sorting and status bar */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 mb-6 gap-3">
               <p className="text-xs text-gray-500 font-mono">
-                Showing <span className="font-bold text-gray-900">{filteredProducts.length}</span> verified component records
+                Page {currentPage} of {totalPages} — <span className="font-bold text-gray-900">{filteredProducts.length}</span> verified component records
               </p>
               
               <div className="flex items-center gap-2">
@@ -345,37 +372,32 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             ) : (
               /* Products grid - HTML inspired card design */
               <div className="flex flex-wrap border-t border-l border-[#eeeeee]">
-                {filteredProducts.map((product) => (
-                  <div key={product.id} className="w-1/2 sm:w-[230px] h-[341px] border-r border-b border-[#eeeeee] bg-white box-border">
+                {paginatedProducts.map((product) => (
+                  <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className="w-1/2 sm:w-[230px] h-[341px] border-r border-b border-[#eeeeee] bg-white box-border group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]">
                     <div className="p-[14px] flex flex-col h-full box-border">
-                      <span className="text-[11px] text-[#768B9C] no-underline block mb-1">
+                      <span className="text-[11px] text-[#768B9C] no-underline block mb-1 group-hover:text-[#3373AB] transition-colors">
                         {product.category}
                       </span>
-                      <button
-                        onClick={() => onViewProduct?.(product.id)}
-                        className="text-left"
-                      >
-                        <h3 className="text-[13px] font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
-                          {product.name}
-                        </h3>
-                      </button>
+                      <h3 className="text-[13px] font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5 group-hover:text-[#3373AB] transition-colors">
+                        {product.name}
+                      </h3>
                       <div className="flex-1 flex items-center justify-center py-2.5">
                         <img
                           src={product.image}
                           alt={product.name}
                           referrerPolicy="no-referrer"
-                          className="max-w-full max-h-full h-auto w-auto object-contain"
+                          className="max-w-full max-h-full h-auto w-auto object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
                       <div className="mt-2.5">
                         <div className="flex justify-between items-center">
                           <span className="text-[16px] font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                           <button
-                            onClick={() => setCartProduct(product)}
-                            className="bg-[#D95907] text-white w-9 h-9 rounded-full flex items-center justify-center text-base shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:scale-110 hover:bg-[#b54a06] transition-transform"
+                            onClick={(e) => { e.stopPropagation(); setCartProduct(product); }}
+                            className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:scale-105 hover:bg-[#D95907]/60 transition-all"
                             title="Add to cart"
                           >
-                            <ShoppingCart size={16} />
+                            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
                           </button>
                         </div>
                       </div>
@@ -385,6 +407,35 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
               </div>
             )}
             
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-8 flex items-center justify-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={`px-3 py-1.5 text-xs font-mono border transition-colors ${currentPage === p ? 'bg-[#3373AB] text-white border-[#3373AB]' : 'border-gray-200 hover:border-[#3373AB]'}`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            )}
+
             {/* Vendor Showcases section in bottom */}
             <div className="mt-12 border-t border-gray-200 pt-10">
               <h4 className="text-xs font-mono font-bold uppercase text-gray-400 tracking-wider mb-6">Original Equipment Manufacturers (OEM) Vetted Registry</h4>
@@ -413,6 +464,19 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             onAddToCart={handleLocalAddToCart}
             onViewDetails={(id) => { setCartProduct(null); onViewProduct?.(id); }}
           />
+        )}
+
+        {loadingProduct && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+            <div className="bg-white rounded-lg shadow-xl p-8 flex flex-col items-center gap-4 min-w-[280px]">
+              <Loader2 size={36} className="animate-spin text-[#3373AB]" />
+              <p className="text-sm font-medium text-gray-700 text-center leading-relaxed">
+                Loading <span className="text-[#3373AB] font-semibold">{loadingProduct}</span>
+                <br />
+                <span className="text-gray-400 text-xs">Accessing product dossier...</span>
+              </p>
+            </div>
+          </div>
         )}
 
       </div>

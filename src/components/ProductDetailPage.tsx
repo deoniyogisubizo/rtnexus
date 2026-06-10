@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { FEATURED_PRODUCTS } from '../data/mockData';
 import CartQuantityModal from './CartQuantityModal';
+import Breadcrumb from './Breadcrumb';
 
 interface ProductDetailPageProps {
   productId: string;
@@ -51,6 +52,14 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
       </div>
 
       <div className="max-w-7xl mx-auto px-6 py-10">
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Shop', onClick: onBack },
+            { label: product.name },
+          ]}
+          theme={theme}
+        />
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
           <div className="md:col-span-2">
             <div className={`h-80 sm:h-96 border ${borderCls} ${isDark ? 'bg-[#222]' : 'bg-gray-50'} flex items-center justify-center p-6`}>
@@ -121,9 +130,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                 </button>
                 <button
                   onClick={() => setCartProduct(product)}
-                  className="bg-[#D95907] hover:bg-[#b54a06] text-white font-bold px-5 py-2.5 text-xs rounded-none transition-colors outline-none flex items-center gap-2"
+                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
                 >
-                  <ShoppingCart size={14} />
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
                   <span>Add to Cart</span>
                 </button>
               </div>

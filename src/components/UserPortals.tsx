@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UserSession, Product, Course, Broadcast, OpenPosition, AdCampaignEstimate } from '../types';
-import { Sliders, Monitor, Terminal, FileCode, CheckCircle, Ship, Plus, Play, Users, BookOpen, ShieldCheck, ShoppingCart, RefreshCw, AlertTriangle, Cpu, DollarSign, BarChart2, Layers, Settings } from 'lucide-react';
+import { Sliders, Monitor, Terminal, FileCode, CheckCircle, Ship, Plus, Play, Users, BookOpen, ShieldCheck, RefreshCw, AlertTriangle, Cpu, DollarSign, BarChart2, Layers, Settings } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 import { FEATURED_PRODUCTS, COURSES, BROADCASTS } from '../data/mockData';
 import AdminDashboard from './AdminDashboard';
 
@@ -13,7 +14,7 @@ export default function UserPortals({ user, setView }: UserPortalsProps) {
   const [activeWorkspace, setActiveWorkspace] = useState<string | null>(null);
 
   const workspaceOptions = [
-    { role: 'customer', label: 'Marketplace Buyer', icon: <ShoppingCart size={18} />, desc: 'Browse products, manage orders and escrow shipments.' },
+    { role: 'customer', label: 'Marketplace Buyer', icon: <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'13px'}}></i>, desc: 'Browse products, manage orders and escrow shipments.' },
     { role: 'student', label: 'RTTI Student Node', icon: <BookOpen size={18} />, desc: 'Enroll in courses, take exams, view certifications.' },
     { role: 'instructor', label: 'Research Instructor', icon: <Monitor size={18} />, desc: 'Manage courses, grade exams, schedule live webinars.' },
     { role: 'vendor', label: 'OEM Foundry Seller', icon: <Ship size={18} />, desc: 'List products, manage inventory, track logistics.' },
@@ -82,6 +83,13 @@ export default function UserPortals({ user, setView }: UserPortalsProps) {
     <section className="w-full bg-white text-gray-900 select-none py-12 px-6 font-sans">
       <div className="max-w-7xl mx-auto">
         
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => setView?.('home') },
+            { label: 'Dashboard' },
+          ]}
+        />
+
         {/* Portal top workspace identification */}
         <div className="border-b border-gray-200 pb-6 mb-10 text-left flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>

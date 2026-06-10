@@ -1,7 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Award, BookOpen, Clock, Play, GraduationCap, CheckCircle, Video, List, HelpCircle, Star, Shield, ArrowRight, User } from 'lucide-react';
 import { Course } from '../types';
 import { COURSES } from '../data/mockData';
+import Breadcrumb from './Breadcrumb';
+
+const ITEMS_PER_PAGE = 3;
 
 interface RTTISectionProps {
   searchQuery: string;
@@ -52,6 +55,7 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
   const [activeTab, setActiveTab] = useState<'syllabus' | 'video' | 'quiz'>('syllabus');
   const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
   const [localSearch, setLocalSearch] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   
   // Quiz Simulation State
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
@@ -65,6 +69,13 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
       course.instructor.toLowerCase().includes((searchQuery || localSearch).toLowerCase());
     return matchesQuery;
   });
+
+  const totalPages = Math.ceil(filteredCourses.length / ITEMS_PER_PAGE);
+  const paginatedCourses = filteredCourses.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, localSearch]);
 
   const handleStartVideo = () => {
     setVideoPlaying(true);
@@ -109,6 +120,15 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+            { label: 'Courses' },
+            ...(filteredCourses.length > 0 && selectedCourse ? [{ label: selectedCourse.title } as { label: string; onClick?: () => void }] : []),
+          ]}
+          theme={theme}
+        />
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10">
           <p className="text-[10px] font-mono font-bold tracking-widest text-[#3373AB]">RTTI ACADEMY & RESEARCH</p>
@@ -174,7 +194,7 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
             </div>
 
             <div className="divide-y divide-gray-100 border border-gray-200">
-              {filteredCourses.map((course) => {
+              {paginatedCourses.map((course) => {
                 const isActive = selectedCourse.id === course.id;
                 return (
                   <div 
@@ -202,6 +222,35 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
                 );
               })}
             </div>
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 pt-2">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  Prev
+                </button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button
+                    key={p}
+                    onClick={() => setCurrentPage(p)}
+                    className={`px-3 py-1.5 text-xs font-mono border transition-colors ${currentPage === p ? 'bg-[#3373AB] text-white border-[#3373AB]' : 'border-gray-200 hover:border-[#3373AB]'}`}
+                  >
+                    {p}
+                  </button>
+                ))}
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                </button>
+              </div>
+            )}
 
             {/* Trending Skills Sidebar block */}
             <div className="border border-gray-200 p-5 bg-gray-50">

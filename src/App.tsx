@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UserRole, UserSession, Product, CartItem } from './types';
 import Navigation from './components/Navigation';
 import HeroSection from './components/HeroSection';
@@ -17,12 +17,44 @@ import CareersSection from './components/CareersSection';
 import ContactSection from './components/ContactSection';
 import AuthExperience from './components/AuthExperience';
 import UserPortals from './components/UserPortals';
-import { X, ShoppingBag, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn } from 'lucide-react';
+import { encodeId, decodeId } from './utils/idUtils';
+
+const SESSION_KEY = 'rt_nexus_session';
+
+function loadSession(): UserSession | null {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    if (parsed && parsed.email && parsed.name && parsed.role && parsed.token) return parsed as UserSession;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function saveSession(session: UserSession | null): void {
+  if (session) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+  } else {
+    localStorage.removeItem(SESSION_KEY);
+  }
+}
+
+function generateToken(): string {
+  const bytes = new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
+}
 
 export default function App() {
   // Navigation View Router
-  const [view, setView] = useState<string>('home');
-  const [user, setUser] = useState<UserSession | null>(null);
+  const [view, setView] = useState<string>(() => {
+    const saved = loadSession();
+    return saved ? 'portals' : 'home';
+  });
+  const [user, setUser] = useState<UserSession | null>(() => loadSession());
   const [authModal, setAuthModal] = useState<{ open: boolean; tab: 'login' | 'register' }>({ open: false, tab: 'login' });
   
   // Cart escrow states
@@ -37,15 +69,111 @@ export default function App() {
   // Global search bridging
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
 
+  // Navigation loading bar + scroll-to-top on view change
+  const [isNavigating, setIsNavigating] = useState(false);
+  const initialRender = useRef(true);
+  useEffect(() => {
+    if (initialRender.current) { initialRender.current = false; return; }
+    setIsNavigating(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const t = setTimeout(() => setIsNavigating(false), 500);
+    return () => clearTimeout(t);
+  }, [view]);
+
+  const navigateTo = (v: string) => {
+    setView(v);
+    setGlobalSearchQuery('');
+    setShopPreselectCategory(null);
+    setProductDetailId(null);
+  };
+
+
+
   // Product detail page routing
   const [productDetailId, setProductDetailId] = useState<string | null>(null);
+  const navRef = useRef(false);
   const handleViewProduct = (id: string) => {
     setProductDetailId(id);
     setView('product');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Shop preselect category from showcase navigation
   const [shopPreselectCategory, setShopPreselectCategory] = useState<string | null>(null);
+
+  // URL sync helpers
+  function getPathFromView(v: string, pid?: string | null, cat?: string | null): string {
+    switch (v) {
+      case 'home': return '/';
+      case 'shop': {
+        if (cat) return `/shop/category/${encodeURIComponent(cat)}`;
+        return '/shop';
+      }
+      case 'product': {
+        if (pid) return `/shop/product/${encodeId(pid)}`;
+        return '/shop';
+      }
+      case 'rtti': return '/courses';
+      case 'classroom': return '/classroom';
+      case 'mttv': return '/broadcasts';
+      case 'solutions': return '/solutions';
+      case 'about': return '/about';
+      case 'careers': return '/careers';
+      case 'contact': return '/contact';
+      case 'adcenter': return '/adcenter';
+      case 'portals': return '/portals';
+      default: return '/';
+    }
+  }
+
+  function parseViewFromPath(path: string): { v: string; pid?: string | null; cat?: string | null } {
+    const parts = path.split('/').filter(Boolean);
+    if (parts.length === 0) return { v: 'home' };
+    const main = parts[0].toLowerCase();
+    if (main === 'shop') {
+      if (parts[1] === 'product' && parts[2]) {
+        const decoded = decodeId(parts[2]);
+        if (decoded) return { v: 'product', pid: decoded };
+      }
+      if (parts[1] === 'category' && parts[2]) {
+        return { v: 'shop', cat: decodeURIComponent(parts[2]) };
+      }
+      return { v: 'shop' };
+    }
+    if (main === 'courses' || main === 'rtti') return { v: 'rtti' };
+    if (main === 'broadcasts' || main === 'mttv') return { v: 'mttv' };
+    if (main === 'classroom') return { v: 'classroom' };
+    if (main === 'solutions') return { v: 'solutions' };
+    if (main === 'about') return { v: 'about' };
+    if (main === 'careers') return { v: 'careers' };
+    if (main === 'contact') return { v: 'contact' };
+    if (main === 'adcenter') return { v: 'adcenter' };
+    if (main === 'portals') return { v: 'portals' };
+    return { v: 'home' };
+  }
+
+  // Sync view state → URL
+  useEffect(() => {
+    if (navRef.current) { navRef.current = false; return; }
+    const path = getPathFromView(view, productDetailId, shopPreselectCategory);
+    window.history.pushState({ view, productDetailId, shopPreselectCategory }, '', path);
+  }, [view, productDetailId, shopPreselectCategory]);
+
+  // Sync URL → view state (popstate + initial load)
+  useEffect(() => {
+    const handlePop = () => {
+      const parsed = parseViewFromPath(window.location.pathname);
+      navRef.current = true;
+      setView(parsed.v);
+      setProductDetailId(parsed.pid ?? null);
+      setShopPreselectCategory(parsed.cat ?? null);
+    };
+    // initial parse
+    handlePop();
+    window.addEventListener('popstate', handlePop);
+    return () => window.removeEventListener('popstate', handlePop);
+  }, []);
+
   const handleShowcaseSelectCategory = (category: string) => {
     setShopPreselectCategory(category);
     setProductDetailId(null);
@@ -69,8 +197,10 @@ export default function App() {
                 email: data.email,
                 name: data.name || data.email,
                 role: 'customer',
+                token: generateToken(),
               };
               setUser(session);
+              saveSession(session);
               setView('portals');
             }
           })
@@ -109,14 +239,18 @@ export default function App() {
 
   // Auth Operations
   const handleLoginSuccess = (session: UserSession) => {
-    setUser(session);
+    const sessionWithToken: UserSession = { ...session, token: generateToken() };
+    setUser(sessionWithToken);
+    saveSession(sessionWithToken);
     setAuthModal({ open: false, tab: 'login' });
     setView('portals'); // launch corresponding portal immediately
   };
 
   const handleLogout = () => {
     setUser(null);
+    saveSession(null);
     setView('home');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Handle Search submit from Navigation bar
@@ -124,9 +258,8 @@ export default function App() {
     setGlobalSearchQuery(query);
     setShopPreselectCategory(null);
     setProductDetailId(null);
-    // If we search, let's route to appropriate context
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (query) {
-      // Let's decide view based on current or keywords
       const qLower = query.toLowerCase();
       if (qLower.includes('course') || qLower.includes('syllabus') || qLower.includes('exam') || qLower.includes('rtti')) {
         setView('rtti');
@@ -154,13 +287,14 @@ export default function App() {
       {!(view === 'portals' && user?.role === 'admin') && (
         <Navigation 
           currentView={view}
-          setView={(v) => { setView(v); setGlobalSearchQuery(''); setShopPreselectCategory(null); setProductDetailId(null); }}
+          setView={navigateTo}
           user={user}
           logout={handleLogout}
           openAuth={(tab) => setAuthModal({ open: true, tab })}
           cart={cart}
           openCartDrawer={() => { setCartOpen(true); setCheckoutStep('cart'); }}
           triggerSearch={handleSearchTrigger}
+          onViewProduct={handleViewProduct}
           theme={theme}
           setTheme={setTheme}
         />
@@ -168,14 +302,22 @@ export default function App() {
 
 
 
+      {/* TOP LOADING BAR — activates on page navigation */}
+      <div className="fixed top-0 left-0 right-0 z-[9999] h-[3px] bg-transparent pointer-events-none">
+        <div
+          className={`h-full bg-[#3373AB] transition-all duration-300 ease-out ${isNavigating ? 'w-full animate-loading-bar' : 'w-0'}`}
+        />
+      </div>
+
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full pt-[112px] ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+      <main className={`flex-1 w-full ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+        <div key={view} className="animate-fade-in-up w-full">
         {view === 'home' && (
           <div className="w-full">
-            <HeroSection setView={setView} theme={theme} />
-            <SolutionsSection setView={setView} theme={theme} />
-            <RTShopShowcase setView={setView} theme={theme} onSelectProduct={handleViewProduct} onSelectCategory={handleShowcaseSelectCategory} />
-            <MarketplaceLayers addToCart={handleAddToCart} theme={theme} onSelectProduct={handleViewProduct} setView={setView} />
+            <HeroSection setView={navigateTo} theme={theme} />
+            <SolutionsSection setView={navigateTo} theme={theme} />
+            <RTShopShowcase setView={navigateTo} theme={theme} onSelectProduct={handleViewProduct} onSelectCategory={handleShowcaseSelectCategory} />
+            <MarketplaceLayers addToCart={handleAddToCart} theme={theme} onSelectProduct={handleViewProduct} setView={navigateTo} />
             <AboutSection theme={theme} />
             <ContactSection theme={theme} />
           </div>
@@ -227,11 +369,11 @@ export default function App() {
         )}
 
         {view === 'solutions' && (
-          <SolutionsSection setView={setView} theme={theme} />
+          <SolutionsSection setView={navigateTo} theme={theme} standalone />
         )}
 
         {view === 'about' && (
-          <AboutSection theme={theme} />
+          <AboutSection theme={theme} standalone />
         )}
 
         {view === 'careers' && (
@@ -239,7 +381,7 @@ export default function App() {
         )}
 
         {view === 'contact' && (
-          <ContactSection theme={theme} />
+          <ContactSection theme={theme} standalone />
         )}
 
         {view === 'portals' && (
@@ -265,6 +407,7 @@ export default function App() {
             </div>
           )
         )}
+        </div>
       </main>
 
       {/* DETAILED BRUTALIST ENTERPRISE FOOTER — hidden on admin dashboard */}
@@ -366,11 +509,11 @@ export default function App() {
                 <div className="space-y-4">
                   {cart.length === 0 ? (
                     <div className="text-center py-20 text-gray-400 flex flex-col items-center">
-                      <ShoppingBag size={48} className="text-[#3373AB]/30 mb-4" />
+                      <i className="fa-solid fa-cart-arrow-down text-[#3373AB]/20 mb-3" style={{fontSize:'28px'}}></i>
                       <p className="text-xs font-sans">Your escrow basket contains zero vetted components currently.</p>
                       <button 
                         onClick={() => { setCartOpen(false); setView('shop'); }} 
-                        className="mt-4 bg-[#3373AB] hover:bg-[#255C8E] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-2"
+                        className="mt-3 bg-[#3373AB] hover:bg-[#255C8E] text-white text-[9px] font-semibold uppercase tracking-widest px-3 py-1.5"
                       >
                         Browse RT Shop
                       </button>

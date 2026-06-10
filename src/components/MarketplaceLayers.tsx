@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ShoppingCart, Plus, Search } from 'lucide-react';
+import { Plus, Search, Loader2 } from 'lucide-react';
 import { Product } from '../types';
 import { FEATURED_PRODUCTS } from '../data/mockData';
 import CartQuantityModal from './CartQuantityModal';
@@ -24,6 +24,12 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
   const isDark = theme === 'dark';
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
+
+  function handleCardClick(productId: string, productName: string) {
+    setLoadingProduct(productName);
+    setTimeout(() => onSelectProduct(productId), 350);
+  }
 
   const filterBySearch = (products: Product[]) => {
     if (!searchQuery.trim()) return products;
@@ -44,18 +50,13 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
         {products.map((product) => (
-          <div key={product.id} className={`flex flex-col p-[14px] box-border ${isDark ? 'bg-[#222]' : 'bg-white'} hover:shadow-xl hover:scale-[1.02] transition-transform`} style={{ minHeight: '341px' }}>
+          <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className={`flex flex-col p-[14px] box-border ${isDark ? 'bg-[#222]' : 'bg-white'} hover:shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer`} style={{ minHeight: '341px' }}>
             <span className="text-[11px] text-[#768B9C] no-underline block mb-1">
               {product.category}
             </span>
-            <button
-              onClick={() => onSelectProduct(product.id)}
-              className="text-left"
-            >
-              <h3 className="text-[13px] font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
-                {product.name}
-              </h3>
-            </button>
+            <h3 className="text-[13px] font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
+              {product.name}
+            </h3>
             <div className="flex-1 flex items-center justify-center py-2.5">
               <img
                 src={product.image}
@@ -67,11 +68,11 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
               <div className="flex justify-between items-center">
                 <span className="text-[16px] font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                 <button
-                  onClick={() => setCartProduct(product)}
-                  className="bg-[#D95907] text-white w-9 h-9 rounded-full flex items-center justify-center text-base shadow-[0_2px_4px_rgba(0,0,0,0.1)] hover:bg-[#0062BD] transition-colors relative"
+                  onClick={(e) => { e.stopPropagation(); setCartProduct(product); }}
+                  className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:bg-[#D95907]/60 transition-all relative"
                   title="Add to cart"
                 >
-                  <ShoppingCart size={16} />
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
                   <Plus size={10} className="absolute -top-0.5 -right-0.5" />
                 </button>
               </div>
@@ -142,6 +143,19 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
           onAddToCart={addToCart}
           onViewDetails={(id) => { setCartProduct(null); onSelectProduct(id); }}
         />
+      )}
+
+      {loadingProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          <div className="bg-white rounded-lg shadow-xl p-8 flex flex-col items-center gap-4 min-w-[280px]">
+            <Loader2 size={36} className="animate-spin text-[#3373AB]" />
+            <p className="text-sm font-medium text-gray-700 text-center leading-relaxed">
+              Loading <span className="text-[#3373AB] font-semibold">{loadingProduct}</span>
+              <br />
+              <span className="text-gray-400 text-xs">Accessing product dossier...</span>
+            </p>
+          </div>
+        </div>
       )}
     </section>
   );

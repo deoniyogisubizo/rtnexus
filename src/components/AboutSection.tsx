@@ -1,11 +1,13 @@
 import { TEAM_MEMBERS } from '../data/mockData';
 import { Target, Compass, Milestone, ShieldCheck, UserPlus, Heart } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 
 interface AboutSectionProps {
   theme?: 'light' | 'dark';
+  standalone?: boolean;
 }
 
-export default function AboutSection({ theme = 'light' }: AboutSectionProps) {
+export default function AboutSection({ theme = 'light', standalone }: AboutSectionProps) {
   const isDark = theme === 'dark';
   const leadership = TEAM_MEMBERS;
 
@@ -19,6 +21,16 @@ export default function AboutSection({ theme = 'light' }: AboutSectionProps) {
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
         
+        {standalone && (
+          <Breadcrumb
+            segments={[
+              { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+              { label: 'About Us' },
+            ]}
+            theme={theme}
+          />
+        )}
+
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
           <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">COMPANY BIOGRAPHY AND FOCUS</p>

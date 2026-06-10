@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, ArrowRight, Package } from 'lucide-react';
+import { Search, ArrowRight, ChevronRight, Package } from 'lucide-react';
 import { FEATURED_PRODUCTS } from '../data/mockData';
 import { searchAll, SearchResultItem } from '../utils/search';
 
@@ -141,10 +141,10 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
             <div
               key={name}
               onClick={() => { onSelectCategory?.(name); setView('shop'); }}
-              className={`flex flex-col ${cardBg} p-4 relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer`}
+              className={`flex flex-col ${cardBg} p-4 relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]`}
             >
-              <div className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-full border border-gray-400/30 text-gray-500 group-hover:bg-[#3373AB] group-hover:text-white group-hover:border-[#3373AB] transition-all duration-200">
-                <ArrowRight size={13} className="-rotate-45" />
+              <div className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-full border border-gray-400/30 text-gray-500 group-hover:bg-[#3373AB] group-hover:text-white group-hover:border-[#3373AB] transition-all duration-200 lg:shadow-md lg:group-hover:shadow-lg">
+                <ChevronRight size={13} className="-rotate-45" />
               </div>
               <div className="h-28 sm:h-32 flex items-center justify-center mb-3 overflow-hidden">
                 <img
@@ -153,7 +153,7 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                   className="max-w-full max-h-full object-contain"
                 />
               </div>
-              <span className={`text-xs sm:text-sm font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{name}</span>
+              <span className={`text-xs sm:text-sm lg:text-[10px] font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'} group-hover:text-[#3373AB] lg:group-hover:underline transition-all duration-200`}>{name}</span>
             </div>
           ))}
         </div>
@@ -162,7 +162,7 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
           <div className="mt-8 text-center">
             <button
               onClick={() => setView('shop')}
-              className="border border-[#3373AB]/30 hover:border-[#3373AB] text-[#3373AB] font-mono text-xs uppercase tracking-widest px-5 py-2.5 transition-colors inline-flex items-center gap-2"
+              className="border border-[#3373AB]/30 hover:border-[#3373AB] text-[#3373AB] font-mono text-xs font-bold uppercase tracking-widest px-5 py-2.5 transition-colors inline-flex items-center gap-2"
             >
               View All Categories <ArrowRight size={12} />
             </button>

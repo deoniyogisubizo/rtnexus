@@ -1,4 +1,4 @@
-import { ArrowRight, ShoppingBag, GraduationCap, Video, Workflow } from 'lucide-react';
+import { ArrowRight, GraduationCap, Video, Workflow } from 'lucide-react';
 
 interface HeroSectionProps {
   setView: (view: string) => void;
@@ -39,7 +39,7 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
               onClick={() => setView('shop')}
               className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-bold uppercase tracking-wider px-6 py-4 flex items-center gap-2 group transition-all duration-150 rounded-none w-full sm:w-auto justify-center"
             >
-              <ShoppingBag size={14} />
+              <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'11px'}}></i>
               <span>Explore RT Shop</span>
               <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
             </button>

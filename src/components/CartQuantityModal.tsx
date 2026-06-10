@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, ShoppingCart } from 'lucide-react';
+import { X } from 'lucide-react';
 import { Product } from '../types';
 
 interface CartQuantityModalProps {
@@ -93,7 +93,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
               onClick={() => { onAddToCart(product, quantity); onClose(); }}
               className="flex-1 bg-[#3373AB] hover:bg-[#255C8E] text-white font-bold py-2 text-xs uppercase tracking-wider outline-none transition-colors flex items-center justify-center gap-2"
             >
-              <ShoppingCart size={14} />
+              <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'11px'}}></i>
               <span>Update Cart</span>
             </button>
           </div>

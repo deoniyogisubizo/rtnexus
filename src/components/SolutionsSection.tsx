@@ -1,11 +1,13 @@
 import { TrendingUp, Building2, Radio, GraduationCap, ArrowRight } from 'lucide-react';
+import Breadcrumb from './Breadcrumb';
 
 interface SolutionsSectionProps {
   setView: (view: string) => void;
   theme?: 'light' | 'dark';
+  standalone?: boolean;
 }
 
-export default function SolutionsSection({ setView, theme = 'light' }: SolutionsSectionProps) {
+export default function SolutionsSection({ setView, theme = 'light', standalone }: SolutionsSectionProps) {
   const isDark = theme === 'dark';
   const users = [
     {
@@ -61,11 +63,20 @@ export default function SolutionsSection({ setView, theme = 'light' }: Solutions
 
   return (
     <section className={`w-full select-none py-10 px-4 sm:px-6 font-sans border-b ${bg}`}>
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-8">
-          <p className="text-[9px] font-mono tracking-[0.25em] text-[#3373AB] uppercase font-bold">WHO WE SERVE</p>
-          <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight mt-1">FIND YOUR PATH</h2>
-        </div>
+    <div className="max-w-7xl mx-auto">
+      {standalone && (
+        <Breadcrumb
+          segments={[
+            { label: 'Home', onClick: () => setView('home') },
+            { label: 'Solutions' },
+          ]}
+          theme={theme}
+        />
+      )}
+      <div className="text-center mb-8">
+        <p className="text-[9px] font-mono tracking-[0.25em] text-[#3373AB] uppercase font-bold">WHO WE SERVE</p>
+        <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight mt-1">FIND YOUR PATH</h2>
+      </div>
 
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
           {users.map((user) => (

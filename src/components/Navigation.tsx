@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Sun, Moon, Bell, ChevronDown, Mail, ShieldCheck, Heart, ShoppingCart, User, LogOut, CheckCircle, Package, ArrowRight, Menu } from 'lucide-react';
+import { Search, Sun, Moon, Bell, ChevronDown, Mail, ShieldCheck, Heart, User, LogOut, CheckCircle, Package, ArrowRight, Menu } from 'lucide-react';
 import { UserSession, CartItem } from '../types';
 import { searchAll } from '../utils/search';
 
@@ -12,6 +12,7 @@ interface NavigationProps {
   cart: CartItem[];
   openCartDrawer: () => void;
   triggerSearch: (query: string) => void;
+  onViewProduct?: (id: string) => void;
   theme: 'light' | 'dark';
   setTheme: (t: 'light' | 'dark') => void;
 }
@@ -25,6 +26,7 @@ export default function Navigation({
   cart,
   openCartDrawer,
   triggerSearch,
+  onViewProduct,
   theme,
   setTheme,
 }: NavigationProps) {
@@ -184,7 +186,7 @@ export default function Navigation({
                     onClick={() => { setView('portals'); setShowUserDropdown(false); }}
                     className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-xs font-semibold flex items-center gap-2.5 border-b border-gray-100"
                   >
-                    <ShoppingCart size={14} className="text-[#3373AB]" />
+                    <i className="fa-solid fa-cart-arrow-down text-[#3373AB]" style={{fontSize:'11px'}}></i>
                     <span>Track Orders</span>
                   </button>
                   <button
@@ -415,6 +417,11 @@ export default function Navigation({
                 setSearchFocused(false);
                 triggerSearch(q);
               };
+              const handleProductNav = (id: string) => {
+                setSearchVal('');
+                setSearchFocused(false);
+                onViewProduct?.(id);
+              };
 
               return (
                 <div className={`absolute top-full left-0 right-0 mt-1 border shadow-lg z-[70] max-h-72 overflow-y-auto ${theme === 'dark' ? 'bg-[#1a1a1a] border-gray-700 text-gray-200' : 'bg-white border-gray-200 text-gray-900'}`}>
@@ -459,7 +466,7 @@ export default function Navigation({
                           {prods.slice(0, 5).map(r => (
                             <button
                               key={r.product.id}
-                              onClick={() => handleNav(r.product.name)}
+                              onClick={() => handleProductNav(r.product.id)}
                               className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-3 hover:${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} transition-colors`}
                             >
                               <span className="font-mono font-bold text-[11px] text-[#D95907] whitespace-nowrap w-24 text-right">
@@ -470,7 +477,7 @@ export default function Navigation({
                           ))}
                           {prods.length > 5 && (
                             <button
-                        onClick={() => handleNav(searchVal)}
+                              onClick={() => handleNav(searchVal)}
                               className={`w-full text-left px-3 py-1.5 text-xs text-gray-400 hover:${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} transition-colors italic`}
                             >
                               +{prods.length - 5} more products...
@@ -491,7 +498,7 @@ export default function Navigation({
             className={`p-2 relative hover:text-[#3373AB] transition-colors rounded-none outline-none ${theme === 'dark' ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-700'}`}
             title="Open RT Cart"
           >
-            <ShoppingCart size={18} />
+            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'13px'}}></i>
             {totalCartCount > 0 && (
               <span className="absolute -top-[1px] -right-[1px] h-4 w-4 bg-[#3373AB] text-white text-[9px] font-mono font-bold flex items-center justify-center">
                 {totalCartCount}
@@ -501,12 +508,23 @@ export default function Navigation({
 
           {user ? (
             <div className="relative control-panel-dropdown">
+              {/* Desktop: Control Panel button */}
               <button 
                 onClick={() => setShowControlPanelDropdown(!showControlPanelDropdown)}
-                className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2.5 transition-all outline-none rounded-none flex items-center gap-1.5"
+                className="hidden lg:flex bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold uppercase tracking-wider px-4 py-2.5 transition-all outline-none rounded-none items-center gap-1.5"
               >
                 <span>Control Panel</span>
                 <ChevronDown size={11} className={`transition-transform duration-200 ${showControlPanelDropdown ? 'rotate-180' : ''}`} />
+              </button>
+              {/* Mobile: User avatar with chevron */}
+              <button 
+                onClick={() => setShowControlPanelDropdown(!showControlPanelDropdown)}
+                className="lg:hidden flex items-center gap-1.5 outline-none"
+              >
+                <div className="w-8 h-8 rounded-full bg-[#3373AB] text-white flex items-center justify-center text-sm font-bold">
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+                <ChevronDown size={12} className={`text-gray-600 transition-transform duration-200 ${showControlPanelDropdown ? 'rotate-180' : ''}`} />
               </button>
               {showControlPanelDropdown && (
                 <div className="absolute right-0 mt-1 w-52 bg-white text-gray-800 border border-gray-200 z-50 shadow-xl">
@@ -521,7 +539,7 @@ export default function Navigation({
                     onClick={() => { setView('portals'); setShowControlPanelDropdown(false); }}
                     className="w-full text-left px-4 py-2.5 hover:bg-gray-50 text-xs font-semibold flex items-center gap-2.5 border-b border-gray-100"
                   >
-                    <ShoppingCart size={14} className="text-[#3373AB]" />
+                    <i className="fa-solid fa-cart-arrow-down text-[#3373AB]" style={{fontSize:'11px'}}></i>
                     <span>Track Orders</span>
                   </button>
                   <button
