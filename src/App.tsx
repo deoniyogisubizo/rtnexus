@@ -11,6 +11,7 @@ import AdCenter from './components/AdCenter';
 import SolutionsSection from './components/SolutionsSection';
 import RTShopShowcase from './components/RTShopShowcase';
 import MarketplaceLayers from './components/MarketplaceLayers';
+import ProductDetailPage from './components/ProductDetailPage';
 import AboutSection from './components/AboutSection';
 import CareersSection from './components/CareersSection';
 import ContactSection from './components/ContactSection';
@@ -36,11 +37,18 @@ export default function App() {
   // Global search bridging
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
 
-  // Shop preselect product from showcase navigation
-  const [shopPreselectProductId, setShopPreselectProductId] = useState<string | null>(null);
-  const handleShowcaseSelectProduct = (id: string) => {
-    setShopPreselectProductId(id);
-    setView('shop');
+  // Product detail page routing
+  const [productDetailId, setProductDetailId] = useState<string | null>(null);
+  const handleViewProduct = (id: string) => {
+    setProductDetailId(id);
+    setView('product');
+  };
+
+  // Shop preselect category from showcase navigation
+  const [shopPreselectCategory, setShopPreselectCategory] = useState<string | null>(null);
+  const handleShowcaseSelectCategory = (category: string) => {
+    setShopPreselectCategory(category);
+    setProductDetailId(null);
   };
 
   // Handle OAuth callback from social SSO
@@ -114,6 +122,8 @@ export default function App() {
   // Handle Search submit from Navigation bar
   const handleSearchTrigger = (query: string) => {
     setGlobalSearchQuery(query);
+    setShopPreselectCategory(null);
+    setProductDetailId(null);
     // If we search, let's route to appropriate context
     if (query) {
       // Let's decide view based on current or keywords
@@ -144,7 +154,7 @@ export default function App() {
       {!(view === 'portals' && user?.role === 'admin') && (
         <Navigation 
           currentView={view}
-          setView={(v) => { setView(v); setGlobalSearchQuery(''); }}
+          setView={(v) => { setView(v); setGlobalSearchQuery(''); setShopPreselectCategory(null); setProductDetailId(null); }}
           user={user}
           logout={handleLogout}
           openAuth={(tab) => setAuthModal({ open: true, tab })}
@@ -164,8 +174,8 @@ export default function App() {
           <div className="w-full">
             <HeroSection setView={setView} theme={theme} />
             <SolutionsSection setView={setView} theme={theme} />
-            <RTShopShowcase setView={setView} theme={theme} onSelectProduct={handleShowcaseSelectProduct} />
-            <MarketplaceLayers addToCart={handleAddToCart} theme={theme} onSelectProduct={handleShowcaseSelectProduct} setView={setView} />
+            <RTShopShowcase setView={setView} theme={theme} onSelectProduct={handleViewProduct} onSelectCategory={handleShowcaseSelectCategory} />
+            <MarketplaceLayers addToCart={handleAddToCart} theme={theme} onSelectProduct={handleViewProduct} setView={setView} />
             <AboutSection theme={theme} />
             <ContactSection theme={theme} />
           </div>
@@ -177,8 +187,20 @@ export default function App() {
             searchQuery={globalSearchQuery}
             cartItems={cart}
             theme={theme}
-            preselectProductId={shopPreselectProductId}
-            onClearPreselectProductId={() => setShopPreselectProductId(null)}
+            onViewProduct={handleViewProduct}
+            preselectCategory={shopPreselectCategory}
+            onClearPreselectCategory={() => setShopPreselectCategory(null)}
+          />
+        )}
+
+        {view === 'product' && productDetailId && (
+          <ProductDetailPage
+            productId={productDetailId}
+            addToCart={handleAddToCart}
+            cartItems={cart}
+            theme={theme}
+            onBack={() => setView('shop')}
+            onViewProduct={handleViewProduct}
           />
         )}
 

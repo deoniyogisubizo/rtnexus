@@ -7,9 +7,10 @@ interface RTShopShowcaseProps {
   setView: (view: string) => void;
   theme?: 'light' | 'dark';
   onSelectProduct: (productId: string) => void;
+  onSelectCategory?: (category: string) => void;
 }
 
-export default function RTShopShowcase({ setView, theme = 'light', onSelectProduct }: RTShopShowcaseProps) {
+export default function RTShopShowcase({ setView, theme = 'light', onSelectProduct, onSelectCategory }: RTShopShowcaseProps) {
   const isDark = theme === 'dark';
   const [search, setSearch] = useState('');
   const [focused, setFocused] = useState(false);
@@ -137,13 +138,14 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
           {gridCategories.slice(0, 12).map(({ name, product }) => (
-            <div key={name} className={`flex flex-col ${cardBg} p-4 relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200`}>
-              <button
-                onClick={() => setView('shop')}
-                className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-full border border-gray-400/30 text-gray-500 group-hover:bg-[#3373AB] group-hover:text-white group-hover:border-[#3373AB] transition-all duration-200"
-              >
+            <div
+              key={name}
+              onClick={() => { onSelectCategory?.(name); setView('shop'); }}
+              className={`flex flex-col ${cardBg} p-4 relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer`}
+            >
+              <div className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-full border border-gray-400/30 text-gray-500 group-hover:bg-[#3373AB] group-hover:text-white group-hover:border-[#3373AB] transition-all duration-200">
                 <ArrowRight size={13} className="-rotate-45" />
-              </button>
+              </div>
               <div className="h-28 sm:h-32 flex items-center justify-center mb-3 overflow-hidden">
                 <img
                   src={product.image}

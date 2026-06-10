@@ -11,11 +11,12 @@ interface ShopSectionProps {
   searchQuery: string;
   cartItems: CartItem[];
   theme?: 'light' | 'dark';
-  preselectProductId?: string | null;
-  onClearPreselectProductId?: () => void;
+  onViewProduct?: (id: string) => void;
+  preselectCategory?: string | null;
+  onClearPreselectCategory?: () => void;
 }
 
-export default function ShopSection({ addToCart, searchQuery, cartItems, theme = 'light', preselectProductId, onClearPreselectProductId }: ShopSectionProps) {
+export default function ShopSection({ addToCart, searchQuery, cartItems, theme = 'light', onViewProduct, preselectCategory, onClearPreselectCategory }: ShopSectionProps) {
   const isDark = theme === 'dark';
   const [products, setProducts] = useState<Product[]>(FEATURED_PRODUCTS);
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,6 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   const [selectedBrand, setSelectedBrand] = useState<string>('All');
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [sortBy, setSortBy] = useState<string>('featured');
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
 
@@ -35,14 +35,11 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   }, []);
 
   useEffect(() => {
-    if (preselectProductId) {
-      const product = products.find(p => p.id === preselectProductId);
-      if (product) {
-        setSelectedProduct(product);
-      }
-      onClearPreselectProductId?.();
+    if (preselectCategory) {
+      setSelectedCategory(preselectCategory);
+      onClearPreselectCategory?.();
     }
-  }, [preselectProductId]);
+  }, [preselectCategory]);
 
   const categories = ['All', 'IoT Devices', 'Development Boards', 'Sensors', 'Robotics', 'Power Solutions', 'Electronics Components'];
   const brands = ['All', 'Nexus Embedded Corp', 'Silicon Ventures Ltd', 'Matrix Transducers', 'OmniDrive Robotics'];
@@ -156,7 +153,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                     {prods.slice(0, 6).map(r => (
                       <button
                         key={r.product.id}
-                        onClick={() => { setSelectedProduct(r.product); setQ(''); setFocused(false); }}
+                        onClick={() => { onViewProduct?.(r.product.id); setQ(''); setFocused(false); }}
                         className={`w-full text-left px-4 py-2 text-sm flex items-center gap-3 hover:${isDark ? 'bg-gray-700' : 'bg-gray-50'} transition-colors`}
                       >
                         <span className="font-mono font-bold text-[#D95907] whitespace-nowrap w-28 text-right">
@@ -355,7 +352,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                         {product.category}
                       </span>
                       <button
-                        onClick={() => setSelectedProduct(product)}
+                        onClick={() => onViewProduct?.(product.id)}
                         className="text-left"
                       >
                         <h3 className="text-[13px] font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
@@ -414,136 +411,8 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             product={cartProduct}
             onClose={() => setCartProduct(null)}
             onAddToCart={handleLocalAddToCart}
-            onViewDetails={(id) => { setCartProduct(null); setSelectedProduct(products.find(p => p.id === id) || null); }}
+            onViewDetails={(id) => { setCartProduct(null); onViewProduct?.(id); }}
           />
-        )}
-
-        {/* DIALOG/MODAL: DETAILED TECHNICAL DATASHEET VIEW */}
-        {selectedProduct && (
-          <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-center justify-center p-4">
-            <div className="bg-white max-w-2xl w-full text-left rounded-none border border-gray-200 shadow-2xl flex flex-col max-h-[90vh]">
-              
-              {/* Modal header */}
-              <div className="bg-[#111111] text-white px-6 py-4 flex items-center justify-between border-b border-gray-800">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest leading-none">__RT SHOP  //  TECHNICAL DATASHEET PORTAL</span>
-                  <span className="text-sm font-bold tracking-tight uppercase font-sans mt-1">MODULE SCHEMA {selectedProduct.id}</span>
-                </div>
-                <button 
-                  onClick={() => setSelectedProduct(null)} 
-                  className="text-gray-400 hover:text-white outline-none cursor-pointer"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              {/* Modal Content */}
-              <div className="p-6 overflow-y-auto space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Photo representation */}
-                  <div className="md:col-span-1 h-52 bg-gray-100 border border-gray-200 overflow-hidden">
-                    <img 
-                      src={selectedProduct.image} 
-                      alt={selectedProduct.name} 
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-contain p-1"
-                    />
-                  </div>
-                  {/* Description breakdown */}
-                  <div className="md:col-span-2">
-                    <h3 className="text-base font-bold text-gray-900">{selectedProduct.name}</h3>
-                    <p className="text-[10px] font-mono text-gray-400 uppercase mt-0.5">OEM: {selectedProduct.vendorName}</p>
-                    <p className="text-xs text-gray-600 mt-2 font-mono leading-relaxed font-light">
-                      {selectedProduct.description}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Where It Will Be Used */}
-                <div className="bg-blue-50 border border-blue-100 p-4">
-                  <h4 className="text-xs font-bold uppercase text-[#3373AB] tracking-wider mb-2">Applications & Use Cases</h4>
-                  <p className="text-[11px] text-gray-700 leading-relaxed font-sans">
-                    {selectedProduct.description}
-                  </p>
-                </div>
-
-                {/* Specs register table */}
-                <div>
-                  <h4 className="text-xs font-bold uppercase text-gray-800 border-b border-gray-300 pb-1.5 mb-3 tracking-wider">Calibrated Specification Profile</h4>
-                  <table className="w-full text-xs font-mono">
-                    <tbody>
-                      {Object.entries(selectedProduct.specs).map(([key, value]) => (
-                        <tr key={key} className="border-b border-gray-100">
-                          <td className="py-2 text-gray-500 font-bold w-1/3 leading-tight pr-3 text-[11px]">{key}</td>
-                          <td className="py-2 text-gray-800 text-[11px]">{value}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                {/* Logistics */}
-                <div className="bg-gray-50 border border-gray-200 p-4">
-                  <h5 className="text-[10px] font-mono font-bold text-[#3373AB] uppercase">Hardware stress report</h5>
-                  <p className="text-[11px] text-gray-600 leading-relaxed font-sans mt-1">
-                    This unit calibrated profile satisfies FCC Part 15 and CE industrial interference regulations. Calibrated at 22°C ambient with 45% standard saturation. Zero defects logic verified by RTTI instrumentation audits.
-                  </p>
-                </div>
-
-                {/* Related Products */}
-                {(() => {
-                  const related = products.filter(p => p.category === selectedProduct.category && p.id !== selectedProduct.id).slice(0, 4);
-                  if (related.length === 0) return null;
-                  return (
-                    <div>
-                      <h4 className="text-xs font-bold uppercase text-gray-800 border-b border-gray-300 pb-1.5 mb-3 tracking-wider">Related Products</h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        {related.map(rp => (
-                          <button
-                            key={rp.id}
-                            onClick={() => setSelectedProduct(rp)}
-                            className="flex items-center gap-3 bg-gray-50 border border-gray-200 p-2.5 text-left hover:border-[#3373AB] transition-colors"
-                          >
-                            <div className="h-10 w-10 bg-gray-100 border border-gray-200 shrink-0">
-                              <img src={rp.image} alt={rp.name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                            </div>
-                            <div className="min-w-0">
-                              <p className="text-[11px] font-bold text-gray-900 leading-tight truncate">{rp.name}</p>
-                              <p className="text-[10px] font-mono text-gray-400">RWF {rp.price.toFixed(2)}</p>
-                            </div>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-
-              {/* Footer pricing */}
-              <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-mono text-gray-400 uppercase block">Single Unit Escrow price</span>
-                  <span className="text-lg font-bold font-mono text-gray-900">RWF {selectedProduct.price.toFixed(2)}</span>
-                </div>
-                <div className="flex gap-2">
-                  <button 
-                    onClick={() => setSelectedProduct(null)}
-                    className="border border-gray-300 hover:border-gray-400 text-gray-700 font-semibold px-4 py-2 text-xs rounded-none outline-none"
-                  >
-                    Close Sheet
-                  </button>
-                  <button 
-                    onClick={() => { const p = selectedProduct; setSelectedProduct(null); setTimeout(() => setCartProduct(p), 50); }}
-                    className="bg-[#3373AB] hover:bg-[#255C8E] text-white font-bold px-5 py-2 text-xs rounded-none transition-colors outline-none flex items-center gap-2"
-                  >
-                    <ShoppingCart size={14} />
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-
-            </div>
-          </div>
         )}
 
       </div>
