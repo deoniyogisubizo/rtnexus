@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, SlidersHorizontal, X, Check, ArrowRight, Cpu } from 'lucide-react';
 import { Product, CartItem } from '../types';
-import { fetchProducts } from '../services/api';
+import { fetchProducts, fetchCategories } from '../services/api';
 
 import CartQuantityModal from './CartQuantityModal';
 import Breadcrumb from './Breadcrumb';
@@ -29,10 +29,12 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   const [maxPrice, setMaxPrice] = useState<number>(100000);
   const [sortBy, setSortBy] = useState<string>('featured');
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
+  const [cartButtonRect, setCartButtonRect] = useState<DOMRect | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [loadingMore, setLoadingMore] = useState(false);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [categoryList, setCategoryList] = useState<{ id: string; name: string }[]>([]);
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
 
   function handleCardClick(productId: string, productName: string) {
@@ -42,6 +44,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
 
   useEffect(() => {
     fetchProducts().then(data => setProducts(data)).catch(() => {}).finally(() => setLoading(false));
+    fetchCategories().then(data => setCategoryList(data)).catch(() => {});
   }, []);
 
   useEffect(() => {
@@ -55,7 +58,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     setDisplayCount(ITEMS_PER_PAGE);
   }, [searchQuery, localSearch, selectedCategory, selectedBrand, maxPrice, sortBy]);
 
-  const categories = ['All', 'IoT Devices', 'Development Boards', 'Sensors', 'Robotics', 'Power Solutions', 'Electronics Components'];
+  const categories = ['All', ...categoryList.map(c => c.name)];
   const brands = ['All', 'Nexus Embedded Corp', 'Silicon Ventures Ltd', 'Matrix Transducers', 'OmniDrive Robotics'];
 
   // Filter & Search processing
@@ -294,7 +297,16 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             {/* Category selection */}
             <div className="mb-5">
               <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Foundry Category</label>
-              <div className="flex flex-col gap-1.5">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full bg-white border border-gray-200 text-xs px-2.5 py-2 text-gray-700 outline-none focus:border-[#3373AB] mb-2"
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <div className="flex flex-col gap-1.5 max-h-40 overflow-y-auto">
                 {categories.map((cat) => (
                   <button
                     key={cat}
@@ -415,7 +427,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                         <div className="flex justify-between items-center">
                           <span className="text-[16px] font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                           <button
-                            onClick={(e) => { e.stopPropagation(); setCartProduct(product); }}
+                            onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
                             className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:scale-105 hover:bg-[#D95907]/60 transition-all"
                             title="Add to cart"
                           >
@@ -453,9 +465,10 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         {cartProduct && (
           <CartQuantityModal
             product={cartProduct}
-            onClose={() => setCartProduct(null)}
+            buttonRect={cartButtonRect}
+            onClose={() => { setCartProduct(null); setCartButtonRect(null); }}
             onAddToCart={handleLocalAddToCart}
-            onViewDetails={(id) => { setCartProduct(null); onViewProduct?.(id); }}
+            onViewDetails={(id) => { setCartProduct(null); setCartButtonRect(null); onViewProduct?.(id); }}
           />
         )}
 

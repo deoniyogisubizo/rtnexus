@@ -482,8 +482,8 @@ export default function App() {
 
       {/* DIALOG MODAL: SECURE KEY AUTHENTICATION OVERLAY */}
       {authModal.open && (
-        <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-center justify-center p-4">
-          <div className="relative max-w-4xl w-full">
+        <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
+          <div className="relative max-w-4xl w-full my-4 sm:my-0">
             <button 
               onClick={() => setAuthModal({ open: false, tab: 'login' })}
               className="absolute -top-10 right-0 bg-[#3373AB] hover:bg-[#255C8E] p-2 text-white font-bold outline-none cursor-pointer"

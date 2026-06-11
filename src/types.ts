@@ -23,7 +23,6 @@ export interface Product {
   vendorName: string;
   stock: number;
   videoUrl?: string;
-  embedCode?: string;
   guideBook?: string;
   whereToUse?: string;
   specTable?: string[][];
@@ -43,6 +42,7 @@ export interface Course {
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   syllabus: string[];
   certified: boolean;
+  images?: string[];
 }
 
 export interface Broadcast {

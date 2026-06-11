@@ -264,7 +264,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
     <div className="w-full max-w-4xl bg-white border border-gray-200 grid grid-cols-1 md:grid-cols-12 rounded-none overflow-hidden select-none font-sans text-left text-gray-900 shadow-2xl">
       
       {/* LEFT COLUMN: BRAND + SOCIAL SSO */}
-      <div className="md:col-span-5 bg-[#111111] text-white p-8 flex flex-col justify-between border-r border-[#3373AB] relative">
+      <div className="md:col-span-5 bg-[#111111] text-white p-4 sm:p-8 flex flex-col justify-between border-r border-[#3373AB] relative">
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div className="absolute inset-0" style={{ 
             backgroundImage: 'radial-gradient(circle, #3373AB 1px, transparent 1px)', 
@@ -305,7 +305,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
       </div>
 
       {/* RIGHT COLUMN: LOGIN / REGISTER / OAUTH ROLE PICKER */}
-      <div className="md:col-span-7 p-8 flex flex-col justify-between">
+      <div className="md:col-span-7 p-4 sm:p-8 flex flex-col justify-between">
         {pendingOAuth && (
           <div className="flex-1 flex flex-col justify-center">
             <div className="mb-6 text-center">
@@ -428,10 +428,10 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                 </button>
 
                 <div className="flex items-center justify-between pt-1">
-                  <button type="button" onClick={() => { setShowForgot(true); setFpIdentifier(identifier); }} className="text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
+                  <button type="button" onClick={() => { setShowForgot(true); setFpIdentifier(identifier); }} className="text-[10px] sm:text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
                     Forgot account?
                   </button>
-                  <button type="button" onClick={() => setActiveTab('register')} className="text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
+                  <button type="button" onClick={() => setActiveTab('register')} className="text-[10px] sm:text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
                     Don't have an account? Sign up
                   </button>
                 </div>

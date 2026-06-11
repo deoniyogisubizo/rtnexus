@@ -21,11 +21,6 @@ function getYoutubeEmbedUrl(url: string): string | null {
   return match ? `https://www.youtube.com/embed/${match[1]}` : null;
 }
 
-function extractEmbedSrc(embedCode: string): string | null {
-  const match = embedCode.match(/src=["']([^"']+)["']/);
-  return match ? match[1] : null;
-}
-
 function StarRating({ rating, isDark }: { rating: number; isDark: boolean }) {
   const full = Math.floor(rating);
   const half = rating - full >= 0.5;
@@ -48,6 +43,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
   const isDark = theme === 'dark';
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
+  const [cartButtonRect, setCartButtonRect] = useState<DOMRect | null>(null);
   const [showFixedBar, setShowFixedBar] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
   const [videoPlaying, setVideoPlaying] = useState(false);
@@ -97,9 +93,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
     ? product.images
     : [product.image];
 
-  const embedSrc = product.embedCode
-    ? extractEmbedSrc(product.embedCode)
-    : (product.videoUrl ? getYoutubeEmbedUrl(product.videoUrl) : null);
+  const embedSrc = product.videoUrl ? getYoutubeEmbedUrl(product.videoUrl) : null;
 
   const hasSpecTable = product.specTable && product.specTable.length > 0
     && product.specTable.some(row => row.some(cell => cell.trim() !== ''));
@@ -186,7 +180,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                   Back to Shop
                 </button>
                 <button
-                  onClick={() => setCartProduct(product)}
+                  onClick={(e) => { setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
                   className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
                 >
                   <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
@@ -374,7 +368,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                   Back to Shop
                 </button>
                 <button
-                  onClick={() => setCartProduct(product)}
+                  onClick={(e) => { setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
                   className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
                 >
                   <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
@@ -388,9 +382,10 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
       {cartProduct && (
         <CartQuantityModal
           product={cartProduct}
-          onClose={() => setCartProduct(null)}
-          onAddToCart={(p, q) => { addToCart(p, q); setCartProduct(null); }}
-          onViewDetails={(id) => { setCartProduct(null); onViewProduct(id); }}
+          buttonRect={cartButtonRect}
+          onClose={() => { setCartProduct(null); setCartButtonRect(null); }}
+          onAddToCart={(p, q) => { addToCart(p, q); setCartProduct(null); setCartButtonRect(null); }}
+          onViewDetails={(id) => { setCartProduct(null); setCartButtonRect(null); onViewProduct(id); }}
         />
       )}
     </section>

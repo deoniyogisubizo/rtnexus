@@ -11,11 +11,7 @@ interface MarketplaceLayersProps {
   setView: (view: string) => void;
 }
 
-const embeddedCats = new Set([
-  'Microcontroller Boards', 'Embedded Wireless Modules', 'Development Boards',
-  'Sensor Interface Circuits', 'Power Management ICs', 'Embedded Storage Modules',
-  'Programmable Logic Circuits', 'Communication Bus Drivers',
-]);
+const embeddedKeywords = ['Microcontroller', 'Embedded Systems', 'Development Boards'];
 
 const ledCats = new Set(['LED Driver Modules', 'Display & LED Matrix Systems']);
 
@@ -23,6 +19,7 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
   const isDark = theme === 'dark';
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
+  const [cartButtonRect, setCartButtonRect] = useState<DOMRect | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
 
@@ -45,7 +42,7 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
   };
 
   const justLanded = filterBySearch(allProducts.slice(0, 12));
-  const embeddedDeals = filterBySearch(allProducts.filter(p => embeddedCats.has(p.category)).slice(0, 6));
+  const embeddedDeals = filterBySearch(allProducts.filter(p => embeddedKeywords.some(k => p.category.toLowerCase().includes(k.toLowerCase()))).slice(0, 6));
   const ledDeals = filterBySearch(allProducts.filter(p => ledCats.has(p.category)).slice(0, 12));
   const microcontrollers = allProducts.filter(p => p.category === 'Microcontroller Boards').slice(0, 8);
 
@@ -72,7 +69,7 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
               <div className="flex justify-between items-center">
                 <span className="text-[16px] font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                 <button
-                  onClick={(e) => { e.stopPropagation(); setCartProduct(product); }}
+                  onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
                   className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:bg-[#D95907]/60 transition-all relative"
                   title="Add to cart"
                 >
@@ -144,7 +141,7 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
                   <div className="flex justify-between items-center">
                     <span className="text-[16px] font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                     <button
-                      onClick={(e) => { e.stopPropagation(); setCartProduct(product); }}
+                      onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
                       className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:bg-[#D95907]/60 transition-all relative"
                       title="Add to cart"
                     >
@@ -186,9 +183,10 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
       {cartProduct && (
         <CartQuantityModal
           product={cartProduct}
-          onClose={() => setCartProduct(null)}
+          buttonRect={cartButtonRect}
+          onClose={() => { setCartProduct(null); setCartButtonRect(null); }}
           onAddToCart={addToCart}
-          onViewDetails={(id) => { setCartProduct(null); onSelectProduct(id); }}
+          onViewDetails={(id) => { setCartProduct(null); setCartButtonRect(null); onSelectProduct(id); }}
         />
       )}
 

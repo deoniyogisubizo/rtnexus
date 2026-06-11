@@ -289,7 +289,18 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
 
   return (
     <div className="fixed top-0 left-0 h-screen w-screen z-40 bg-gray-50 font-sans flex flex-col md:flex-row overflow-hidden">
-      <style>{`aside nav::-webkit-scrollbar-thumb { background: rgba(51,115,171,0.5); border-radius: 999px; } aside nav::-webkit-scrollbar-thumb:hover { background: rgba(51,115,171,0.75); } aside nav::-webkit-scrollbar { width: 3px; } aside nav::-webkit-scrollbar-track { background: transparent; }`}</style>
+      <style>{`
+        aside nav::-webkit-scrollbar-thumb { background: rgba(51,115,171,0.5); border-radius: 999px; }
+        aside nav::-webkit-scrollbar-thumb:hover { background: rgba(51,115,171,0.75); }
+        aside nav::-webkit-scrollbar { width: 3px; }
+        aside nav::-webkit-scrollbar-track { background: transparent; }
+        .sidebar-section:hover .sidebar-item {
+          transform: scale(1.03);
+          font-weight: 700;
+          margin-top: 6px;
+          margin-bottom: 6px;
+        }
+      `}</style>
 
       {/* Sidebar */}
       <aside className={`
@@ -299,7 +310,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
         md:translate-x-0
         transition-transform duration-300 ease-in-out
 
-        md:relative md:flex md:flex-col md:h-full md:w-20 md:hover:w-56 md:bg-transparent md:z-0
+        md:relative md:flex md:flex-col md:h-full md:w-20 md:hover:w-56 md:bg-white md:z-0
         md:border-r md:border-gray-200
         md:transition-all md:duration-300 md:ease-out
         group
@@ -336,7 +347,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           {sidebarGroups.map(group => {
             const isGroupActive = group.items.some(item => activeSection === item.id);
             return (
-              <div key={group.label}>
+              <div key={group.label} className="sidebar-section">
                 {/* Desktop collapsed: group icon */}
                 {group.showGroupIcon && (
                   <div className="hidden md:block md:group-hover:hidden">
@@ -370,16 +381,16 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                       <button
                         key={item.id}
                         onClick={() => { navigateTo(item.id); setMobileOpen(false); }}
-                        className={`w-full flex items-center outline-none text-left cursor-pointer
+                        className={`sidebar-item w-full flex items-center outline-none text-left cursor-pointer
                           px-3 py-2
-                          ml-7 md:pr-3 md:py-1.5 md:my-0.5 md:rounded-md
+                          ml-7 md:pr-3 md:py-1.5 md:my-0.5
                           transition-all duration-200
                           ${isActive
                             ? 'text-[#3373AB] bg-[#3373AB]/10 border-l-2 border-[#3373AB] font-semibold'
                             : 'text-gray-400 hover:text-white hover:bg-[#3373AB] hover:shadow-sm border-l-2 border-transparent'
                           }`}
                       >
-                        <span className="text-[11px] md:text-[10px] font-medium tracking-wide text-gray-600 md:group-hover:text-inherit transition-colors duration-200">
+                        <span className="text-[13px] md:text-[12px] font-medium tracking-wide text-black md:group-hover:text-inherit transition-all duration-200">
                           {item.label}
                         </span>
                       </button>
@@ -986,7 +997,7 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: '', category: '', price: '', stock: '', vendorName: '',
-    description: '', videoUrl: '', embedCode: '', guideBook: '', whereToUse: '',
+    description: '', videoUrl: '', guideBook: '', whereToUse: '',
     specTable: [['', ''], ['', '']],
     images: [] as string[],
     mainImageUrl: ''
@@ -1015,7 +1026,7 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
 
   const initForm = () => ({
     name: '', category: '', price: '', stock: '', vendorName: '',
-    description: '', videoUrl: '', embedCode: '', guideBook: '', whereToUse: '',
+    description: '', videoUrl: '', guideBook: '', whereToUse: '',
     specTable: [['', ''], ['', '']],
     images: [] as string[],
     mainImageUrl: ''
@@ -1037,7 +1048,6 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
       vendorName: p.vendorName,
       description: p.description,
       videoUrl: p.videoUrl || '',
-      embedCode: p.embedCode || '',
       guideBook: p.guideBook || '',
       whereToUse: p.whereToUse || '',
       specTable: p.specTable && p.specTable.length > 0 ? p.specTable : [['', ''], ['', '']],
@@ -1112,7 +1122,6 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
       vendorName: form.vendorName || 'Admin',
       description: form.description,
       videoUrl: form.videoUrl,
-      embedCode: form.embedCode,
       guideBook: form.guideBook,
       whereToUse: form.whereToUse,
       specTable: form.specTable,
@@ -1145,7 +1154,6 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
           vendorName: form.vendorName || 'Admin',
           stock: parseInt(form.stock) || 0,
           videoUrl: form.videoUrl,
-          embedCode: form.embedCode,
           guideBook: form.guideBook,
           whereToUse: form.whereToUse,
           specTable: form.specTable,
@@ -1418,12 +1426,6 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
                 <input value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} placeholder="https://youtube.com/watch?v=..." className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs" />
               </div>
 
-              {/* YouTube Embed Code */}
-              <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Embed Code <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
-                <textarea value={form.embedCode} onChange={e => setForm({ ...form, embedCode: e.target.value })} rows={3} placeholder='Paste the YouTube iframe embed code, e.g. &lt;iframe src="https://www.youtube.com/embed/..."&gt;&lt;/iframe&gt;' className="w-full border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all resize-vertical font-mono text-xs" />
-              </div>
-
               {/* Guide Book / Documentation */}
               <div>
                 <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Guide Book / Documentation Link <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
@@ -1670,27 +1672,50 @@ function OrdersSection({ orders, setOrders, searchQuery, notify }: any) {
 function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
   const [showForm, setShowForm] = useState(false);
   const [editCourse, setEditCourse] = useState<Course | null>(null);
-  const [form, setForm] = useState({ title: '', category: 'Embedded Systems', instructor: '', duration: '', price: '', level: 'Beginner' as Course['level'] });
+  const [form, setForm] = useState({ title: '', category: 'Embedded Systems', instructor: '', duration: '', price: '', level: 'Beginner' as Course['level'], images: [] as string[], mainImageUrl: '' });
   const [page, setPage] = useState(1);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const perPage = 15;
 
   const openAdd = () => {
     setEditCourse(null);
-    setForm({ title: '', category: 'Embedded Systems', instructor: '', duration: '', price: '', level: 'Beginner' });
+    setForm({ title: '', category: 'Embedded Systems', instructor: '', duration: '', price: '', level: 'Beginner', images: [], mainImageUrl: '' });
     setShowForm(true);
   };
 
   const openEdit = (c: Course) => {
     setEditCourse(c);
-    setForm({ title: c.title, category: c.category, instructor: c.instructor, duration: c.duration, price: String(c.price), level: c.level });
+    setForm({ title: c.title, category: c.category, instructor: c.instructor, duration: c.duration, price: String(c.price), level: c.level, images: c.images || [], mainImageUrl: '' });
     setShowForm(true);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      if (ev.target?.result) {
+        setForm({ ...form, images: [...form.images, ev.target.result as string] });
+      }
+    };
+    reader.readAsDataURL(file);
+    e.target.value = '';
+  };
+
+  const addImageUrl = () => {
+    if (!form.mainImageUrl.trim()) return;
+    setForm({ ...form, images: [...form.images, form.mainImageUrl.trim()], mainImageUrl: '' });
+  };
+
+  const removeImage = (idx: number) => {
+    setForm({ ...form, images: form.images.filter((_, i) => i !== idx) });
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!form.title) return;
-    const payload = { title: form.title, category: form.category, instructor: form.instructor, duration: form.duration, price: parseFloat(form.price), level: form.level };
+    const finalImages = form.images.length > 0 ? form.images : ['https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'];
+    const payload = { title: form.title, category: form.category, instructor: form.instructor, duration: form.duration, price: parseFloat(form.price), level: form.level, images: finalImages, image: finalImages[0] };
     if (editCourse) {
       try {
         await updateCourse(editCourse.id, payload);
@@ -1702,7 +1727,7 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
     } else {
       try {
         const created = await createCourse(payload);
-        const newC: Course = { id: created.id, ...payload, rating: 0, studentsCount: 0, image: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60', syllabus: [], certified: false };
+        const newC: Course = { id: created.id, ...payload, rating: 0, studentsCount: 0, syllabus: [], certified: false };
         setCourses([newC, ...courses]);
         notify('success', `Course "${form.title}" added.`);
       } catch {
@@ -1837,6 +1862,37 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
               <div>
                 <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Price (RWF)</label>
                 <input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
+              </div>
+              <div className="col-span-2">
+                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Course Images</label>
+                <div className="space-y-2">
+                  <div className="flex gap-2">
+                    <input value={form.mainImageUrl} onChange={e => setForm({ ...form, mainImageUrl: e.target.value })} placeholder="Paste image URL..." className="flex-1 border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB] font-mono" />
+                    <button type="button" onClick={addImageUrl} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-[10px] font-semibold px-3 py-2 outline-none whitespace-nowrap">Add URL</button>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[9px] text-gray-400 font-mono">or</span>
+                    <div className="flex gap-2">
+                      <input type="file" id="course-img-upload" accept="image/*" className="hidden" onChange={handleImageUpload} />
+                      <button type="button" onClick={() => document.getElementById('course-img-upload')?.click()} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Upload from Device</button>
+                      <input type="file" id="course-img-camera" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload} />
+                      <button type="button" onClick={() => document.getElementById('course-img-camera')?.click()} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Take Photo</button>
+                    </div>
+                  </div>
+                </div>
+                {form.images.length > 0 && (
+                  <div className="mt-2">
+                    <div className="text-[9px] text-gray-500 font-semibold mb-1">{form.images.length} image(s) added</div>
+                    <div className="flex flex-wrap gap-2">
+                      {form.images.map((img, idx) => (
+                        <div key={idx} className="relative group">
+                          <img src={img} alt={`Course ${idx + 1}`} className="h-14 w-14 object-cover border border-gray-200" onError={e => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/56?text=Error'; }} />
+                          <button type="button" onClick={() => removeImage(idx)} className="absolute -top-1.5 -right-1.5 bg-red-500 text-white p-0.5 opacity-0 group-hover:opacity-100 transition-opacity outline-none shadow" title="Remove"><X size={10} /></button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
