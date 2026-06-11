@@ -23,6 +23,8 @@ export interface Product {
   vendorName: string;
   stock: number;
   videoUrl?: string;
+  embedCode?: string;
+  guideBook?: string;
   whereToUse?: string;
   specTable?: string[][];
   images?: string[];

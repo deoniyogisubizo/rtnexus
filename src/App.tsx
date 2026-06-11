@@ -17,6 +17,7 @@ import CareersSection from './components/CareersSection';
 import ContactSection from './components/ContactSection';
 import AuthExperience from './components/AuthExperience';
 import UserPortals from './components/UserPortals';
+import SearchPage from './components/SearchPage';
 import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn } from 'lucide-react';
 import { encodeId, decodeId } from './utils/idUtils';
 
@@ -121,6 +122,7 @@ export default function App() {
       case 'careers': return '/careers';
       case 'contact': return '/contact';
       case 'adcenter': return '/adcenter';
+      case 'search': return '/search';
       case 'portals': return '/portals';
       default: return '/';
     }
@@ -148,6 +150,7 @@ export default function App() {
     if (main === 'careers') return { v: 'careers' };
     if (main === 'contact') return { v: 'contact' };
     if (main === 'adcenter') return { v: 'adcenter' };
+    if (main === 'search') return { v: 'search' };
     if (main === 'portals') return { v: 'portals' };
     return { v: 'home' };
   }
@@ -310,7 +313,7 @@ export default function App() {
       </div>
 
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[112px]' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[112px] pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
         <div key={view} className="animate-fade-in-up w-full">
         {view === 'home' && (
           <div className="w-full">
@@ -382,6 +385,15 @@ export default function App() {
 
         {view === 'contact' && (
           <ContactSection theme={theme} standalone />
+        )}
+
+        {view === 'search' && (
+          <SearchPage
+            onBack={() => setView('home')}
+            onSearch={handleSearchTrigger}
+            onViewProduct={handleViewProduct}
+            setView={navigateTo}
+          />
         )}
 
         {view === 'portals' && (

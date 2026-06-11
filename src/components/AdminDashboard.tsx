@@ -67,7 +67,7 @@ interface AdRequest {
   date: string;
 }
 
-type AdminSection = 'overview' | 'products' | 'orders' | 'categories' | 'courses' | 'certificates' | 'ads' | 'tv' | 'commerce-report' | 'education-report' | 'media-report' | 'reports' | 'users' | 'settings' | 'support' | 'analytics' | 'billing' | 'notifications';
+type AdminSection = 'overview' | 'products' | 'orders' | 'categories' | 'courses' | 'certificates' | 'ads' | 'tv' | 'commerce-report' | 'education-report' | 'media-report' | 'reports' | 'users' | 'settings' | 'support' | 'analytics' | 'billing' | 'notifications' | 'admin-settings';
 
 interface SidebarGroup {
   label: string;
@@ -179,6 +179,10 @@ function cacheProducts(products: Product[]) {
 export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
   const [activeSection, setActiveSection] = useState<AdminSection>('overview');
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotifMessage, setShowNotifMessage] = useState(false);
+  const [showProductGroup, setShowProductGroup] = useState(false);
 
   const cached = loadCachedProducts();
   const [products, setProducts] = useState<Product[]>(cached.length > 0 ? cached : []);
@@ -289,9 +293,14 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
 
       {/* Sidebar */}
       <aside className={`
-        hidden md:relative md:flex md:flex-col md:h-full
+        fixed top-0 left-0 h-[100vh] z-[60] bg-white w-64
+        flex flex-col
+        ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0
+        transition-transform duration-300 ease-in-out
+
+        md:relative md:flex md:flex-col md:h-full md:w-20 md:hover:w-56 md:bg-transparent md:z-0
         md:border-r md:border-gray-200
-        md:w-20 md:hover:w-56
         md:transition-all md:duration-300 md:ease-out
         group
       `}>
@@ -363,7 +372,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                         onClick={() => { navigateTo(item.id); setMobileOpen(false); }}
                         className={`w-full flex items-center outline-none text-left cursor-pointer
                           px-3 py-2
-                          md:ml-7 md:pr-3 md:py-1.5 md:my-0.5 md:rounded-md
+                          ml-7 md:pr-3 md:py-1.5 md:my-0.5 md:rounded-md
                           transition-all duration-200
                           ${isActive
                             ? 'text-[#3373AB] bg-[#3373AB]/10 border-l-2 border-[#3373AB] font-semibold'
@@ -419,10 +428,16 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
         </div>
       </aside>
 
-      {/* Mobile overlay - removed */}
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed top-0 left-0 right-0 h-[200vh] bg-black/40 z-40 md:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden pb-16 md:pb-0">
         {/* Header */}
         <header className="sticky top-0 z-30 h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 shrink-0">
           <div className="flex items-center gap-2">
@@ -512,8 +527,127 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           {activeSection === 'analytics' && <PlaceholderSection title="Analytics" description="Detailed platform analytics and reporting." />}
           {activeSection === 'billing' && <PlaceholderSection title="Billing & Payments" description="Manage subscriptions, invoices, and transactions." />}
           {activeSection === 'notifications' && <PlaceholderSection title="Notifications" description="Configure notification channels and templates." />}
+          {activeSection === 'admin-settings' && <AdminSettingsSection onBack={goBack} notify={notify} />}
         </main>
       </div>
+
+      {/* Bottom Navigation - Mobile Only */}
+      <div className="md:hidden absolute bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around h-16 px-1">
+          {/* Products Group */}
+          <div className="relative">
+            <button onClick={() => { setShowProductGroup(!showProductGroup); setShowProfileMenu(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+              <Package size={20} />
+              <span className="text-[8px] font-medium">Products</span>
+            </button>
+            {showProductGroup && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowProductGroup(false)} />
+                <div className="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 shadow-lg min-w-[180px] z-50 rounded-lg overflow-hidden">
+                  <div className="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 bg-gray-50">Commerce</div>
+                  {sidebarGroups.find(g => g.label === 'Commerce')?.items.filter(i => i.id !== 'billing').map(item => (
+                    <button key={item.id} onClick={() => { navigateTo(item.id); setShowProductGroup(false); setMobileOpen(false); }} className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[11px] hover:bg-gray-50 text-gray-700">
+                      <span className="text-[#3373AB]">{item.icon}</span>
+                      {item.label}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          {/* Notification Bell */}
+          <button onClick={() => { setShowNotifMessage(true); setShowProductGroup(false); setShowProfileMenu(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500 relative">
+            <Bell size={20} />
+            <span className="text-[8px] font-medium">Alerts</span>
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-red-500 text-white text-[5px] font-bold flex items-center justify-center rounded-full">3</span>
+          </button>
+
+          {/* Center Add Button */}
+          <button onClick={() => { setShowAddModal(true); setShowProductGroup(false); setShowProfileMenu(false); }} className="bg-[#3373AB] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg -mt-6 border-4 border-white hover:bg-[#255C8E] transition-colors">
+            <Plus size={28} strokeWidth={3} />
+          </button>
+
+          {/* Settings Gear */}
+          <button onClick={() => { navigateTo('admin-settings'); setShowProductGroup(false); setShowProfileMenu(false); setShowNotifMessage(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+            <Settings size={20} />
+            <span className="text-[8px] font-medium">Settings</span>
+          </button>
+
+          {/* Profile */}
+          <div className="relative">
+            <button onClick={() => { setShowProfileMenu(!showProfileMenu); setShowProductGroup(false); setShowNotifMessage(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1">
+              <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-[9px] font-bold rounded-full">A</div>
+              <span className="text-[8px] font-medium text-gray-500">Profile</span>
+            </button>
+            {showProfileMenu && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowProfileMenu(false)} />
+                <div className="absolute bottom-full right-0 mb-2 bg-white border border-gray-200 shadow-lg min-w-[200px] z-50 rounded-lg overflow-hidden">
+                  <div className="px-4 py-3 border-b border-gray-100">
+                    <p className="text-xs font-bold text-gray-900">Administrator</p>
+                    <p className="text-[10px] text-gray-500">Full system control</p>
+                  </div>
+                  <button onClick={() => { navigateTo('admin-settings'); setShowProfileMenu(false); }} className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 text-gray-700">
+                    <Settings size={14} className="text-gray-400" />
+                    Profile Settings
+                  </button>
+                  <button onClick={() => { onBack?.(); setShowProfileMenu(false); }} className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 text-gray-700">
+                    <ArrowLeft size={14} className="text-gray-400" />
+                    Back to Webview
+                  </button>
+                  <button onClick={() => { onBack?.(); setShowProfileMenu(false); }} className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 text-red-500 border-t border-gray-100">
+                    <ArrowLeft size={14} className="text-red-400" />
+                    Leave Dashboard
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Add Item Modal - Bottom Sheet */}
+      {showAddModal && (
+        <div className="md:hidden fixed inset-0 z-[60]" onClick={() => setShowAddModal(false)}>
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute bottom-0 left-0 right-0 bg-white rounded-t-xl shadow-2xl animate-slideUp" onClick={e => e.stopPropagation()}>
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 bg-gray-300 rounded-full" />
+            </div>
+            <div className="px-5 pb-6">
+              <p className="text-[11px] font-bold text-gray-900 uppercase tracking-wider text-center mb-3">Add New</p>
+              <div className="space-y-0.5">
+                {[
+                  { label: 'Add Product', icon: <Package size={16} />, section: 'products' as AdminSection },
+                  { label: 'Add Course', icon: <BookOpen size={16} />, section: 'courses' as AdminSection },
+                  { label: 'Add User', icon: <Users size={16} />, section: 'users' as AdminSection },
+                  { label: 'Add Advertisement', icon: <Megaphone size={16} />, section: 'ads' as AdminSection },
+                  { label: 'Add Video in MTTV', icon: <Monitor size={16} />, section: 'tv' as AdminSection },
+                ].map(item => (
+                  <button key={item.label} onClick={() => { navigateTo(item.section); setShowAddModal(false); setMobileOpen(false); }} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
+                    <span className="text-[#3373AB]">{item.icon}</span>
+                    <span className="text-[12px] font-medium">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Under Development Toast */}
+      {showNotifMessage && (
+        <div className="md:hidden fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowNotifMessage(false)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative bg-white border border-gray-200 shadow-xl p-6 max-w-xs w-full text-center rounded-lg">
+            <Bell size={24} className="mx-auto text-gray-300 mb-2" />
+            <p className="text-sm font-bold text-gray-900 uppercase tracking-wider">Under Development</p>
+            <p className="text-[11px] text-gray-500 mt-1">This feature is currently under development.</p>
+            <button onClick={() => setShowNotifMessage(false)} className="mt-4 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-5 py-1.5 outline-none rounded transition-colors">OK</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -852,7 +986,7 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: '', category: '', price: '', stock: '', vendorName: '',
-    description: '', videoUrl: '', whereToUse: '',
+    description: '', videoUrl: '', embedCode: '', guideBook: '', whereToUse: '',
     specTable: [['', ''], ['', '']],
     images: [] as string[],
     mainImageUrl: ''
@@ -881,7 +1015,7 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
 
   const initForm = () => ({
     name: '', category: '', price: '', stock: '', vendorName: '',
-    description: '', videoUrl: '', whereToUse: '',
+    description: '', videoUrl: '', embedCode: '', guideBook: '', whereToUse: '',
     specTable: [['', ''], ['', '']],
     images: [] as string[],
     mainImageUrl: ''
@@ -903,6 +1037,8 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
       vendorName: p.vendorName,
       description: p.description,
       videoUrl: p.videoUrl || '',
+      embedCode: p.embedCode || '',
+      guideBook: p.guideBook || '',
       whereToUse: p.whereToUse || '',
       specTable: p.specTable && p.specTable.length > 0 ? p.specTable : [['', ''], ['', '']],
       images: p.images || [],
@@ -976,6 +1112,8 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
       vendorName: form.vendorName || 'Admin',
       description: form.description,
       videoUrl: form.videoUrl,
+      embedCode: form.embedCode,
+      guideBook: form.guideBook,
       whereToUse: form.whereToUse,
       specTable: form.specTable,
       specs: specObj,
@@ -1007,6 +1145,8 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
           vendorName: form.vendorName || 'Admin',
           stock: parseInt(form.stock) || 0,
           videoUrl: form.videoUrl,
+          embedCode: form.embedCode,
+          guideBook: form.guideBook,
           whereToUse: form.whereToUse,
           specTable: form.specTable,
           images: finalImages
@@ -1274,8 +1414,20 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
 
               {/* Video URL */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Video URL</label>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Video URL <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
                 <input value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} placeholder="https://youtube.com/watch?v=..." className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs" />
+              </div>
+
+              {/* YouTube Embed Code */}
+              <div>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Embed Code <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
+                <textarea value={form.embedCode} onChange={e => setForm({ ...form, embedCode: e.target.value })} rows={3} placeholder='Paste the YouTube iframe embed code, e.g. &lt;iframe src="https://www.youtube.com/embed/..."&gt;&lt;/iframe&gt;' className="w-full border border-gray-300 px-3 py-2 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all resize-vertical font-mono text-xs" />
+              </div>
+
+              {/* Guide Book / Documentation */}
+              <div>
+                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Guide Book / Documentation Link <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
+                <input value={form.guideBook} onChange={e => setForm({ ...form, guideBook: e.target.value })} placeholder="https://link-to-guide-or-documentation" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs" />
               </div>
 
               {/* Where to use */}
@@ -3097,6 +3249,94 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
 
         </div>
       )}
+    </div>
+  );
+}
+
+/* ─────── ADMIN SETTINGS ─────── */
+function AdminSettingsSection({ onBack, notify }: { onBack: () => void; notify: (type: 'success' | 'error', message: string) => void }) {
+  const [username, setUsername] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [oldPassword, setOldPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [currentAdmin, setCurrentAdmin] = useState<any>(null);
+
+  useEffect(() => {
+    try {
+      const users = JSON.parse(localStorage.getItem('rt_nexus_users') || '[]');
+      const admin = users.find((u: any) => u.role === 'admin');
+      if (admin) {
+        setCurrentAdmin(admin);
+        setUsername(admin.username || '');
+        setFullName(admin.fullName || '');
+      }
+    } catch {}
+  }, []);
+
+  const handleUpdate = () => {
+    if (!username.trim()) {
+      notify('error', 'Username cannot be empty.');
+      return;
+    }
+    try {
+      const users = JSON.parse(localStorage.getItem('rt_nexus_users') || '[]');
+      const idx = users.findIndex((u: any) => u.id === currentAdmin?.id);
+      if (idx === -1) {
+        notify('error', 'Admin account not found.');
+        return;
+      }
+      if (newPassword && oldPassword !== currentAdmin.password) {
+        notify('error', 'Old password is incorrect.');
+        return;
+      }
+      users[idx].username = username;
+      users[idx].fullName = fullName;
+      if (newPassword) {
+        users[idx].password = newPassword;
+      }
+      localStorage.setItem('rt_nexus_users', JSON.stringify(users));
+      notify('success', 'Admin settings updated successfully.');
+      onBack();
+    } catch {
+      notify('error', 'Failed to update admin settings.');
+    }
+  };
+
+  return (
+    <div className="max-w-lg mx-auto p-4 md:p-6">
+      <div className="bg-white border border-gray-200">
+        <div className="border-b border-gray-200 px-4 py-3 flex items-center justify-between bg-gray-50">
+          <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider">Admin Settings</h3>
+          <button onClick={onBack} className="text-gray-400 hover:text-gray-700 outline-none p-1 transition-colors"><X size={14} /></button>
+        </div>
+        <div className="p-5 space-y-4">
+          <div>
+            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+            <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter full name" />
+          </div>
+          <div>
+            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Username</label>
+            <input value={username} onChange={e => setUsername(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter username" />
+          </div>
+          <hr className="border-gray-100" />
+          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Change Password</p>
+          <div>
+            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Current Password</label>
+            <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter current password" />
+          </div>
+          <div>
+            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">New Password</label>
+            <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Leave blank to keep current" />
+          </div>
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
+            <button onClick={onBack} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-xs font-semibold outline-none hover:bg-gray-50 transition-all rounded">Cancel</button>
+            <button onClick={handleUpdate} className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-xs font-bold outline-none transition-all rounded flex items-center gap-1.5">
+              <Check size={12} />
+              Update Admin
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

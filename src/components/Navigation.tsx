@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Search, Sun, Moon, Bell, ChevronDown, Mail, ShieldCheck, Heart, User, LogOut, CheckCircle, Package, ArrowRight, Menu } from 'lucide-react';
+import { Search, Sun, Moon, Bell, ChevronDown, Mail, ShieldCheck, Heart, User, LogOut, CheckCircle, Package, ArrowRight, Menu, Home, Bot } from 'lucide-react';
 import { UserSession, CartItem } from '../types';
-import { searchAll } from '../utils/search';
 
 interface NavigationProps {
   currentView: string;
@@ -40,6 +39,7 @@ export default function Navigation({
   const [scrolled, setScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showChatbotMsg, setShowChatbotMsg] = useState(false);
   const lastScrollY = useRef(0);
   const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -742,6 +742,62 @@ export default function Navigation({
                 Inquire Sponsorship
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Navigation - Mobile Only */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 shadow-[0_-2px_10px_rgba(0,0,0,0.08)]">
+        <div className="flex items-center justify-around h-16 px-1">
+          {/* Home */}
+          <button onClick={() => { setView('home'); setMobileMenuOpen(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+            <Home size={20} />
+            <span className="text-[8px] font-medium">Home</span>
+          </button>
+
+          {/* RT Shop */}
+          <button onClick={() => { setView('shop'); setMobileMenuOpen(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'18px'}}></i>
+            <span className="text-[8px] font-medium">Shop</span>
+          </button>
+
+          {/* Center Search */}
+          <button onClick={() => { setView('search'); setMobileMenuOpen(false); }} className="bg-[#3373AB] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg -mt-6 border-4 border-white hover:bg-[#255C8E] transition-colors">
+            <Search size={24} />
+          </button>
+
+          {/* Chatbot AI */}
+          <button onClick={() => { setShowChatbotMsg(true); setMobileMenuOpen(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+            <Bot size={20} />
+            <span className="text-[8px] font-medium">AI Chat</span>
+          </button>
+
+          {/* Profile */}
+          {user ? (
+            <button onClick={() => { setView('portals'); setMobileMenuOpen(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1">
+              <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-[9px] font-bold rounded-full">
+                {user.name.charAt(0).toUpperCase()}
+              </div>
+              <span className="text-[8px] font-medium text-gray-500">Profile</span>
+            </button>
+          ) : (
+            <button onClick={() => { openAuth('login'); setMobileMenuOpen(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
+              <User size={20} />
+              <span className="text-[8px] font-medium">Profile</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Chatbot AI Message */}
+      {showChatbotMsg && (
+        <div className="md:hidden fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowChatbotMsg(false)}>
+          <div className="absolute inset-0 bg-black/40" />
+          <div className="relative bg-white border border-gray-200 shadow-xl p-6 max-w-xs w-full text-center rounded-lg">
+            <Bot size={32} className="mx-auto text-[#3373AB] mb-2" />
+            <p className="text-sm font-bold text-gray-900 uppercase tracking-wider">AI Assistant</p>
+            <p className="text-[11px] text-gray-500 mt-1">AI Chatbot is currently under development.</p>
+            <button onClick={() => setShowChatbotMsg(false)} className="mt-4 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-5 py-1.5 outline-none rounded transition-colors">OK</button>
           </div>
         </div>
       )}

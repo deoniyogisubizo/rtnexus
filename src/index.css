@@ -74,6 +74,15 @@ html {
   animation: anim-slide-down 0.3s ease-out;
 }
 
+@keyframes anim-slide-up {
+  0% { transform: translateY(100%); }
+  100% { transform: translateY(0); }
+}
+
+.animate-slideUp {
+  animation: anim-slide-up 0.3s ease-out;
+}
+
 .animate-fadeIn {
   animation: anim-fade-in 0.2s ease-out;
 }

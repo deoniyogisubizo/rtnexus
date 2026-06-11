@@ -57,6 +57,8 @@ app.get('/api/products', async (_req, res) => {
       vendorName: p.vendor || p.vendorName || '',
       stock: p.stock ?? 0,
       videoUrl: p.videoUrl || '',
+      embedCode: p.embedCode || '',
+      guideBook: p.guideBook || '',
       whereToUse: p.whereToUse || '',
       specTable: p.specTable || [],
       images: p.images || [],

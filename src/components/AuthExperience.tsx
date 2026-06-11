@@ -280,7 +280,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             Sign in with your credentials or use a social single sign-on provider to access your workspace instantly.
           </p>
 
-          <div className="space-y-3 mt-8">
+          <div className="space-y-3 mt-8 hidden md:block">
             <span className="text-[10px] font-mono text-gray-500 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
             
             <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
@@ -749,6 +749,27 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                 </button>
               </form>
             )}
+          </div>
+        )}
+
+        {/* Mobile social login — bottom */}
+        {!pendingOAuth && !successMsg && (
+          <div className="md:hidden mt-6 pt-6 border-t border-gray-200">
+            <span className="text-[10px] font-mono text-gray-400 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
+            <div className="space-y-3">
+              <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
+                <Chrome size={15} className="text-[#4285F4]" />
+                <span className="font-semibold">Continue with Google</span>
+              </button>
+              <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill="#F25022" d="M11.37 12.73H2.67V4.03h8.7v8.7z"/><path fill="#00A4EF" d="M21.37 12.73h-8.7V4.03h8.7v8.7z"/><path fill="#FFB900" d="M11.37 22.03H2.67v-8.7h8.7v8.7z"/><path fill="#7FBA00" d="M21.37 22.03h-8.7v-8.7h8.7v8.7z"/></svg>
+                <span className="font-semibold">Continue with Microsoft</span>
+              </button>
+              <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-sm hover:shadow-md">
+                <Linkedin size={15} className="text-white" />
+                <span className="font-semibold">Continue with LinkedIn</span>
+              </button>
+            </div>
           </div>
         )}
       </div>

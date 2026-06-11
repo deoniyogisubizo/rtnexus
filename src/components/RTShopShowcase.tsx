@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, ArrowRight, ChevronRight, Package } from 'lucide-react';
-import { fetchProducts } from '../services/api';
-import { searchAll, SearchResultItem } from '../utils/search';
+import { fetchProducts, fetchCategories } from '../services/api';
+import { searchAll } from '../utils/search';
 
 interface RTShopShowcaseProps {
   setView: (view: string) => void;
@@ -15,24 +15,23 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
   const [search, setSearch] = useState('');
   const [focused, setFocused] = useState(false);
   const [showcaseProducts, setShowcaseProducts] = useState<any[]>([]);
+  const [categoriesList, setCategoriesList] = useState<any[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchProducts().then(setShowcaseProducts).catch(() => {});
+    fetchCategories().then(setCategoriesList).catch(() => {});
   }, []);
 
   const { results, suggestion } = searchAll(search, showcaseProducts);
 
-  const categoryMap = new Map<string, any>();
-  showcaseProducts.forEach(p => {
-    if (!categoryMap.has(p.category)) categoryMap.set(p.category, p);
+  const categories = categoriesList.map(cat => {
+    const product = showcaseProducts.find(p => p.category === cat.name);
+    return { name: cat.name, image: product?.image || cat.thumbnail, id: cat.id };
   });
-  const categories = Array.from(categoryMap.entries()).map(([name, product]) => ({ name, product }));
 
   const categoryNames = new Set(results.filter(r => r.type === 'category').map(r => r.label));
   const productResults = results.filter(r => r.type === 'product');
-  const hasCategoryMatch = results.some(r => r.type === 'category');
-  const hasProductMatch = results.some(r => r.type === 'product');
   const noResults = search.trim() && results.length === 0;
 
   const gridCategories = search.trim()
@@ -142,7 +141,7 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
-          {gridCategories.slice(0, 12).map(({ name, product }) => (
+          {gridCategories.slice(0, 12).map(({ name, image }) => (
             <div
               key={name}
               onClick={() => { onSelectCategory?.(name); setView('shop'); }}
@@ -152,11 +151,17 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                 <ChevronRight size={13} className="-rotate-45" />
               </div>
               <div className="h-28 sm:h-32 flex items-center justify-center mb-3 overflow-hidden">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="max-w-full max-h-full object-contain"
-                />
+                {image ? (
+                  <img
+                    src={image}
+                    alt={name}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                ) : (
+                  <div className={`w-full h-full flex items-center justify-center ${isDark ? 'text-gray-600' : 'text-gray-300'}`}>
+                    <Package size={40} />
+                  </div>
+                )}
               </div>
               <span className={`text-xs sm:text-sm lg:text-[10px] font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'} group-hover:text-[#3373AB] lg:group-hover:underline transition-all duration-200`}>{name}</span>
             </div>

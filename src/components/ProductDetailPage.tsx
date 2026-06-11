@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Star } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { fetchProducts } from '../services/api';
 import CartQuantityModal from './CartQuantityModal';
@@ -14,12 +14,46 @@ interface ProductDetailPageProps {
   onViewProduct: (id: string) => void;
 }
 
+function getYoutubeEmbedUrl(url: string): string | null {
+  const match = url.match(
+    /(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+  );
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
+
+function extractEmbedSrc(embedCode: string): string | null {
+  const match = embedCode.match(/src=["']([^"']+)["']/);
+  return match ? match[1] : null;
+}
+
+function StarRating({ rating, isDark }: { rating: number; isDark: boolean }) {
+  const full = Math.floor(rating);
+  const half = rating - full >= 0.5;
+  const empty = 5 - full - (half ? 1 : 0);
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {Array.from({ length: full }, (_, i) => (
+        <Star key={`f${i}`} size={11} className="text-yellow-400 fill-yellow-400" />
+      ))}
+      {half && <Star key="half" size={11} className="text-yellow-400 fill-yellow-400 opacity-50" />}
+      {Array.from({ length: empty }, (_, i) => (
+        <Star key={`e${i}`} size={11} className={isDark ? 'text-gray-600' : 'text-gray-300'} />
+      ))}
+      <span className={`text-[10px] font-mono ml-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{rating.toFixed(1)}</span>
+    </span>
+  );
+}
+
 export default function ProductDetailPage({ productId, addToCart, cartItems, theme = 'light', onBack, onViewProduct }: ProductDetailPageProps) {
   const isDark = theme === 'dark';
   const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [showFixedBar, setShowFixedBar] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(0);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
+  const videoSectionRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   useEffect(() => {
     fetchProducts().then(setAllProducts).catch(() => {});
@@ -38,6 +72,11 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    setSelectedImage(0);
+    setVideoPlaying(false);
+  }, [productId]);
+
   const bg = isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900';
   const borderCls = isDark ? 'border-gray-800' : 'border-gray-200';
 
@@ -54,6 +93,17 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
 
   const related = allProducts.filter(p => p.category === product.category && p.id !== product.id).slice(0, 6);
 
+  const allImages = product.images && product.images.length > 0
+    ? product.images
+    : [product.image];
+
+  const embedSrc = product.embedCode
+    ? extractEmbedSrc(product.embedCode)
+    : (product.videoUrl ? getYoutubeEmbedUrl(product.videoUrl) : null);
+
+  const hasSpecTable = product.specTable && product.specTable.length > 0
+    && product.specTable.some(row => row.some(cell => cell.trim() !== ''));
+
   return (
     <section className={`w-full min-h-screen select-none font-sans ${bg}`}>
       <div className={`border-b ${borderCls}`}>
@@ -65,7 +115,6 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
             <ArrowLeft size={14} />
             <span>BACK TO SHOP DIRECTORY</span>
           </button>
-          <span className="text-[10px] font-mono text-gray-400 uppercase">{product.id}</span>
         </div>
       </div>
 
@@ -79,15 +128,34 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
           theme={theme}
         />
         <div className="grid grid-cols-1 md:grid-cols-5 gap-10">
-          <div className="md:col-span-2">
+          <div className="md:col-span-2 space-y-3">
             <div className={`h-80 sm:h-96 border ${borderCls} ${isDark ? 'bg-[#222]' : 'bg-gray-50'} flex items-center justify-center p-6`}>
               <img
-                src={product.image}
+                src={allImages[selectedImage] || product.image}
                 alt={product.name}
                 referrerPolicy="no-referrer"
                 className="max-w-full max-h-full object-contain"
+                onError={(e) => { (e.target as HTMLImageElement).src = product.image; }}
               />
             </div>
+
+            {allImages.length > 1 && (
+              <div className="flex flex-wrap gap-2">
+                {allImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setSelectedImage(idx)}
+                    className={`w-14 h-14 border-2 overflow-hidden flex items-center justify-center p-1 transition-all ${
+                      selectedImage === idx
+                        ? 'border-[#3373AB]'
+                        : borderCls
+                    }`}
+                  >
+                    <img src={img} alt="" className="max-w-full max-h-full object-contain" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="md:col-span-3 space-y-6">
@@ -95,6 +163,11 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               <p className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">{product.category}</p>
               <h1 className={`text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 ${isDark ? 'text-white' : 'text-[#111111]'}`}>{product.name}</h1>
               <p className="text-[10px] font-mono text-gray-400 uppercase mt-1">OEM: {product.vendorName}</p>
+              {product.rating > 0 && (
+                <div className="mt-1.5">
+                  <StarRating rating={product.rating} isDark={isDark} />
+                </div>
+              )}
             </div>
 
             <div ref={barRef} className={`border-t pt-6 pb-6 flex items-center justify-between ${borderCls} ${isDark ? 'bg-[#1a1a1a]' : 'bg-white'} ${showFixedBar ? 'invisible' : ''}`}>
@@ -128,13 +201,6 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               </p>
             </div>
 
-            <div className={`bg-blue-50 border border-blue-100 p-4 ${isDark ? 'bg-blue-900/20 border-blue-800' : ''}`}>
-              <h4 className="text-xs font-bold uppercase text-[#3373AB] tracking-wider mb-2">Applications & Use Cases</h4>
-              <p className={`text-[11px] leading-relaxed font-sans ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-                {product.description}
-              </p>
-            </div>
-
             <div>
               <h4 className={`text-xs font-bold uppercase border-b pb-1.5 mb-3 tracking-wider ${isDark ? 'text-gray-200 border-gray-700' : 'text-gray-800 border-gray-300'}`}>Calibrated Specification Profile</h4>
               <table className="w-full text-xs font-mono">
@@ -149,6 +215,27 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               </table>
             </div>
 
+            {hasSpecTable && (
+              <div>
+                <h4 className={`text-xs font-bold uppercase border-b pb-1.5 mb-3 tracking-wider ${isDark ? 'text-gray-200 border-gray-700' : 'text-gray-800 border-gray-300'}`}>Detailed Specification Table</h4>
+                <div className="overflow-x-auto">
+                  <table className={`w-full text-[11px] font-mono border ${borderCls}`}>
+                    <tbody>
+                      {product.specTable!.map((row, ri) => (
+                        <tr key={ri} className={`${ri === 0 ? (isDark ? 'bg-gray-800' : 'bg-gray-100') : ''} border-b ${borderCls}`}>
+                          {row.map((cell, ci) => (
+                            <td key={ci} className={`px-3 py-2 border-r ${borderCls} ${ri === 0 ? 'font-bold' : ''} ${isDark ? 'text-gray-200' : 'text-gray-700'}`}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             <div className={`${isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-50 border-gray-200'} border p-4`}>
               <h5 className="text-[10px] font-mono font-bold text-[#3373AB] uppercase">Hardware stress report</h5>
               <p className={`text-[11px] leading-relaxed font-sans mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
@@ -157,6 +244,76 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
             </div>
           </div>
         </div>
+
+        {embedSrc && (
+          <div ref={videoSectionRef} className={`mt-16 pt-8 border-t ${borderCls}`}>
+            <div className="border-l-4 border-[#3373AB] pl-4 mb-6">
+              <p className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">VIDEO GUIDE</p>
+              <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+                How to Use & Setup Guide
+              </h3>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className={`relative aspect-video border ${borderCls} ${isDark ? 'bg-black' : 'bg-gray-50'} flex items-center justify-center overflow-hidden group`}>
+                {videoPlaying ? (
+                  <iframe
+                    ref={iframeRef}
+                    src={`${embedSrc}?autoplay=1&controls=1`}
+                    title={product.name}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <>
+                    <div className={`absolute inset-0 ${isDark ? 'bg-gray-900' : 'bg-gray-100'}`}>
+                      <div className="w-full h-full flex items-center justify-center">
+                        <i className={`fa-solid fa-film text-5xl ${isDark ? 'text-gray-700' : 'text-gray-300'}`}></i>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setVideoPlaying(true)}
+                      className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer"
+                    >
+                      <div className="w-16 h-16 rounded-full bg-[#D95907] flex items-center justify-center shadow-lg hover:scale-110 transition-transform">
+                        <i className="fa-solid fa-play text-white text-xl ml-1"></i>
+                      </div>
+                    </button>
+                  </>
+                )}
+              </div>
+              <div className="flex flex-col justify-center gap-3">
+                {product.whereToUse && (
+                  <div>
+                    <h4 className={`text-xs font-bold uppercase mb-2 tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Quick Start Guide</h4>
+                    <p className={`text-[11px] leading-relaxed font-sans ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {product.whereToUse}
+                    </p>
+                  </div>
+                )}
+                {product.guideBook && (
+                  <div>
+                    <h4 className={`text-xs font-bold uppercase mb-2 tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Reference Guide</h4>
+                    <a
+                      href={product.guideBook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#3373AB] hover:underline"
+                    >
+                      <i className="fa-solid fa-book-open"></i>
+                      <span>Open Documentation / Guide Book</span>
+                    </a>
+                  </div>
+                )}
+                {!product.whereToUse && !product.guideBook && (
+                  <p className={`text-[11px] font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                    Click the play button to watch the product video.
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {related.length > 0 && (
           <div className={`mt-16 pt-8 border-t ${borderCls}`}>
