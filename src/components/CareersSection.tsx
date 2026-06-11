@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { OPEN_POSITIONS } from '../data/mockData';
+
 import { Search, Briefcase, MapPin, Building, Lock, FileCheck, Check, Send, X } from 'lucide-react';
 import Breadcrumb from './Breadcrumb';
 import { OpenPosition } from '../types';
@@ -22,7 +22,9 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
 
   const departments = ['All', 'Engineering', 'Learning Paths', 'Media'];
 
-  const filteredJobs = OPEN_POSITIONS.filter(job => {
+  const allJobs: OpenPosition[] = [];
+
+  const filteredJobs = allJobs.filter(job => {
     return selectedDept === 'All' || job.department === selectedDept;
   });
 

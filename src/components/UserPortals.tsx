@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { UserSession, Product, Course, Broadcast, OpenPosition, AdCampaignEstimate } from '../types';
 import { Sliders, Monitor, Terminal, FileCode, CheckCircle, Ship, Plus, Play, Users, BookOpen, ShieldCheck, RefreshCw, AlertTriangle, Cpu, DollarSign, BarChart2, Layers, Settings } from 'lucide-react';
 import Breadcrumb from './Breadcrumb';
-import { FEATURED_PRODUCTS, COURSES, BROADCASTS } from '../data/mockData';
+import { useEffect } from 'react';
+import { fetchProducts, fetchCourses, fetchVideos } from '../services/api';
 import AdminDashboard from './AdminDashboard';
 
 interface UserPortalsProps {
@@ -22,15 +23,25 @@ export default function UserPortals({ user, setView }: UserPortalsProps) {
     { role: 'admin', label: 'System Administrator', icon: <Settings size={18} />, desc: 'Full system control: manage products, orders, courses, certs, ads & TV settings.' },
   ];
 
+  const [fetchedProducts, setFetchedProducts] = useState<Product[]>([]);
+  const [fetchedCourses, setFetchedCourses] = useState<Course[]>([]);
+  const [fetchedBroadcasts, setFetchedBroadcasts] = useState<Broadcast[]>([]);
+
+  useEffect(() => {
+    fetchProducts().then(setFetchedProducts).catch(() => {});
+    fetchCourses().then(setFetchedCourses).catch(() => {});
+    fetchVideos().then(setFetchedBroadcasts).catch(() => {});
+  }, []);
+
   // Vendor specific products adding state
-  const [vendorProducts, setVendorProducts] = useState<Product[]>(FEATURED_PRODUCTS.filter(p => p.vendorName.includes('Matrix') || p.vendorName.includes('Embedded')));
+  const [vendorProducts, setVendorProducts] = useState<Product[]>([]);
   const [newProdName, setNewProdName] = useState('');
   const [newProdPrice, setNewProdPrice] = useState('');
   const [newProdCat, setNewProdCat] = useState('IoT Devices');
   const [vendorSuccess, setVendorSuccess] = useState(false);
 
   // Instructor webinar schedules state
-  const [instructorBroadcasts, setInstructorBroadcasts] = useState<Broadcast[]>(BROADCASTS);
+  const [instructorBroadcasts, setInstructorBroadcasts] = useState<Broadcast[]>([]);
   const [newBroadTitle, setNewBroadTitle] = useState('');
   const [newBroadCat, setNewBroadCat] = useState('Webinars');
   const [broadSuccess, setBroadSuccess] = useState(false);

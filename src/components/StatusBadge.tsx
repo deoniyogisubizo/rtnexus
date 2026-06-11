@@ -1,17 +1,26 @@
 interface StatusBadgeProps {
+  title: string;
   label: string;
   count: number;
-  color?: string;
+  onClick?: () => void;
+  hoverHint?: string;
 }
 
-export default function StatusBadge({ label, count, color = 'bg-gray-500' }: StatusBadgeProps) {
+export default function StatusBadge({ title, label, count, onClick, hoverHint }: StatusBadgeProps) {
+  const Comp = onClick ? 'button' : 'div';
   return (
-    <div className="flex items-center gap-2.5 bg-gray-50 rounded-lg p-3">
-      <span className={`h-3 w-3 rounded-full ${color} shrink-0`} />
-      <div>
-        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">{label}</p>
-        <p className="text-lg font-bold text-gray-900 -mt-0.5">{count}</p>
+    <Comp
+      onClick={onClick}
+      className={`flex flex-col bg-white border border-gray-200 px-2.5 py-2 w-full outline-none min-h-[72px] group ${onClick ? 'hover:border-[#3373AB] hover:shadow-sm cursor-pointer transition-all' : ''}`}
+    >
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] font-bold text-gray-700 tracking-[0.12em]">{title}</p>
+        <p className="text-base font-bold text-gray-900 leading-none">{count}</p>
       </div>
-    </div>
+      <p className="text-[10px] text-gray-500 mt-3 text-right leading-tight group-hover:hidden">{label}</p>
+      {onClick && (
+        <p className="text-[10px] text-[#3373AB] mt-3 text-right leading-tight font-medium hidden group-hover:block">{hoverHint || 'Click to manage'}</p>
+      )}
+    </Comp>
   );
 }

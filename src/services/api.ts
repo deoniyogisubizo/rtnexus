@@ -42,18 +42,178 @@ function generateId(): string {
   return 'u_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
 }
 
-import { Product } from '../types';
+import { Product, RttiData } from '../types';
 
+export interface KpiMetric {
+  current: number;
+  previous: number;
+  change: number;
+}
+
+export interface KpiOverview {
+  revenue: KpiMetric & { today: number; yesterday: number };
+  activeClients: KpiMetric;
+  globalEngagement: KpiMetric;
+  marketplace: {
+    productsInStock: number;
+    totalProducts: number;
+    lowStock: number;
+    categories: number;
+    verifiedOrders: number;
+    pendingOrders: number;
+    totalOrders: number;
+  };
+  edTech: {
+    totalEnrollments: number;
+    totalCourses: number;
+    completionRate: number;
+    activeCertificates: number;
+  };
+  mediaAds: {
+    totalViews: number;
+    activeCampaigns: number;
+    pendingAds: number;
+    adCtr: number;
+  };
+}
+
+async function apiGet<T>(url: string): Promise<T> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`GET ${url} failed`);
+  return res.json();
+}
+
+async function apiPost<T>(url: string, data: any): Promise<T> {
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`POST ${url} failed`);
+  return res.json();
+}
+
+async function apiPut(url: string, data: any): Promise<void> {
+  const res = await fetch(url, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error(`PUT ${url} failed`);
+}
+
+async function apiDelete(url: string): Promise<void> {
+  const res = await fetch(url, { method: 'DELETE' });
+  if (!res.ok) throw new Error(`DELETE ${url} failed`);
+}
+
+/* ─────── KPI ─────── */
+export async function fetchKpiOverview(): Promise<KpiOverview> {
+  return apiGet<KpiOverview>('/api/kpi/overview');
+}
+
+/* ─────── PRODUCTS ─────── */
 export async function fetchProducts(): Promise<Product[]> {
-  try {
-    const res = await fetch('/api/products');
-    if (!res.ok) throw new Error('Failed to fetch');
-    return await res.json();
-  } catch (err) {
-    console.warn('API unavailable, falling back to mock data');
-    const { FEATURED_PRODUCTS } = await import('../data/mockData');
-    return FEATURED_PRODUCTS;
-  }
+  return apiGet<Product[]>('/api/products');
+}
+
+export async function createProduct(data: Record<string, any>): Promise<Product> {
+  return apiPost<Product>('/api/products', data);
+}
+
+export async function updateProduct(id: string, data: Record<string, any>): Promise<void> {
+  return apiPut(`/api/products/${id}`, data);
+}
+
+export async function deleteProduct(id: string): Promise<void> {
+  return apiDelete(`/api/products/${id}`);
+}
+
+/* ─────── CATEGORIES ─────── */
+export async function fetchCategories(): Promise<any[]> {
+  return apiGet<any[]>('/api/categories');
+}
+
+export async function createCategory(data: any): Promise<any> {
+  return apiPost('/api/categories', data);
+}
+
+export async function updateCategory(id: string, data: any): Promise<void> {
+  return apiPut(`/api/categories/${id}`, data);
+}
+
+export async function deleteCategory(id: string): Promise<void> {
+  return apiDelete(`/api/categories/${id}`);
+}
+
+/* ─────── ORDERS ─────── */
+export async function fetchOrders(): Promise<any[]> {
+  return apiGet<any[]>('/api/orders');
+}
+
+export async function updateOrderStatus(id: string, status: string): Promise<void> {
+  return apiPut(`/api/orders/${id}`, { status });
+}
+
+/* ─────── CERTIFICATES ─────── */
+export async function fetchCertificates(): Promise<any[]> {
+  return apiGet<any[]>('/api/certificates');
+}
+
+export async function createCertificate(data: any): Promise<any> {
+  return apiPost('/api/certificates', data);
+}
+
+export async function deleteCertificate(id: string): Promise<void> {
+  return apiDelete(`/api/certificates/${id}`);
+}
+
+/* ─────── ADVERTISEMENTS ─────── */
+export async function fetchAds(): Promise<any[]> {
+  return apiGet<any[]>('/api/ads');
+}
+
+export async function updateAdStatus(id: string, status: string): Promise<void> {
+  return apiPut(`/api/ads/${id}`, { status });
+}
+
+/* ─────── COURSES ─────── */
+export async function fetchCourses(): Promise<any[]> {
+  return apiGet<any[]>('/api/courses');
+}
+
+export async function createCourse(data: any): Promise<any> {
+  return apiPost('/api/courses', data);
+}
+
+export async function updateCourse(id: string, data: any): Promise<void> {
+  return apiPut(`/api/courses/${id}`, data);
+}
+
+export async function deleteCourse(id: string): Promise<void> {
+  return apiDelete(`/api/courses/${id}`);
+}
+
+/* ─────── VIDEOS / BROADCASTS ─────── */
+export async function fetchVideos(): Promise<any[]> {
+  return apiGet<any[]>('/api/videos');
+}
+
+export async function createVideo(data: any): Promise<any> {
+  return apiPost('/api/videos', data);
+}
+
+export async function updateVideo(id: string, data: any): Promise<void> {
+  return apiPut(`/api/videos/${id}`, data);
+}
+
+export async function deleteVideo(id: string): Promise<void> {
+  return apiDelete(`/api/videos/${id}`);
+}
+
+/* ─────── RTTI ─────── */
+export async function fetchRttiData(): Promise<RttiData> {
+  return apiGet<RttiData>('/api/rtti/dashboard');
 }
 
 export async function signup(data: {

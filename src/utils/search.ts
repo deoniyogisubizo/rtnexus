@@ -1,4 +1,3 @@
-import { FEATURED_PRODUCTS } from '../data/mockData';
 import { Product } from '../types';
 
 function levenshtein(a: string, b: string): number {
@@ -27,14 +26,14 @@ export interface SearchResults {
   suggestion: string | null;
 }
 
-export function searchAll(query: string): SearchResults {
+export function searchAll(query: string, allProducts: Product[] = []): SearchResults {
   const q = query.toLowerCase().trim();
   if (!q) return { results: [], suggestion: null };
 
   const seenCategories = new Set<string>();
   const results: SearchResultItem[] = [];
 
-  for (const product of FEATURED_PRODUCTS) {
+  for (const product of allProducts) {
     const catMatch = !seenCategories.has(product.category) && product.category.toLowerCase().includes(q);
     const prodMatch = product.name.toLowerCase().includes(q);
 
@@ -51,8 +50,8 @@ export function searchAll(query: string): SearchResults {
   if (results.length === 0) {
     const allNames = [
       ...new Set([
-        ...FEATURED_PRODUCTS.map(p => p.name.toLowerCase()),
-        ...FEATURED_PRODUCTS.map(p => p.category.toLowerCase()),
+        ...allProducts.map(p => p.name.toLowerCase()),
+        ...allProducts.map(p => p.category.toLowerCase()),
       ]),
     ];
     let bestDist = Infinity;

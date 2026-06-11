@@ -22,6 +22,10 @@ export interface Product {
   specs: Record<string, string>;
   vendorName: string;
   stock: number;
+  videoUrl?: string;
+  whereToUse?: string;
+  specTable?: string[][];
+  images?: string[];
 }
 
 export interface Course {
@@ -75,4 +79,12 @@ export interface AdCampaignEstimate {
   budget: number;
   estimatedImpressions: number;
   estimatedClicks: number;
+}
+
+export interface RttiData {
+  totalStudents: number;
+  totalCourses: number;
+  totalTeachers: number;
+  activeCertificates: number;
+  avgCompletion: number;
 }

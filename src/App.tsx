@@ -310,7 +310,7 @@ export default function App() {
       </div>
 
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full pt-[112px] ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[112px]' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
         <div key={view} className="animate-fade-in-up w-full">
         {view === 'home' && (
           <div className="w-full">

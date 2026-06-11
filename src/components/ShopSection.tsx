@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { Search, SlidersHorizontal, X, Check, ArrowRight, Loader2 } from 'lucide-react';
+import { Search, SlidersHorizontal, X, Check, ArrowRight, Cpu } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { fetchProducts } from '../services/api';
-import { FEATURED_PRODUCTS, VENDORS } from '../data/mockData';
+
 import CartQuantityModal from './CartQuantityModal';
 import Breadcrumb from './Breadcrumb';
 import { searchAll } from '../utils/search';
@@ -17,11 +17,11 @@ interface ShopSectionProps {
   onClearPreselectCategory?: () => void;
 }
 
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 20;
 
 export default function ShopSection({ addToCart, searchQuery, cartItems, theme = 'light', onViewProduct, preselectCategory, onClearPreselectCategory }: ShopSectionProps) {
   const isDark = theme === 'dark';
-  const [products, setProducts] = useState<Product[]>(FEATURED_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [localSearch, setLocalSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -30,7 +30,9 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   const [sortBy, setSortBy] = useState<string>('featured');
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [notification, setNotification] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement>(null);
   const [loadingProduct, setLoadingProduct] = useState<string | null>(null);
 
   function handleCardClick(productId: string, productName: string) {
@@ -39,9 +41,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   }
 
   useEffect(() => {
-    fetchProducts().then(data => {
-      if (data.length > 0) setProducts(data);
-    }).finally(() => setLoading(false));
+    fetchProducts().then(data => setProducts(data)).catch(() => {}).finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -52,7 +52,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   }, [preselectCategory]);
 
   useEffect(() => {
-    setCurrentPage(1);
+    setDisplayCount(ITEMS_PER_PAGE);
   }, [searchQuery, localSearch, selectedCategory, selectedBrand, maxPrice, sortBy]);
 
   const categories = ['All', 'IoT Devices', 'Development Boards', 'Sensors', 'Robotics', 'Power Solutions', 'Electronics Components'];
@@ -76,11 +76,31 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     if (sortBy === 'price-low') return a.price - b.price;
     if (sortBy === 'price-high') return b.price - a.price;
     if (sortBy === 'rating') return b.rating - a.rating;
+    if (sortBy === 'name-asc') return a.name.localeCompare(b.name);
+    if (sortBy === 'name-desc') return b.name.localeCompare(a.name);
     return 0; // featured
   });
 
-  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-  const paginatedProducts = filteredProducts.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const displayedProducts = filteredProducts.slice(0, displayCount);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && displayCount < filteredProducts.length && !loadingMore) {
+          setLoadingMore(true);
+          const timer = setTimeout(() => {
+            setDisplayCount(prev => Math.min(prev + ITEMS_PER_PAGE, filteredProducts.length));
+            setLoadingMore(false);
+          }, 600);
+          return () => clearTimeout(timer);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    const sentinel = sentinelRef.current;
+    if (sentinel) observer.observe(sentinel);
+    return () => { if (sentinel) observer.unobserve(sentinel); };
+  }, [displayCount, filteredProducts.length, loadingMore]);
 
   const handleLocalAddToCart = (product: Product, quantity: number = 1) => {
     addToCart(product, quantity);
@@ -94,7 +114,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     setSelectedBrand('All');
     setMaxPrice(100000);
     setSortBy('featured');
-    setCurrentPage(1);
+    setDisplayCount(ITEMS_PER_PAGE);
   };
 
   function BigSearch() {
@@ -102,7 +122,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     const [focused, setFocused] = useState(false);
     const ref = useRef<HTMLDivElement>(null);
 
-    const { results, suggestion } = searchAll(q);
+    const { results, suggestion } = searchAll(q, products);
     const cats = results.filter(r => r.type === 'category');
     const prods = results.filter(r => r.type === 'product');
     const noResults = q.trim() && results.length === 0;
@@ -242,7 +262,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           
           {/* LEFT COLUMN: ADVANCED FILTERS SYSTEM */}
-          <div className="lg:col-span-1 bg-gray-50 p-6 border border-gray-200">
+          <div className="lg:col-span-1 bg-gray-50 p-6 border border-gray-200 lg:sticky lg:top-24 lg:self-start">
             <div className="flex items-center justify-between border-b border-gray-200 pb-3 mb-5">
               <span className="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-gray-900">
                 <SlidersHorizontal size={14} className="text-[#3373AB]" />
@@ -337,7 +357,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             {/* Sorting and status bar */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between border-b border-gray-200 pb-3 mb-6 gap-3">
               <p className="text-xs text-gray-500 font-mono">
-                Page {currentPage} of {totalPages} — <span className="font-bold text-gray-900">{filteredProducts.length}</span> verified component records
+                Showing <span className="font-bold text-gray-900">{Math.min(displayCount, filteredProducts.length)}</span> of <span className="font-bold text-gray-900">{filteredProducts.length}</span> verified component records
               </p>
               
               <div className="flex items-center gap-2">
@@ -351,6 +371,8 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
                   <option value="rating">Rating Matrix</option>
+                  <option value="name-asc">Name: A to Z</option>
+                  <option value="name-desc">Name: Z to A</option>
                 </select>
               </div>
             </div>
@@ -366,14 +388,14 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 </button>
               </div>
             ) : loading ? (
-              <div className="text-center py-16 border border-dashed border-gray-200 p-8">
-                <p className="text-sm text-gray-500">Loading components from database...</p>
+              <div className="flex justify-center items-center py-16 border border-dashed border-gray-200 p-8">
+                <Cpu size={48} className="animate-spin text-[#3373AB]" />
               </div>
             ) : (
-              /* Products grid - HTML inspired card design */
-              <div className="flex flex-wrap border-t border-l border-[#eeeeee]">
-                {paginatedProducts.map((product) => (
-                  <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className="w-1/2 sm:w-[230px] h-[341px] border-r border-b border-[#eeeeee] bg-white box-border group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]">
+              /* Products grid - 4 column CSS grid */
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 border-t border-l border-[#eeeeee]">
+                {displayedProducts.map((product) => (
+                  <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className="h-[341px] border-r border-b border-[#eeeeee] bg-white box-border group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]">
                     <div className="p-[14px] flex flex-col h-full box-border">
                       <span className="text-[11px] text-[#768B9C] no-underline block mb-1 group-hover:text-[#3373AB] transition-colors">
                         {product.category}
@@ -407,51 +429,22 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
               </div>
             )}
             
-            {/* Pagination Controls */}
-            {totalPages > 1 && (
-              <div className="mt-8 flex items-center justify-center gap-2">
-                <button
-                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                  disabled={currentPage === 1}
-                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
-                  Prev
-                </button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                  <button
-                    key={p}
-                    onClick={() => setCurrentPage(p)}
-                    className={`px-3 py-1.5 text-xs font-mono border transition-colors ${currentPage === p ? 'bg-[#3373AB] text-white border-[#3373AB]' : 'border-gray-200 hover:border-[#3373AB]'}`}
-                  >
-                    {p}
-                  </button>
-                ))}
-                <button
-                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                  disabled={currentPage === totalPages}
-                  className="px-3 py-1.5 text-xs font-mono border border-gray-200 hover:border-[#3373AB] disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
-                >
-                  Next
-                </button>
+            {/* Infinite scroll sentinel */}
+            {displayCount < filteredProducts.length && (
+              <div ref={sentinelRef} className="flex justify-center py-10">
+                {loadingMore && (
+                  <Cpu size={44} className="animate-spin text-[#3373AB]" />
+                )}
               </div>
+            )}
+            {displayCount >= filteredProducts.length && filteredProducts.length > 0 && (
+              <p className="text-center text-xs text-gray-400 font-mono mt-8">All verified component records loaded.</p>
             )}
 
             {/* Vendor Showcases section in bottom */}
             <div className="mt-12 border-t border-gray-200 pt-10">
               <h4 className="text-xs font-mono font-bold uppercase text-gray-400 tracking-wider mb-6">Original Equipment Manufacturers (OEM) Vetted Registry</h4>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {VENDORS.map((vendor, index) => (
-                  <div key={index} className="bg-gray-50 border border-gray-200 p-4 flex items-center gap-3">
-                    <div className="h-10 w-10 bg-[#3373AB] text-white flex items-center justify-center font-mono font-bold text-lg rounded-none">
-                      {vendor.logo}
-                    </div>
-                    <div className="text-left">
-                      <p className="font-bold text-xs text-gray-900 leading-tight">{vendor.name}</p>
-                      <p className="text-[10px] text-gray-500 font-mono mt-0.5">{vendor.productsCount} catalog items • ★ {vendor.rating}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <p className="text-xs text-gray-500">Vendor registry loading from supply chain ledger...</p>
             </div>
 
           </div>
@@ -469,7 +462,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         {loadingProduct && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
             <div className="bg-white rounded-lg shadow-xl p-8 flex flex-col items-center gap-4 min-w-[280px]">
-              <Loader2 size={36} className="animate-spin text-[#3373AB]" />
+              <Cpu size={44} className="animate-spin text-[#3373AB]" />
               <p className="text-sm font-medium text-gray-700 text-center leading-relaxed">
                 Loading <span className="text-[#3373AB] font-semibold">{loadingProduct}</span>
                 <br />

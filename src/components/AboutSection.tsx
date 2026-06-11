@@ -1,4 +1,4 @@
-import { TEAM_MEMBERS } from '../data/mockData';
+
 import { Target, Compass, Milestone, ShieldCheck, UserPlus, Heart } from 'lucide-react';
 import Breadcrumb from './Breadcrumb';
 
@@ -9,7 +9,7 @@ interface AboutSectionProps {
 
 export default function AboutSection({ theme = 'light', standalone }: AboutSectionProps) {
   const isDark = theme === 'dark';
-  const leadership = TEAM_MEMBERS;
+  const leadership: any[] = [];
 
   const milestones = [
     { year: '2021', title: 'Silicon Registry Launch', desc: 'Registered 20,000 active device designs and formed European smart grid councils.' },

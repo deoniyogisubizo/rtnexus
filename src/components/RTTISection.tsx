@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Award, BookOpen, Clock, Play, GraduationCap, CheckCircle, Video, List, HelpCircle, Star, Shield, ArrowRight, User } from 'lucide-react';
+import { Award, BookOpen, Clock, Play, GraduationCap, CheckCircle, Video, List, HelpCircle, Shield, ArrowRight, User } from 'lucide-react';
 import { Course } from '../types';
-import { COURSES } from '../data/mockData';
+import { fetchCourses } from '../services/api';
 import Breadcrumb from './Breadcrumb';
 
 const ITEMS_PER_PAGE = 3;
@@ -11,47 +11,12 @@ interface RTTISectionProps {
   theme?: 'light' | 'dark';
 }
 
-interface Question {
-  id: number;
-  questionText: string;
-  options: string[];
-  correctIdx: number;
-}
 
-const MOCK_QUIZZES: Record<string, Question[]> = {
-  'course-001': [
-    {
-      id: 1,
-      questionText: 'Which mechanism prevents priority inversion under FreeRTOS schedulers?',
-      options: ['Priority Inheritance Protocol', 'Round-Robin Time-Slicing', 'Mutually Assured Priority Promotion', 'Hardware Level Cache Lock'],
-      correctIdx: 0
-    },
-    {
-      id: 2,
-      questionText: 'Under heavy DMA burst stresses, which element arbitrates access to the AHB system bus?',
-      options: ['System Controller', 'Bus Matrix Arbiter', 'Symmetric RAM Bank Controller', 'Direct Interconnect Router'],
-      correctIdx: 1
-    }
-  ],
-  'course-003': [
-    {
-      id: 1,
-      questionText: 'How does Neural Mesh Pruning affect edge visual inference payloads?',
-      options: ['It doubles floating point register allocation', 'It deletes high-weight redundances to reduce inference latency', 'It strictly increases accuracy bounds on low-resolution streams', 'It requires an active external network transceiver module'],
-      correctIdx: 1
-    },
-    {
-      id: 2,
-      questionText: 'What is the primary operational constraint of TensorFlow Lite on microcontrollers?',
-      options: ['Absolute lack of dynamic heap allocations after boot', 'Requirement of minimum 512KB L1 cache capacity', 'Total restriction against integer-only quantization logic', 'Inability to compile on standard GCC toolchains'],
-      correctIdx: 0
-    }
-  ]
-};
 
 export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectionProps) {
   const isDark = theme === 'dark';
-  const [selectedCourse, setSelectedCourse] = useState<Course>(COURSES[0]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
   const [activeTab, setActiveTab] = useState<'syllabus' | 'video' | 'quiz'>('syllabus');
   const [videoPlaying, setVideoPlaying] = useState<boolean>(false);
   const [localSearch, setLocalSearch] = useState('');
@@ -61,8 +26,15 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({});
   const [quizSubmitted, setQuizSubmitted] = useState<boolean>(false);
 
+  useEffect(() => {
+    fetchCourses().then(data => {
+      setCourses(data);
+      if (data.length > 0) setSelectedCourse(data[0]);
+    }).catch(() => {});
+  }, []);
+
   // Filtercourses
-  const filteredCourses = COURSES.filter(course => {
+  const filteredCourses = courses.filter(course => {
     const matchesQuery = 
       course.title.toLowerCase().includes((searchQuery || localSearch).toLowerCase()) ||
       course.category.toLowerCase().includes((searchQuery || localSearch).toLowerCase()) ||
@@ -101,20 +73,16 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
     setQuizSubmitted(true);
   };
 
-  const activeCourseQuiz = MOCK_QUIZZES[selectedCourse.id];
+  const activeCourseQuiz = null;
 
   const scoreNum = activeCourseQuiz?.reduce((acc, q) => {
     if (quizAnswers[q.id] === q.correctIdx) return acc + 1;
     return acc;
   }, 0) || 0;
 
-  const trendingSkills = ['Embedded RTOS Schedulers', 'TensorRL Tensor Quantization', 'SCADA Vulnerability Securing', 'RF Impedance Calibrating', 'OTA Boot Dual-Banking Routing'];
+  const trendingSkills: string[] = [];
 
-  const learningPaths = [
-    { name: 'Industrial Dev Core (ID-C)', coursesCount: 3, estimate: '90 Hours', desc: 'Syllabus training covering microarchitectures, RTOS core, and bus matrix layouts.' },
-    { name: 'SCADA Networks Defense Lead', coursesCount: 2, estimate: '60 Hours', desc: 'Advanced threat assessment on OT networks, cryptography modules, and Modbus defense.' },
-    { name: 'Edge Machine Intelligence', coursesCount: 4, estimate: '120 Hours', desc: 'Specialized pipeline quantization, convolutional vision flows, and hardware accelerator compiling.' }
-  ];
+  const learningPaths: { name: string; coursesCount: number; estimate: string; desc: string }[] = [];
 
   return (
     <section className={`w-full select-none py-12 px-6 font-sans ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
@@ -124,13 +92,13 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
           segments={[
             { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
             { label: 'Courses' },
-            ...(filteredCourses.length > 0 && selectedCourse ? [{ label: selectedCourse.title } as { label: string; onClick?: () => void }] : []),
+            ...(filteredCourses.length > 0 && selectedCourse ? [{ label: selectedCourse.title } as { label: string; onClick?: () => void }] : []) as { label: string; onClick?: () => void }[],
           ]}
           theme={theme}
         />
 
         {/* Section Header */}
-        <div className="border-l-4 border-[#3373AB] pl-5 mb-10">
+          <div className="border-l-4 border-[#3373AB] pl-5 mb-10">
           <p className="text-[10px] font-mono font-bold tracking-widest text-[#3373AB]">RTTI ACADEMY & RESEARCH</p>
           <h2 className={`text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 ${isDark ? 'text-white' : 'text-[#111111]'}`}>REAL-WORLD CERTIFICATIONS FOR SYSTEMS ENGINEERING</h2>
         </div>
@@ -266,6 +234,12 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
           {/* RIGHT AREA: COHESIVE INTERACTIVE COURSE DEMONSTRATOR AND SYLLABUS VIEWER (8 Cols) */}
           <div className="lg:col-span-8 border border-gray-200 bg-white">
             
+            {!selectedCourse ? (
+              <div className="p-10 text-center text-gray-500 text-sm">
+                Select a course from the catalog to view details.
+              </div>
+            ) : (
+            <>
             {/* Header profile */}
             <div className="bg-[#111111] text-white p-6 border-b border-gray-800">
               <div className="flex justify-between items-start gap-4">
@@ -456,7 +430,8 @@ export default function RTTISection({ searchQuery, theme = 'light' }: RTTISectio
                 )}
               </div>
             )}
-
+          </>
+          )}
           </div>
         </div>
 

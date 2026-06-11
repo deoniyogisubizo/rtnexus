@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Play, Calendar, Headset, Eye, FileText, ArrowUpRight, Search, Clock, Bell, Radio, Check } from 'lucide-react';
 import { Broadcast } from '../types';
-import { BROADCASTS } from '../data/mockData';
+import { fetchVideos } from '../services/api';
 import Breadcrumb from './Breadcrumb';
 
 const ITEMS_PER_PAGE = 4;
@@ -13,23 +13,24 @@ interface MTTVSectionProps {
 
 export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectionProps) {
   const isDark = theme === 'dark';
+  const [broadcasts, setBroadcasts] = useState<Broadcast[]>([]);
   const [localSearch, setLocalSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [subscribedEvent, setSubscribedEvent] = useState<string | null>(null);
-  const [activeMedia, setActiveMedia] = useState<Broadcast | null>(BROADCASTS[0]);
+  const [activeMedia, setActiveMedia] = useState<Broadcast | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+
+  useEffect(() => {
+    fetchVideos().then(data => {
+      setBroadcasts(data);
+      if (data.length > 0) setActiveMedia(data[0]);
+    }).catch(() => {});
+  }, []);
 
   // Categories
   const categories = ['All', 'Live Events', 'Webinars', 'Podcasts', 'Tutorials'];
 
-  // Event list schedule
-  const webinarSchedules = [
-    { title: 'Zero-Trust Secure Boot Verification', date: 'June 09, 2026', time: '14:00 UTC', host: 'Marcus Vance' },
-    { title: 'SCADA OT Network Anomaly Deep Auditing', date: 'June 10, 2026', time: '16:00 UTC', host: 'Sarah Jenkins' },
-    { title: 'Multi-Tenant Semiconductor Escrow Standardisation', date: 'June 12, 2026', time: '13:00 UTC', host: 'Alistair Vance' }
-  ];
-
-  const filteredMedia = BROADCASTS.filter(item => {
+  const filteredMedia = broadcasts.filter(item => {
     const matchesSearch = 
       item.title.toLowerCase().includes((searchQuery || localSearch).toLowerCase()) ||
       item.description.toLowerCase().includes((searchQuery || localSearch).toLowerCase()) ||
@@ -232,11 +233,11 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
               </div>
 
               <div className="space-y-4 text-left">
-                {webinarSchedules.map((webinar, idx) => (
-                  <div key={idx} className="bg-white border border-gray-200 p-4">
+                {broadcasts.filter(b => b.scheduledTime).slice(0, 3).map((webinar, idx) => (
+                  <div key={webinar.id || idx} className="bg-white border border-gray-200 p-4">
                     <div className="flex justify-between items-center text-[10px] font-mono text-[#3373AB] font-bold">
-                      <span>{webinar.date}</span>
-                      <span>{webinar.time}</span>
+                      <span>{webinar.scheduledTime?.split('T')[0] || 'TBD'}</span>
+                      <span>{webinar.scheduledTime?.split('T')[1] || 'TBD'}</span>
                     </div>
                     
                     <h5 className="font-sans font-bold text-xs mt-1.5 text-gray-950 uppercase tracking-tight leading-snug line-clamp-2">
@@ -253,6 +254,9 @@ export default function MTTVSection({ searchQuery, theme = 'light' }: MTTVSectio
                     </button>
                   </div>
                 ))}
+                {broadcasts.filter(b => b.scheduledTime).length === 0 && (
+                  <p className="text-xs text-gray-400 text-center py-4">No scheduled events at this time.</p>
+                )}
               </div>
             </div>
 

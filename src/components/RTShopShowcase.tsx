@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Search, ArrowRight, ChevronRight, Package } from 'lucide-react';
-import { FEATURED_PRODUCTS } from '../data/mockData';
+import { fetchProducts } from '../services/api';
 import { searchAll, SearchResultItem } from '../utils/search';
 
 interface RTShopShowcaseProps {
@@ -14,12 +14,17 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
   const isDark = theme === 'dark';
   const [search, setSearch] = useState('');
   const [focused, setFocused] = useState(false);
+  const [showcaseProducts, setShowcaseProducts] = useState<any[]>([]);
   const ref = useRef<HTMLDivElement>(null);
 
-  const { results, suggestion } = searchAll(search);
+  useEffect(() => {
+    fetchProducts().then(setShowcaseProducts).catch(() => {});
+  }, []);
 
-  const categoryMap = new Map<string, (typeof FEATURED_PRODUCTS)[number]>();
-  FEATURED_PRODUCTS.forEach(p => {
+  const { results, suggestion } = searchAll(search, showcaseProducts);
+
+  const categoryMap = new Map<string, any>();
+  showcaseProducts.forEach(p => {
     if (!categoryMap.has(p.category)) categoryMap.set(p.category, p);
   });
   const categories = Array.from(categoryMap.entries()).map(([name, product]) => ({ name, product }));

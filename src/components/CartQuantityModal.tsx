@@ -16,8 +16,8 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
   const hasMoreSpecs = Object.entries(product.specs).length > 3;
 
   return (
-    <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-center justify-center p-4">
-      <div className="bg-white max-w-md w-full text-left border border-gray-200 shadow-2xl flex flex-col">
+    <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-start justify-center pt-16 sm:pt-24 overflow-y-auto">
+      <div className="bg-white max-w-md w-full text-left border border-gray-200 shadow-2xl flex flex-col my-4">
         <div className="bg-[#111111] text-white px-5 py-3 flex items-center justify-between border-b border-gray-800">
           <span className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">ESCROW PLACEMENT CONSOLE</span>
           <button onClick={onClose} className="text-gray-400 hover:text-white outline-none cursor-pointer">

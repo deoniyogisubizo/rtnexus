@@ -1,0 +1,1 @@
+MONGODB_URI = mongodb://deoniyogisubizo:maiden410@ac-ylmbizd-shard-00-00.cfkm29w.mongodb.net:27017,ac-ylmbizd-shard-00-01.cfkm29w.mongodb.net:27017,ac-ylmbizd-shard-00-02.cfkm29w.mongodb.net:27017/?ssl=true&replicaSet=atlas-u0drir-shard-0&authSource=admin&appName=rtgroup

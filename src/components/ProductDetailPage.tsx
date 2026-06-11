@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Product, CartItem } from '../types';
-import { FEATURED_PRODUCTS } from '../data/mockData';
+import { fetchProducts } from '../services/api';
 import CartQuantityModal from './CartQuantityModal';
 import Breadcrumb from './Breadcrumb';
 
@@ -16,11 +16,16 @@ interface ProductDetailPageProps {
 
 export default function ProductDetailPage({ productId, addToCart, cartItems, theme = 'light', onBack, onViewProduct }: ProductDetailPageProps) {
   const isDark = theme === 'dark';
-  const allProducts = FEATURED_PRODUCTS;
-  const product = allProducts.find(p => p.id === productId);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
   const [showFixedBar, setShowFixedBar] = useState(false);
   const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    fetchProducts().then(setAllProducts).catch(() => {});
+  }, []);
+
+  const product = allProducts.find(p => p.id === productId);
 
   useEffect(() => {
     const handleScroll = () => {
