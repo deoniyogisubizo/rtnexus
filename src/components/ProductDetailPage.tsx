@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { FEATURED_PRODUCTS } from '../data/mockData';
@@ -19,6 +19,19 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
   const allProducts = FEATURED_PRODUCTS;
   const product = allProducts.find(p => p.id === productId);
   const [cartProduct, setCartProduct] = useState<Product | null>(null);
+  const [showFixedBar, setShowFixedBar] = useState(false);
+  const barRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (barRef.current) {
+        const rect = barRef.current.getBoundingClientRect();
+        setShowFixedBar(rect.top <= 112);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const bg = isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900';
   const borderCls = isDark ? 'border-gray-800' : 'border-gray-200';
@@ -79,6 +92,31 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               <p className="text-[10px] font-mono text-gray-400 uppercase mt-1">OEM: {product.vendorName}</p>
             </div>
 
+            <div ref={barRef} className={`border-t pt-6 pb-6 flex items-center justify-between ${borderCls} ${isDark ? 'bg-[#1a1a1a]' : 'bg-white'} ${showFixedBar ? 'invisible' : ''}`}>
+              <div>
+                <span className="text-[10px] font-mono text-gray-400 uppercase block">Single Unit Escrow price</span>
+                <span className={`text-2xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF {product.price.toFixed(2)}</span>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Stock: {product.stock} units verified
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={onBack}
+                  className={`border px-4 py-2.5 text-xs font-semibold rounded-none outline-none ${isDark ? 'border-gray-600 text-gray-300 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:border-gray-400'}`}
+                >
+                  Back to Shop
+                </button>
+                <button
+                  onClick={() => setCartProduct(product)}
+                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
+                >
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
+
             <div className={`border-l-4 border-[#3373AB] pl-4 py-1`}>
               <p className={`text-xs leading-relaxed font-sans ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                 {product.description}
@@ -111,31 +149,6 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               <p className={`text-[11px] leading-relaxed font-sans mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 This unit calibrated profile satisfies FCC Part 15 and CE industrial interference regulations. Calibrated at 22°C ambient with 45% standard saturation. Zero defects logic verified by RTTI instrumentation audits.
               </p>
-            </div>
-
-            <div className={`border-t pt-6 flex items-center justify-between ${borderCls}`}>
-              <div>
-                <span className="text-[10px] font-mono text-gray-400 uppercase block">Single Unit Escrow price</span>
-                <span className={`text-2xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF {product.price.toFixed(2)}</span>
-                <span className={`text-[10px] font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                  Stock: {product.stock} units verified
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={onBack}
-                  className={`border px-4 py-2.5 text-xs font-semibold rounded-none outline-none ${isDark ? 'border-gray-600 text-gray-300 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:border-gray-400'}`}
-                >
-                  Back to Shop
-                </button>
-                <button
-                  onClick={() => setCartProduct(product)}
-                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
-                >
-                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
-                  <span>Add to Cart</span>
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -180,6 +193,36 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
         )}
       </div>
 
+      {showFixedBar && (
+        <div className="fixed top-[116px] left-0 right-0 z-20 border-b shadow-sm pt-6" style={{backgroundColor: isDark ? '#1a1a1a' : 'white'}}>
+          <div className="max-w-7xl mx-auto px-6">
+            <div className={`border-t pt-6 pb-6 flex items-center justify-between ${borderCls}`}>
+              <div>
+                <span className="text-[10px] font-mono text-gray-400 uppercase block">{product.name}</span>
+                <span className={`text-2xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF {product.price.toFixed(2)}</span>
+                <span className={`text-[10px] font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                  Stock: {product.stock} units verified
+                </span>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={onBack}
+                  className={`border px-4 py-2.5 text-xs font-semibold rounded-none outline-none ${isDark ? 'border-gray-600 text-gray-300 hover:border-gray-500' : 'border-gray-300 text-gray-700 hover:border-gray-400'}`}
+                >
+                  Back to Shop
+                </button>
+                <button
+                  onClick={() => setCartProduct(product)}
+                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
+                >
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {cartProduct && (
         <CartQuantityModal
           product={cartProduct}
