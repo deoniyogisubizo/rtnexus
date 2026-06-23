@@ -216,9 +216,9 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
         ))}
       </div>
 
-      {/* Card overlay */}
+      {/* Card overlay — hidden on mobile */}
         <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 flex items-start pt-20 lg:pt-24 h-[75vh] lg:h-screen">
-        <div className="mx-auto md:ml-auto md:mr-12 w-full max-w-lg border border-white/40 bg-white/70 backdrop-blur-lg p-4 md:p-6 flex flex-col justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12)] min-h-[300px] md:min-h-[400px]" style={{ transform: 'perspective(800px) rotateX(-5deg) rotate(3deg)' }}>
+        <div className="hidden md:flex mx-auto md:ml-auto md:mr-12 w-full max-w-lg border border-white/40 bg-white/70 backdrop-blur-lg p-4 md:p-6 flex-col justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12)] min-h-[300px] md:min-h-[400px]" style={{ transform: 'perspective(800px) rotateX(-5deg) rotate(3deg)' }}>
           <div className="absolute top-0 right-0 p-3 text-[10px] font-mono text-gray-400 tracking-wider">
             NEXUS_MATRIX_V1.1
           </div>
