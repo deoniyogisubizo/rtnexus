@@ -111,10 +111,14 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
 
   return (
     <section className={`w-full select-none py-12 px-6 font-sans border-b ${isDark ? 'bg-[#1a1a1a] text-gray-200 border-gray-800' : 'bg-[#FAFAFA] text-gray-900 border-gray-200'}`}>
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-7xl mx-auto">
         {renderSection('Just Landed', 'Fresh Inventory', justLanded)}
+      </div>
+
+      <div className="w-full h-[180px] sm:h-[260px] md:h-[360px] bg-cover bg-center" style={{backgroundImage: "url('/inplace/microcontroler.png')"}} />
+
+      <div className="max-w-7xl mx-auto space-y-10">
         <div>
-          <img src="/inplace/microcontroler.png" alt="Microcontroller" className="w-full h-[180px] sm:h-[260px] md:h-[360px] object-cover mb-4 rounded-lg shadow-md" />
           <div className="border-l-4 border-[#3373AB] pl-4 mb-6 text-left">
             <p className="text-[9px] font-mono tracking-widest text-[#3373AB] uppercase font-bold">Embedded System Deals</p>
             <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-white' : 'text-[#111]'}`}>

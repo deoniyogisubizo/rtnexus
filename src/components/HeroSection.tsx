@@ -1,85 +1,225 @@
-import { ArrowRight, GraduationCap, Video, Workflow } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Workflow } from 'lucide-react';
 
 interface HeroSectionProps {
   setView: (view: string) => void;
   theme: 'light' | 'dark';
 }
 
+const HERO_SLIDES = ['/animation/rtshop.png', '/animation/rtlearn.png'];
+
 export default function HeroSection({ setView, theme }: HeroSectionProps) {
   const isDark = theme === 'dark';
+  const [slide, setSlide] = useState(0);
+
+  useEffect(() => {
+    const t = setInterval(() => setSlide((p) => (p + 1) % HERO_SLIDES.length), 5000);
+    return () => clearInterval(t);
+  }, []);
+
   return (
-    <section className={`w-full py-16 lg:py-24 px-6 border-b-4 border-[#3373AB] relative overflow-hidden select-none ${isDark ? 'bg-[#111111] text-white' : 'bg-white text-gray-900'}`}>
-      {/* Decorative corporate background grid */}
-      <div className={`absolute inset-0 pointer-events-none ${isDark ? 'opacity-5' : 'opacity-10'}`}>
-        <div className="absolute inset-0" style={{ 
-          backgroundImage: 'radial-gradient(circle, #3373AB 1px, transparent 1px)', 
-          backgroundSize: '24px 24px' 
-        }}></div>
+    <section className="relative w-full h-screen border-b-4 border-[#3373AB] overflow-hidden select-none">
+      <style>{`
+        @font-face {
+          font-family: 'Jarvane';
+          src: url('/jarvane-display-font/Jarvane-BF6814d55045491.woff') format('woff'),
+               url('/jarvane-display-font/Jarvane-BF6814d5504a5e3.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }
+        @keyframes heroOverlayIn {
+          from { opacity: 0; transform: translateX(40px); }
+          to { opacity: 1; transform: translateX(0); }
+        }
+        .hero-overlay-in { animation: heroOverlayIn 0.6s ease-out both; }
+        .fancy-btn {
+          background-color: transparent;
+          border: 2px solid #fff;
+          box-sizing: border-box;
+          cursor: pointer;
+          display: inline-block;
+          font-weight: 700;
+          letter-spacing: 0.05em;
+          outline: none;
+          overflow: visible;
+          padding: 1em 1.5em;
+          position: relative;
+          text-align: center;
+          text-decoration: none;
+          text-transform: uppercase;
+          transition: all 0.3s ease-in-out;
+          user-select: none;
+          font-size: 12px;
+        }
+        .fancy-btn::before {
+          content: " ";
+          width: 1.25rem;
+          height: 2px;
+          background: white;
+          top: 50%;
+          left: 1.2em;
+          position: absolute;
+          transform: translateY(-50%);
+          transition: background 0.3s linear, width 0.3s linear;
+        }
+        .fancy-btn .f-text {
+          font-size: 1em;
+          line-height: 1.3;
+          padding-left: 1.8em;
+          display: block;
+          text-align: left;
+          transition: all 0.3s ease-in-out;
+          color: white;
+        }
+        .fancy-btn .f-top-key {
+          height: 2px;
+          width: 1.25rem;
+          top: -2px;
+          left: 0.5rem;
+          position: absolute;
+          background: rgba(255,255,255,0.5);
+          transition: width 0.5s ease-out, left 0.3s ease-out;
+        }
+        .fancy-btn .f-bot-key-1 {
+          height: 2px;
+          width: 1.25rem;
+          right: 1.5rem;
+          bottom: -2px;
+          position: absolute;
+          background: rgba(255,255,255,0.5);
+          transition: width 0.5s ease-out, right 0.3s ease-out;
+        }
+        .fancy-btn .f-bot-key-2 {
+          height: 2px;
+          width: 0.5rem;
+          right: 0.5rem;
+          bottom: -2px;
+          position: absolute;
+          background: rgba(255,255,255,0.5);
+          transition: width 0.5s ease-out, right 0.3s ease-out;
+        }
+        .fancy-btn:hover {
+          background: rgba(255,255,255,0.08);
+          border-color: rgba(255,255,255,0.9);
+          box-shadow: 0 0 20px rgba(232,197,71,0.15);
+          transform: translateY(-1px);
+        }
+        .fancy-btn:hover::before {
+          width: 0.75rem;
+          background: #E8C547;
+        }
+        .fancy-btn:hover .f-text {
+          color: #E8C547;
+          padding-left: 1.5em;
+        }
+        .fancy-btn:hover .f-top-key {
+          left: -2px;
+          width: 0px;
+        }
+        .fancy-btn:hover .f-bot-key-1,
+        .fancy-btn:hover .f-bot-key-2 {
+          right: 0;
+          width: 0;
+        }
+        .fancy-btn-solid {
+          background-color: #3373AB;
+          border-color: #3373AB;
+        }
+        .fancy-btn-solid:hover {
+          background: rgba(255,255,255,0.1);
+          border-color: #E8C547;
+          box-shadow: 0 0 25px rgba(232,197,71,0.2), 0 4px 12px rgba(0,0,0,0.3);
+          transform: translateY(-2px);
+        }
+        .fancy-btn-solid:hover::before {
+          background: #E8C547;
+        }
+        .fancy-btn-solid:hover .f-text {
+          color: #E8C547;
+        }
+      `}</style>
+
+      {/* Full‑width background crossfade */}
+      <div className={`absolute inset-0 ${isDark ? 'bg-black' : 'bg-white'}`}>
+        {HERO_SLIDES.map((src, i) => (
+          <div key={src} className={`absolute inset-0 transition-opacity duration-700 ${i === slide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+            <div
+              className="absolute inset-0 bg-contain bg-top bg-no-repeat"
+              style={{ backgroundImage: `url(${src})` }}
+            />
+            {/* Dark overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+            {i === 0 ? (
+              <div className="absolute left-8 md:left-16 bottom-[38%]">
+                <div className="border-2 border-dashed border-white/50 bg-black/30 p-6 md:p-8 max-w-2xl text-center">
+                  <h2 className="text-[#E8C547] text-xl sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+                    GETS OUR PRODUCT ON SHELF PRICE & QUALITY
+                  </h2>
+                  <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                    <button onClick={() => setView('shop')} className="fancy-btn fancy-btn-solid shadow-lg">
+                      <span className="f-top-key" />
+                      <span className="f-text">Shop Your IOT Device</span>
+                      <span className="f-bot-key-1" />
+                      <span className="f-bot-key-2" />
+                    </button>
+                    <button onClick={() => setView('shop')} className="fancy-btn shadow-lg">
+                      <span className="f-top-key" />
+                      <span className="f-text">Jump To Categories</span>
+                      <span className="f-bot-key-1" />
+                      <span className="f-bot-key-2" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="absolute left-8 md:left-16 bottom-[38%]">
+                <div className="border-2 border-dashed border-white/50 bg-black/30 p-6 md:p-8 max-w-2xl text-center">
+                  <h2 className="text-[#E8C547] text-xl sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+                    LEARN WITH BEST TRACK AND GETS CERTIFIED WITH RTB OFFER
+                  </h2>
+                  <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                    <button onClick={() => setView('rtti')} className="fancy-btn fancy-btn-solid shadow-lg">
+                      <span className="f-top-key" />
+                      <span className="f-text">Gets Certified</span>
+                      <span className="f-bot-key-1" />
+                      <span className="f-bot-key-2" />
+                    </button>
+                    <button onClick={() => setView('rtti')} className="fancy-btn shadow-lg">
+                      <span className="f-top-key" />
+                      <span className="f-text">Get Started</span>
+                      <span className="f-bot-key-1" />
+                      <span className="f-bot-key-2" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        ))}
+        {/* Dimming overlay */}
+        <div className={`absolute inset-0 ${isDark ? 'bg-black/50' : 'bg-black/10'}`} />
+        {/* Grid pattern */}
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #3373AB 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
       </div>
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-        {/* Left column: Typography Copy */}
-        <div className="lg:col-span-7 flex flex-col items-start text-left">
-          <span className="font-mono text-xs tracking-[0.25em] text-[#3373AB] uppercase font-bold mb-3 border-l-2 border-[#3373AB] pl-3.5">
-            CONVERGED ENTERPRISE CONTEXT
-          </span>
-          
-          <h1 className={`font-bold font-sans leading-[1.1] mb-6 ${isDark ? 'text-white' : 'text-[#111111]'}`}>
-            <span className="text-xl sm:text-2xl lg:text-3xl tracking-[0.15em]">_TECHNOLOGY, LEARNING, COMMERCE AND MEDIA_ </span>
-            <span className="text-3xl sm:text-4xl lg:text-5xl text-[#3373AB]">Unified.</span>
-          </h1>
-          
-          <p className={`text-sm sm:text-base max-w-2xl leading-relaxed mb-10 font-sans font-light ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-            One platform connecting innovation, education, digital commerce and media broadcasting. RT Nexus bridges the physical supply-chain matrix with verified engineering certifications, live sub-second video broadcasts, and targeted operational diagnostics.
-          </p>
+      {/* Slide indicator circles */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        {HERO_SLIDES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setSlide(i)}
+            className={`relative w-3 h-3 rounded-full transition-all duration-300 ${
+              i === slide ? 'bg-[#3373AB] scale-110' : isDark ? 'bg-white/40 hover:bg-white/70' : 'bg-gray-400 hover:bg-gray-600'
+            }`}
+            aria-label={`Slide ${i + 1}`}
+          />
+        ))}
+      </div>
 
-          {/* Call to actions - Sharp Edged Buttons */}
-          <div className="flex flex-wrap gap-4 w-full sm:w-auto">
-            <button 
-              onClick={() => setView('shop')}
-              className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-bold uppercase tracking-wider px-6 py-4 flex items-center gap-2 group transition-all duration-150 rounded-none w-full sm:w-auto justify-center"
-            >
-              <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'11px'}}></i>
-              <span>Explore RT Shop</span>
-              <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            
-            <button 
-              onClick={() => setView('rtti')}
-              className={`bg-transparent border text-xs font-bold uppercase tracking-wider px-6 py-4 flex items-center gap-2 transition-all duration-150 rounded-none w-full sm:w-auto justify-center ${isDark ? 'border-gray-400 hover:border-[#3373AB] hover:text-[#3373AB] text-white' : 'border-[#3373AB] text-[#3373AB] hover:bg-[#3373AB] hover:text-white'}`}
-            >
-              <GraduationCap size={14} />
-              <span>Start Learning</span>
-            </button>
-
-            <button 
-              onClick={() => setView('mttv')}
-              className={`text-xs font-bold uppercase tracking-wider px-6 py-4 flex items-center gap-2 transition-all duration-150 rounded-none w-full sm:w-auto justify-center ${isDark ? 'bg-neutral-800 hover:bg-neutral-700 text-gray-200' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
-            >
-              <Video size={14} />
-              <span>Watch MTTV</span>
-            </button>
-          </div>
-
-          {/* Quick status line */}
-          <div className={`mt-8 hidden sm:flex flex-wrap gap-6 text-[11px] font-mono ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 bg-emerald-500"></span>
-              250K+ Connected Engineers
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 bg-[#3373AB]"></span>
-              Sub-second video delivery
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="h-1.5 w-1.5 bg-indigo-400"></span>
-              Hardware Escrow Guarantee
-            </span>
-          </div>
-        </div>
-
-        <div className="lg:col-span-5 relative w-full h-[320px] sm:h-[400px] border border-neutral-800 bg-[#161616e2] p-6 flex flex-col justify-between shadow-2xl shadow-black/40">
-          <div className="absolute top-0 right-0 p-3 text-[10px] font-mono text-gray-500 tracking-wider">
+      {/* Card overlay */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 flex items-start pt-24 h-screen">
+        <div className="ml-190 mr-4 md:mr-12 w-full max-w-lg border border-white/40 bg-white/70 backdrop-blur-lg p-6 flex flex-col justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12)] min-h-[400px]" style={{ transform: 'perspective(800px) rotateX(-5deg) rotate(3deg)' }}>
+          <div className="absolute top-0 right-0 p-3 text-[10px] font-mono text-gray-400 tracking-wider">
             NEXUS_MATRIX_V1.1
           </div>
 
@@ -87,14 +227,14 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
           <div className="relative flex-1 flex flex-col justify-center items-center gap-4">
             
             {/* Top tier - RT Shop */}
-            <div className="w-11/12 border border-[#3373AB] bg-[#111111] p-3 text-left relative hover:bg-neutral-900 transition-colors cursor-pointer" onClick={() => setView('shop')}>
+            <div className="w-11/12 border border-[#3373AB]/30 bg-white/60 p-3 text-left relative hover:bg-white/90 transition-colors cursor-pointer" onClick={() => setView('shop')}>
               <div className="absolute -top-[9px] left-3 bg-[#3373AB] text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
                 COMMERCE GRID
               </div>
               <div className="flex justify-between items-center">
                 <div>
-                  <h4 className="font-sans font-extrabold text-sm text-white uppercase tracking-wide">RT Shop</h4>
-                  <p className="text-xs text-gray-300 mt-0.5 font-medium">Microcontrollers, IoT Shields, Biometrics</p>
+                  <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">RT Shop</h4>
+                  <p className="text-xs text-gray-500 mt-0.5 font-medium">Microcontrollers, IoT Shields, Biometrics</p>
                 </div>
                 <Workflow className="text-[#3373AB]" size={16} />
               </div>
@@ -102,32 +242,32 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
 
             {/* Middle tier split: RTTI and MTTV */}
             <div className="w-11/12 grid grid-cols-2 gap-4">
-              <div className="border border-neutral-700 bg-[#111111] p-3 text-left relative hover:border-[#3373AB] transition-colors cursor-pointer" onClick={() => setView('rtti')}>
-                <div className="absolute -top-[9px] left-3 bg-neutral-700 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
+              <div className="border border-gray-200 bg-white/60 p-3 text-left relative hover:border-[#3373AB]/50 transition-colors cursor-pointer" onClick={() => setView('rtti')}>
+                <div className="absolute -top-[9px] left-3 bg-gray-500 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
                   EDUCATION SYSTEM
                 </div>
-                <h4 className="font-sans font-extrabold text-sm text-white uppercase tracking-wide">RTTI Learn</h4>
-                <p className="text-xs text-gray-300 mt-0.5 font-medium">Certifications & labs</p>
+                <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">RTTI Learn</h4>
+                <p className="text-xs text-gray-500 mt-0.5 font-medium">Certifications & labs</p>
               </div>
 
-              <div className="border border-neutral-700 bg-[#111111] p-3 text-left relative hover:border-[#3373AB] transition-colors cursor-pointer" onClick={() => setView('mttv')}>
-                <div className="absolute -top-[9px] left-3 bg-neutral-700 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
+              <div className="border border-gray-200 bg-white/60 p-3 text-left relative hover:border-[#3373AB]/50 transition-colors cursor-pointer" onClick={() => setView('mttv')}>
+                <div className="absolute -top-[9px] left-3 bg-gray-500 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
                   BROADCASTING NODE
                 </div>
-                <h4 className="font-sans font-extrabold text-sm text-white uppercase tracking-wide">MTTV Media</h4>
-                <p className="text-xs text-gray-300 mt-0.5 font-medium">Webinars & podcasts</p>
+                <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">MTTV Media</h4>
+                <p className="text-xs text-gray-500 mt-0.5 font-medium">Webinars & podcasts</p>
               </div>
             </div>
 
             {/* Bottom tier - Integrated Portals workspace controller */}
-            <div className="w-11/12 border border-dashed border-[#3373AB] bg-[#1a1a1a] p-3 text-left relative hover:bg-neutral-950 transition-colors cursor-pointer" onClick={() => setView('portals')}>
+            <div className="w-11/12 border border-dashed border-[#3373AB]/30 bg-white/60 p-3 text-left relative hover:bg-white/90 transition-colors cursor-pointer" onClick={() => setView('portals')}>
               <div className="absolute -top-[9px] left-3 bg-[#3373AB] text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
                 ROLE WORKSPACES
               </div>
               <div className="flex justify-between items-center">
                 <div>
                   <h4 className="font-mono text-xs font-extrabold text-[#3373AB] uppercase">RT-PORTAL CORE</h4>
-                  <p className="text-xs text-gray-300 mt-0.5 font-sans font-medium leading-none">Diagnostic dashboards for all user types</p>
+                  <p className="text-xs text-gray-500 mt-0.5 font-sans font-medium leading-none">Diagnostic dashboards for all user types</p>
                 </div>
                 <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
               </div>
@@ -136,7 +276,7 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
           </div>
 
           {/* Mini info overlay bar */}
-          <div className="h-10 border-t border-neutral-800 hidden sm:flex items-center justify-between text-[10px] font-mono text-gray-400">
+          <div className="h-10 border-t border-gray-200 hidden sm:flex items-center justify-between text-[10px] font-mono text-gray-400">
             <span className="text-[#3373AB]">STATUS: ESTABLISHED</span>
             <span>ENCRYPTION: SHIELD-CORE</span>
             <span>REGION: GBL-1</span>
