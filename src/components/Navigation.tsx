@@ -4,10 +4,9 @@ import {
   LogOut, CheckCircle, Package, ArrowRight, Menu, X, Home, Bot,
   ShoppingCart, LayoutDashboard,
 } from 'lucide-react';
-import { UserSession, CartItem } from '../types';
-// searchAll(query) is the same search helper the previous version of this
-// file used — keep whatever import you already have for it in your project,
-// e.g. `import { searchAll } from '../utils/search';`
+import { UserSession, CartItem, Product } from '../types';
+import { searchAll } from '../utils/search';
+import { fetchProducts } from '../services/api';
 
 interface NavigationProps {
   currentView: string;
@@ -57,7 +56,8 @@ export default function Navigation({
   const [scrolled, setScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [showChatbotMsg, setShowChatbotMsg] = useState(false);
+  const [searchProducts, setSearchProducts] = useState<Product[]>([]);
+  useEffect(() => { fetchProducts().then(setSearchProducts).catch(() => {}); }, []);
   const lastScrollY = useRef(0);
   const megaMenuTimeout = useRef<NodeJS.Timeout | null>(null);
   const searchRef = useRef<HTMLDivElement>(null);
@@ -120,6 +120,7 @@ export default function Navigation({
   ];
 
   return (
+    <>
     <header
       className={`w-full fixed top-0 z-50 select-none font-sans text-sm transition-all duration-300 ${
         scrolled ? 'shadow-lg' : 'shadow-none'
@@ -196,7 +197,7 @@ export default function Navigation({
             </div>
 
             {searchFocused && searchVal.trim() && (() => {
-              const { results, suggestion } = searchAll(searchVal);
+              const { results, suggestion } = searchAll(searchVal, searchProducts);
               const cats = results.filter((r) => r.type === 'category');
               const prods = results.filter((r) => r.type === 'product');
               const noResults = results.length === 0;
@@ -727,6 +728,8 @@ export default function Navigation({
         </div>
       )}
 
+    </header>
+
       {/* ============================================================ */}
       {/* MOBILE NAV DRAWER                                             */}
       {/* ============================================================ */}
@@ -760,7 +763,7 @@ export default function Navigation({
       {/* ============================================================ */}
       {/* MOBILE BOTTOM NAV                                             */}
       {/* ============================================================ */}
-      <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-50 border-t shadow-[0_-2px_10px_rgba(0,0,0,0.08)] ${theme === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-200'}`}>
+      <div className={`lg:hidden fixed bottom-0 left-0 right-0 z-[60] border-t shadow-[0_-2px_10px_rgba(0,0,0,0.08)] pb-[env(safe-area-inset-bottom)] ${theme === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-200'}`}>
         <div className="flex items-center justify-around h-16 px-1">
           <button onClick={() => goTo('home')} className={`flex flex-col items-center gap-0.5 px-2 py-1 ${focusRing} ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
             <Home size={20} />
@@ -779,7 +782,7 @@ export default function Navigation({
             <Search size={24} />
           </button>
 
-          <button onClick={() => { setShowChatbotMsg(true); setMobileMenuOpen(false); }} className={`flex flex-col items-center gap-0.5 px-2 py-1 ${focusRing} ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+          <button onClick={() => setMobileMenuOpen(false)} className={`flex flex-col items-center gap-0.5 px-2 py-1 ${focusRing} ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
             <Bot size={20} />
             <span className="text-[8px] font-medium">AI Chat</span>
           </button>
@@ -800,20 +803,6 @@ export default function Navigation({
         </div>
       </div>
 
-      {/* Chatbot placeholder modal */}
-      {showChatbotMsg && (
-        <div className="lg:hidden fixed inset-0 z-50 flex items-center justify-center p-4" onClick={() => setShowChatbotMsg(false)}>
-          <div className="absolute inset-0 bg-black/40" />
-          <div className="relative bg-white border border-gray-200 shadow-xl p-6 max-w-xs w-full text-center">
-            <Bot size={32} className="mx-auto text-[#3373AB] mb-2" />
-            <p className="text-sm font-bold text-gray-900 uppercase tracking-wider">AI Assistant</p>
-            <p className="text-[11px] text-gray-500 mt-1">AI Chatbot is currently under development.</p>
-            <button onClick={() => setShowChatbotMsg(false)} className="mt-4 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-5 py-1.5 transition-colors">
-              OK
-            </button>
-          </div>
-        </div>
-      )}
-    </header>
+    </>
   );
 }

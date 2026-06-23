@@ -18,7 +18,7 @@ import ContactSection from './components/ContactSection';
 import AuthExperience from './components/AuthExperience';
 import UserPortals from './components/UserPortals';
 import SearchPage from './components/SearchPage';
-import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn } from 'lucide-react';
+import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn, Bot, Send } from 'lucide-react';
 import { encodeId, decodeId } from './utils/idUtils';
 
 const SESSION_KEY = 'rt_nexus_session';
@@ -282,6 +282,43 @@ export default function App() {
   };
 
   const cartTotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
+
+  // Global AI Chatbot
+  const pageDescriptions: Record<string, { title: string; desc: string }> = {
+    home: { title: 'Home', desc: 'RT Nexus industrial ecosystem — hardware, courses, broadcasts & more.' },
+    shop: { title: 'RT Shop', desc: 'Browse 5K+ industrial components, dev boards & embedded systems.' },
+    rtti: { title: 'RTTI Courses', desc: 'Accredited engineering certifications with live sandbox labs.' },
+    classroom: { title: 'Live Classroom', desc: 'Interactive sandbox sessions with AI-powered whiteboards.' },
+    mttv: { title: 'MTTV Broadcasts', desc: 'Low-latency engineering streams, webinars & tech debates.' },
+    solutions: { title: 'Solutions', desc: 'Who we serve — engineers, businesses, creators & students.' },
+    adcenter: { title: 'Ad Center', desc: 'Promote your brand to 250K+ engineering builders worldwide.' },
+    about: { title: 'About Us', desc: 'RT Nexus — converging foundries, education & media.' },
+    careers: { title: 'Careers', desc: 'Join the federation building the future of hardware engineering.' },
+    contact: { title: 'Contact', desc: 'Open support tickets, explore FAQ base & global office registry.' },
+    search: { title: 'Search', desc: 'Find products, courses & broadcasts across the ecosystem.' },
+    portals: { title: 'Dashboard', desc: 'Your workspace — orders, courses, streams & billing.' },
+    product: { title: 'Product Detail', desc: 'View specifications, pricing & documentation for this component.' },
+  };
+  const [showGlobalChat, setShowGlobalChat] = useState(false);
+  const [showGlobalChatPopup, setShowGlobalChatPopup] = useState(false);
+  const [globalChatMessages, setGlobalChatMessages] = useState([
+    { sender: 'system', text: 'You are connected with Nexus AI Core Assist. Please declare your telemetry query.' }
+  ]);
+  const [globalChatInput, setGlobalChatInput] = useState('');
+  useEffect(() => {
+    const timer = setTimeout(() => setShowGlobalChatPopup(true), 300000);
+    return () => clearTimeout(timer);
+  }, []);
+  const handleGlobalChatSend = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!globalChatInput.trim()) return;
+    setGlobalChatMessages(prev => [
+      ...prev,
+      { sender: 'user', text: globalChatInput },
+      { sender: 'system', text: 'Acknowledge: Logging chat parameters internally. Your active telemetry index is #' + Math.floor(Math.random() * 900 + 100) + '. An associate will take over.' }
+    ]);
+    setGlobalChatInput('');
+  };
 
   return (
     <div className={`min-h-screen flex flex-col justify-between font-sans selection:bg-[#3373AB]/30 tracking-normal antialiased ${theme === 'dark' ? 'bg-[#111111]' : 'bg-gray-100'}`}>
@@ -669,6 +706,78 @@ export default function App() {
           </div>
         </div>
       )}
+
+      {/* GLOBAL AI CHATBOT — fixed bottom-right on every page */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+        {!showGlobalChat && showGlobalChatPopup && (
+          <div className="relative bg-[#111111] text-white px-4 py-2.5 shadow-2xl max-w-[200px] text-xs font-mono animate-fade-in">
+            <span>this is nexus ai ask every thing</span>
+            <button
+              onClick={() => setShowGlobalChatPopup(false)}
+              className="absolute -top-1.5 -right-1.5 bg-[#3373AB] hover:bg-[#255C8E] text-white w-4 h-4 flex items-center justify-center outline-none"
+            >
+              <X size={10} />
+            </button>
+          </div>
+        )}
+        {!showGlobalChat ? (
+          <button
+            onClick={() => setShowGlobalChat(true)}
+            className="bg-[#3373AB] hover:bg-[#255C8E] text-white p-3 shadow-2xl transition-all hover:scale-105 rounded-full outline-none"
+          >
+            <Bot size={22} />
+          </button>
+        ) : (
+          <div className="w-80 bg-white border border-gray-200 shadow-2xl z-50 rounded-none overflow-hidden text-left flex flex-col max-h-[480px]">
+            {/* Chat head */}
+            <div className="bg-[#111111] text-white px-4 py-3 flex items-center justify-between border-b border-gray-800 font-sans">
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-bold uppercase tracking-wider">NEXUS AI</span>
+              </div>
+              <button onClick={() => setShowGlobalChat(false)} className="text-gray-400 hover:text-white outline-none">
+                <X size={15} />
+              </button>
+            </div>
+
+            {/* Page context greeting */}
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
+              <p className="text-[11px] font-mono text-gray-500">
+                You are on <span className="font-bold text-gray-900">{pageDescriptions[view]?.title || view}</span>
+              </p>
+              <p className="text-[10px] text-gray-400 mt-0.5 leading-relaxed">
+                {pageDescriptions[view]?.desc || 'Explore the RT Nexus ecosystem.'}
+              </p>
+              <p className="text-[11px] font-mono text-[#3373AB] mt-2 font-semibold">
+                What is in your agenda with nexus today?
+              </p>
+            </div>
+
+            {/* Chat messages */}
+            <div className="flex-1 p-3 overflow-y-auto space-y-2 bg-gray-55/30 max-h-[240px]">
+              {globalChatMessages.map((msg, idx) => (
+                <div key={idx} className={`text-left p-2.5 max-w-[85%] text-xs ${msg.sender === 'user' ? 'bg-[#3373AB]/15 text-gray-800 ml-auto border-r-2 border-[#3373AB]' : 'bg-gray-100 text-gray-700'}`}>
+                  <p className="leading-relaxed font-sans">{msg.text}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Chat input */}
+            <form onSubmit={handleGlobalChatSend} className="p-2 border-t border-gray-150 bg-gray-50 flex gap-1">
+              <input
+                type="text"
+                placeholder="Ask Nexus AI..."
+                value={globalChatInput}
+                onChange={(e) => setGlobalChatInput(e.target.value)}
+                className="bg-white border border-gray-200 text-xs px-3 py-1.5 text-gray-800 w-full outline-none focus:border-[#3373AB] font-sans rounded-none"
+              />
+              <button type="submit" className="bg-[#3373AB] text-white p-2 rounded-none hover:bg-[#255C8E] outline-none">
+                <Send size={11} />
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
 
     </div>
   );

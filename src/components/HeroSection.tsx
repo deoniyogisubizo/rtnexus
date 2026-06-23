@@ -18,7 +18,7 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
   }, []);
 
   return (
-    <section className="relative w-full h-screen border-b-4 border-[#3373AB] overflow-hidden select-none">
+    <section className="relative w-full h-[75vh] lg:h-screen border-b-4 border-[#3373AB] overflow-hidden select-none">
       <style>{`
         @font-face {
           font-family: 'Jarvane';
@@ -144,15 +144,15 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
         {HERO_SLIDES.map((src, i) => (
           <div key={src} className={`absolute inset-0 transition-opacity duration-700 ${i === slide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
             <div
-              className="absolute inset-0 bg-contain bg-top bg-no-repeat"
+              className="absolute inset-0 bg-cover md:bg-contain bg-top bg-no-repeat"
               style={{ backgroundImage: `url(${src})` }}
             />
             {/* Dark overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
             {i === 0 ? (
-              <div className="absolute left-8 md:left-16 bottom-[38%]">
-                <div className="border-2 border-dashed border-white/50 bg-black/30 p-6 md:p-8 max-w-2xl text-center">
-                  <h2 className="text-[#E8C547] text-xl sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+              <div className="absolute left-1/2 -translate-x-1/2 md:left-16 md:translate-x-0 bottom-[30%] md:bottom-[38%] w-full px-4 md:px-0">
+                <div className="border-2 border-dashed border-white/50 bg-black/30 p-4 md:p-8 max-w-2xl text-center mx-auto md:mx-0">
+                  <h2 className="text-[#E8C547] text-lg sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
                     GETS OUR PRODUCT ON SHELF PRICE & QUALITY
                   </h2>
                   <div className="flex flex-wrap gap-3 mt-6 justify-center">
@@ -172,9 +172,9 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
                 </div>
               </div>
             ) : (
-              <div className="absolute left-8 md:left-16 bottom-[38%]">
-                <div className="border-2 border-dashed border-white/50 bg-black/30 p-6 md:p-8 max-w-2xl text-center">
-                  <h2 className="text-[#E8C547] text-xl sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
+              <div className="absolute left-1/2 -translate-x-1/2 md:left-16 md:translate-x-0 bottom-[30%] md:bottom-[38%] w-full px-4 md:px-0">
+                <div className="border-2 border-dashed border-white/50 bg-black/30 p-4 md:p-8 max-w-2xl text-center mx-auto md:mx-0">
+                  <h2 className="text-[#E8C547] text-lg sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
                     LEARN WITH BEST TRACK AND GETS CERTIFIED WITH RTB OFFER
                   </h2>
                   <div className="flex flex-wrap gap-3 mt-6 justify-center">

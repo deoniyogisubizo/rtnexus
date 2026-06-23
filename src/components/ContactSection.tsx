@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Phone, MapPin, Search, ChevronDown, Check, Send, MessageSquare, X, ShieldAlert, Bot } from 'lucide-react';
+import React, { useState } from 'react';
+import { Mail, Phone, MapPin, Search, ChevronDown, Check, Send, ShieldAlert } from 'lucide-react';
 import Breadcrumb from './Breadcrumb';
 
 interface ContactSectionProps {
@@ -15,19 +15,6 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
   const [formEmail, setFormEmail] = useState('');
   const [formMsg, setFormMsg] = useState('');
   const [ticketLogged, setTicketLogged] = useState(false);
-  const [showLiveChat, setShowLiveChat] = useState(false);
-  const [showChatPopup, setShowChatPopup] = useState(false);
-  const [chatMessages, setChatMessages] = useState([
-    { sender: 'system', text: 'You are connected with RTTI Live Core Assist. Please declare your telemetry query.' }
-  ]);
-  const [chatInput, setChatInput] = useState('');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowChatPopup(true);
-    }, 300000);
-    return () => clearTimeout(timer);
-  }, []);
 
   const globalOffices = [
     { city: 'Boston, USA', address: '42 Patriot Way, Technology Square, Boston, MA 02139', phone: '+1 (617) 555-0192', map: 'B' },
@@ -47,17 +34,6 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
     e.preventDefault();
     if (!formName || !formEmail) return;
     setTicketLogged(true);
-  };
-
-  const handleChatSend = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!chatInput.trim()) return;
-    setChatMessages(prev => [
-      ...prev,
-      { sender: 'user', text: chatInput },
-      { sender: 'system', text: 'Acknowledge: Logging chat parameters internally. Your active telemetry index is #' + Math.floor(Math.random() * 900 + 100) + '. An associate will take over.' }
-    ]);
-    setChatInput('');
   };
 
   const filteredFaqs = faqList.filter(item => 
@@ -223,65 +199,6 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
               </div>
             ))}
           </div>
-        </div>
-
-        {/* FLOATING CHATBOT ICON WITH POPUP */}
-        <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
-          {showChatPopup && (
-            <div className="relative bg-[#111111] text-white px-4 py-2.5 shadow-2xl max-w-[200px] text-xs font-mono animate-fade-in">
-              <span>this is nexus ai ask every thing</span>
-              <button
-                onClick={() => setShowChatPopup(false)}
-                className="absolute -top-1.5 -right-1.5 bg-[#3373AB] hover:bg-[#255C8E] text-white w-4 h-4 flex items-center justify-center outline-none"
-              >
-                <X size={10} />
-              </button>
-            </div>
-          )}
-          {!showLiveChat ? (
-            <button 
-              onClick={() => setShowLiveChat(true)}
-              className="bg-[#3373AB] hover:bg-[#255C8E] text-white p-3 shadow-2xl transition-all hover:scale-105 rounded-full outline-none"
-            >
-              <Bot size={22} />
-            </button>
-          ) : (
-            <div className="w-80 bg-white border border-gray-200 shadow-2xl z-50 rounded-none overflow-hidden text-left flex flex-col h-96">
-              {/* Chat head */}
-              <div className="bg-[#111111] text-white px-4 py-3 flex items-center justify-between border-b border-gray-800 font-sans">
-                <div className="flex items-center gap-2">
-                  <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                  <span className="text-xs font-bold uppercase tracking-wider">RTTI LIVE AGENCY CHAT</span>
-                </div>
-                <button onClick={() => setShowLiveChat(false)} className="text-gray-400 hover:text-white outline-none">
-                  <X size={15} />
-                </button>
-              </div>
-
-              {/* Chat messages viewer */}
-              <div className="flex-1 p-3 overflow-y-auto space-y-2 bg-gray-55/30 max-h-[290px]">
-                {chatMessages.map((msg, idx) => (
-                  <div key={idx} className={`text-left p-2.5 max-w-[85%] text-xs ${msg.sender === 'user' ? 'bg-[#3373AB]/15 text-gray-800 ml-auto border-r-2 border-[#3373AB]' : 'bg-gray-150 text-gray-650'}`}>
-                    <p className="leading-relaxed font-sans">{msg.text}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Chat submission form */}
-              <form onSubmit={handleChatSend} className="p-2 border-t border-gray-150 bg-gray-50 flex gap-1">
-                <input 
-                  type="text" 
-                  placeholder="Ask live assistant..." 
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  className="bg-white border border-gray-200 text-xs px-3 py-1.5 text-gray-800 w-full outline-none focus:border-[#3373AB] font-sans rounded-none"
-                />
-                <button type="submit" className="bg-[#3373AB] text-white p-2 rounded-none hover:bg-[#255C8E] outline-none">
-                  <Send size={11} />
-                </button>
-              </form>
-            </div>
-          )}
         </div>
 
       </div>
