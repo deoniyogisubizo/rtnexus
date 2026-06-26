@@ -89,8 +89,8 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
     return (
       <div>
         <div className="border-l-4 border-[#3373AB] pl-4 mb-6 text-left">
-          <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">{label}</p>
-          <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-white' : 'text-[#111]'}`}>
+          <p className="text-xs tracking-widest text-[#3373AB] uppercase font-bold" style={{ fontFamily: "'Jarvane', serif" }}>{label}</p>
+          <h3 className={`text-sm font-bold tracking-tight mt-0.5 capitalize ${isDark ? 'text-white' : 'text-[#111]'}`}>
             {title}
           </h3>
         </div>
@@ -120,8 +120,8 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
       <div className="max-w-7xl mx-auto space-y-10">
         <div>
           <div className="border-l-4 border-[#3373AB] pl-4 mb-6 text-left">
-            <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">Embedded System Deals</p>
-            <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-white' : 'text-[#111]'}`}>
+            <p className="text-xs tracking-widest text-[#3373AB] uppercase font-bold" style={{ fontFamily: "'Jarvane', serif" }}>Embedded System Deals</p>
+            <h3 className={`text-sm font-bold tracking-tight mt-0.5 capitalize ${isDark ? 'text-white' : 'text-[#111]'}`}>
               Microcontrollers, Wireless & Dev Boards
             </h3>
           </div>
@@ -166,9 +166,9 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
 
         <div>
           <div className="border-l-4 border-[#3373AB] pl-4 mb-5 text-left">
-            <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">Popular Microcontroller Boards</p>
-            <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-white' : 'text-[#111]'}`}>
-              Available Components for Embedded Development
+            <p className="text-xs tracking-widest text-[#3373AB] uppercase font-bold" style={{ fontFamily: "'Jarvane', serif" }}>Popular Microcontroller Boards</p>
+            <h3 className={`text-sm font-bold tracking-tight mt-0.5 capitalize ${isDark ? 'text-white' : 'text-[#111]'}`}>
+              Available Components For Embedded Development
             </h3>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-2">

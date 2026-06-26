@@ -63,7 +63,7 @@ export default function SolutionsSection({ setView, theme = 'light', standalone 
       <style>{`
         .sol-card {
           width: 100%;
-          height: 130px;
+          height: 148px;
           padding: 0.5rem;
           background: rgba(255, 255, 255, 0.92);
           border-radius: 8px;

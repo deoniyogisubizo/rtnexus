@@ -33,6 +33,16 @@
   font-display: swap;
 }
 
+/* ── Jarvane Display Font ── */
+@font-face {
+  font-family: 'Jarvane';
+  src: url('/jarvane-display-font/Jarvane-BF6814d55045491.woff') format('woff'),
+       url('/jarvane-display-font/Jarvane-BF6814d5504a5e3.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── SF Pro Display (headings / UI accents) ── */
 @font-face {
   font-family: 'SF Pro Display';

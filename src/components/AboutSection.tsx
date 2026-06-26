@@ -33,8 +33,8 @@ export default function AboutSection({ theme = 'light', standalone }: AboutSecti
 
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
-          <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">COMPANY BIOGRAPHY AND FOCUS</p>
-          <h2 className={`text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 text-left ${isDark ? 'text-white' : ''}`}>RT GROUP CORPORATE PHILOSOPHY & LEADERSHIP</h2>
+          <p className="text-xs tracking-widest text-[#3373AB] uppercase font-bold text-left" style={{ fontFamily: "'Jarvane', serif" }}>Company Biography And Focus</p>
+          <h2 className={`text-xl lg:text-2xl font-bold tracking-tight mt-1 text-left capitalize ${isDark ? 'text-white' : ''}`}>RT Group Corporate Philosophy & Leadership</h2>
         </div>
 
         {/* Story Intro */}
