@@ -877,7 +877,7 @@ export default function Navigation({
             </button>
 
             <button onClick={() => goTo('shop')} className={`flex flex-col items-center gap-0.5 px-2 py-1 transition-colors ${focusRing} ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-              <ShoppingCart size={18} />
+              <ShoppingCart size={20} strokeWidth={2.5} className="drop-shadow-[0_0_2px_rgba(234,179,8,0.2)]" />
               <span className="text-[11px] font-medium">Shop</span>
             </button>
 
