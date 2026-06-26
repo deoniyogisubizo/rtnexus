@@ -57,8 +57,8 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
       <div className="max-w-7xl mx-auto">
         <div className="flex items-end justify-between mb-8">
           <div className="border-l-4 border-[#3373AB] pl-4">
-            <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">RT SHOP</p>
-            <h2 className="text-lg font-bold uppercase tracking-tight mt-0.5">Shop by Category</h2>
+            <p className="text-xs tracking-widest text-[#3373AB] uppercase font-bold" style={{ fontFamily: "'Jarvane', serif" }}>RT SHOP</p>
+            <h2 className="text-lg font-bold tracking-tight mt-0.5 capitalize">Shop by category</h2>
           </div>
           <div ref={ref} className="relative w-64">
             <Search size={14} className={`absolute left-3 top-1/2 -translate-y-1/2 ${textMuted} z-10`} />
@@ -140,22 +140,25 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-1.5">
           {gridCategories.slice(0, 12).map(({ name, image }) => (
             <div
               key={name}
               onClick={() => { onSelectCategory?.(name); setView('shop'); }}
-              className={`flex flex-col ${cardBg} p-4 relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98]`}
+              className={`flex flex-col ${cardBg} relative group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer active:scale-[0.98] overflow-hidden rounded-sm`}
             >
-              <div className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center rounded-full border border-gray-400/30 text-gray-500 group-hover:bg-[#3373AB] group-hover:text-white group-hover:border-[#3373AB] transition-all duration-200 lg:shadow-md lg:group-hover:shadow-lg">
+              <div
+                className="absolute top-2 right-2 h-7 w-7 flex items-center justify-center border border-yellow-500/30 text-yellow-600/70 group-hover:bg-yellow-400/20 group-hover:text-yellow-600 group-hover:border-yellow-500/60 transition-all duration-200 z-10 lg:shadow-md lg:group-hover:shadow-lg"
+                style={{ borderRadius: '50%' }}
+              >
                 <ChevronRight size={13} className="-rotate-45" />
               </div>
-              <div className="h-28 sm:h-32 flex items-center justify-center mb-3 overflow-hidden">
+              <div className="h-32 sm:h-36 flex items-center justify-center overflow-hidden">
                 {image ? (
                   <img
                     src={image}
                     alt={name}
-                    className="max-w-full max-h-full object-contain"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : (
                   <div className={`w-full h-full flex items-center justify-center ${isDark ? 'text-gray-600' : 'text-gray-300'}`}>
@@ -163,7 +166,8 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                   </div>
                 )}
               </div>
-              <span className={`text-xs sm:text-sm lg:text-xs font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'} group-hover:text-[#3373AB] lg:group-hover:underline transition-all duration-200`}>{name}</span>
+              <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black via-black/60 to-transparent pointer-events-none" />
+              <span className="absolute bottom-2.5 left-1/2 -translate-x-1/2 text-xs font-semibold capitalize text-white text-center leading-tight px-3 line-clamp-2 max-w-[90%]">{name}</span>
             </div>
           ))}
         </div>

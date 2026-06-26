@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
   Search, SlidersHorizontal, X, Check, ArrowRight, Cpu, Star, ShieldCheck, Package,
-  Heart, Eye, GitCompare, ChevronLeft, ChevronRight, Filter, Clock, ShoppingBag
+  Heart, Eye, GitCompare, ChevronLeft, ChevronRight, Filter, Clock, ShoppingBag, Plus
 } from 'lucide-react';
 import { Product, CartItem } from '../types';
 import { fetchProducts, fetchCategories } from '../services/api';
@@ -51,6 +51,23 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
   const [quickViewQty, setQuickViewQty] = useState(1);
   const [recentlyViewedIds, setRecentlyViewedIds] = useState<string[]>([]);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [typingText, setTypingText] = useState('');
+  const [typingDone, setTypingDone] = useState(false);
+  const fullText = 'gets all embedded and circuit devices in rt shop';
+
+  useEffect(() => {
+    if (typingDone) return;
+    let i = 0;
+    const interval = setInterval(() => {
+      i++;
+      setTypingText(fullText.slice(0, i));
+      if (i >= fullText.length) {
+        clearInterval(interval);
+        setTypingDone(true);
+      }
+    }, 50);
+    return () => clearInterval(interval);
+  }, [typingDone]);
 
   const directoryRef = useRef<HTMLDivElement>(null);
   const categoryRailRef = useRef<HTMLDivElement>(null);
@@ -269,11 +286,6 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         className={`flex-shrink-0 w-[170px] border cursor-pointer group transition-all duration-200 hover:-translate-y-0.5 ${isDark ? 'bg-[#212121] border-gray-800 hover:border-[#3373AB]/50' : 'bg-white border-gray-100 hover:border-[#3373AB]/40 hover:shadow-[0_8px_20px_rgba(0,0,0,0.07)]'}`}
       >
         <div className={`relative h-[110px] flex items-center justify-center p-3 border-b ${isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#FAFBFC] border-gray-100'}`}>
-          {badge && (
-            <span className="absolute top-1.5 left-1.5 bg-[#3373AB] text-white text-[14px] font-mono font-bold uppercase px-1 py-0.5 tracking-wider">
-              {badge}
-            </span>
-          )}
           <button
             onClick={(e) => toggleWishlist(product.id, e)}
             className={`absolute top-1.5 right-1.5 w-5 h-5 flex items-center justify-center transition-colors ${wishlist.has(product.id) ? 'text-[#D95907]' : (isDark ? 'text-gray-600' : 'text-gray-300')} hover:text-[#D95907]`}
@@ -301,16 +313,16 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
 
   function RailHeader({ icon, title, railRef }: { icon: React.ReactNode; title: string; railRef: React.RefObject<HTMLDivElement> }) {
     return (
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-xs font-bold uppercase tracking-wider flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
+      <div className="flex items-center justify-between mb-4">
+        <h3 className={`text-sm font-bold tracking-wide flex items-center gap-2 ${isDark ? 'text-gray-200' : 'text-gray-800'}`} style={{ fontFamily: "'Jarvane', serif" }}>
           {icon} {title}
         </h3>
         <div className="flex items-center gap-1.5">
-          <button onClick={() => scrollRail(railRef, -1)} className={`w-6 h-6 flex items-center justify-center border ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB]'} hover:text-[#3373AB] transition-colors`}>
-            <ChevronLeft size={13} />
+          <button onClick={() => scrollRail(railRef, -1)} className={`w-7 h-7 flex items-center justify-center border ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB]'} hover:text-[#3373AB] transition-colors`}>
+            <ChevronLeft size={14} />
           </button>
-          <button onClick={() => scrollRail(railRef, 1)} className={`w-6 h-6 flex items-center justify-center border ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB]'} hover:text-[#3373AB] transition-colors`}>
-            <ChevronRight size={13} />
+          <button onClick={() => scrollRail(railRef, 1)} className={`w-7 h-7 flex items-center justify-center border ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB]'} hover:text-[#3373AB] transition-colors`}>
+            <ChevronRight size={14} />
           </button>
         </div>
       </div>
@@ -533,27 +545,30 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
     <section className={`w-full select-none py-12 px-6 font-sans relative ${isDark ? 'bg-[#1a1a1a] text-gray-200' : 'bg-white text-gray-900'}`}>
       <div className="max-w-7xl mx-auto">
 
-        <Breadcrumb
-          segments={[
-            { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
-            { label: 'Shop' },
-            ...(selectedCategory !== 'All' ? [{ label: selectedCategory } as { label: string; onClick?: () => void }] : []),
-          ]}
-          theme={theme}
-        />
+        <div className="mb-8">
+          <Breadcrumb
+            segments={[
+              { label: 'Home', onClick: () => { window.history.pushState({}, '', '/'); window.dispatchEvent(new PopStateEvent('popstate')); } },
+              { label: 'Shop' },
+              ...(selectedCategory !== 'All' ? [{ label: selectedCategory } as { label: string; onClick?: () => void }] : []),
+            ]}
+            theme={theme}
+            size="lg"
+          />
+        </div>
 
         {/* Hero header */}
         <div className={`relative overflow-hidden flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pb-8 mb-10 border-b-2 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
           <div className={`absolute -top-10 -right-10 w-72 h-72 rounded-full pointer-events-none ${isDark ? 'bg-[#3373AB]/10' : 'bg-[#3373AB]/[0.06]'}`} />
           <div className="border-l-4 border-[#3373AB] pl-5 relative z-10">
-            <p className="text-xs font-mono font-bold tracking-widest text-[#3373AB] flex items-center gap-1.5">
+            <p className="text-xs font-bold tracking-widest text-[#3373AB] flex items-center gap-1.5" style={{ fontFamily: "'Jarvane', serif" }}>
               <ShieldCheck size={13} /> B2B FOUNDRY MARKETPLACE
             </p>
-            <h2 className={`text-2xl lg:text-4xl font-extrabold uppercase tracking-tight mt-1.5 leading-none ${isDark ? 'text-white' : 'text-[#111111]'}`}>
-              Component Directory
+            <h2 className={`text-2xl lg:text-4xl font-extrabold tracking-tight mt-1.5 leading-none min-h-[1.2em] ${isDark ? 'text-white' : 'text-[#111111]'}`}>
+              {typingText}<span className={`${typingDone ? 'opacity-0' : 'animate-pulse'}`}>|</span>
             </h2>
             <p className="text-xs text-gray-500 max-w-md font-light mt-3 leading-relaxed">
-              Sovereign escrow purchasing of calibrated electronics, multi-protocol sensors, and certified development boards directly from factory hubs.
+              Shop directly from verified factory hubs — calibrated electronics, multi-protocol sensors, and certified development boards with escrow-backed purchasing.
             </p>
           </div>
 
@@ -595,25 +610,26 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
 
         {/* Shop by Category rail */}
         {categoryRailItems.length > 0 && (
-          <div className="mb-10">
-            <RailHeader icon={<Package size={13} className="text-[#3373AB]" />} title="Shop by Category" railRef={categoryRailRef} />
-            <div ref={categoryRailRef} className="flex gap-3 overflow-x-auto pb-2 scroll-smooth">
+          <div className="mb-14">
+            <RailHeader icon={<Package size={14} className="text-[#3373AB]" />} title="Shop by Category" railRef={categoryRailRef} />
+            <div ref={categoryRailRef} className="flex gap-3 overflow-x-auto pb-2 scroll-smooth lg:gap-2" style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
               {categoryRailItems.map(c => (
                 <button
                   key={c.id}
                   onClick={() => { setSelectedCategory(c.name); scrollToDirectory(); }}
-                  className={`flex-shrink-0 w-[140px] border text-left group transition-all ${isDark ? 'border-gray-800 hover:border-[#3373AB]/50' : 'border-gray-100 hover:border-[#3373AB]/40 hover:shadow-md'}`}
+                  className={`flex-shrink-0 w-[140px] lg:w-[130px] group transition-all duration-200 overflow-hidden rounded-sm`}
+                  style={{ scrollSnapAlign: 'start' }}
                 >
-                  <div className={`h-[90px] flex items-center justify-center p-3 border-b ${isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#FAFBFC] border-gray-100'}`}>
+                  <div className={`relative h-[110px] lg:h-[100px] flex items-center justify-center overflow-hidden ${isDark ? 'bg-[#1a1a1a]' : 'bg-[#FAFBFC]'}`}>
                     {c.image ? (
-                      <img src={c.image} alt={c.name} referrerPolicy="no-referrer" className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
+                      <img src={c.image} alt={c.name} referrerPolicy="no-referrer" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                     ) : (
                       <Package size={28} className="text-gray-300" />
                     )}
-                  </div>
-                  <div className="p-2.5">
-                    <p className={`text-xs font-bold truncate ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{c.name}</p>
-                    <p className="text-xs text-gray-400 font-mono">{c.count} parts</p>
+                    <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black via-black/50 to-transparent pointer-events-none" />
+                    <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-semibold capitalize text-white text-center leading-tight px-2 line-clamp-2 max-w-[90%]">
+                      {c.name}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -623,28 +639,28 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
 
         {/* Top Rated rail */}
         {topRatedProducts.length > 0 && (
-          <div className="mb-10">
-            <RailHeader icon={<Star size={13} className="text-[#D95907] fill-[#D95907]" />} title="Top Rated This Week" railRef={topRatedRailRef} />
+          <div className="mb-14">
+            <RailHeader icon={<Star size={14} className="text-[#D95907] fill-[#D95907]" />} title="Top Rated This Week" railRef={topRatedRailRef} />
             <div ref={topRatedRailRef} className="flex gap-3 overflow-x-auto pb-2 scroll-smooth">
-              {topRatedProducts.map(p => <RailCard key={p.id} product={p} badge="Top Rated" />)}
+              {topRatedProducts.map(p => <RailCard key={p.id} product={p} />)}
             </div>
           </div>
         )}
 
         {/* Budget Picks rail */}
         {budgetProducts.length > 0 && (
-          <div className="mb-10">
-            <RailHeader icon={<Cpu size={13} className="text-[#3373AB]" />} title="Budget-Friendly Picks" railRef={budgetRailRef} />
+          <div className="mb-14">
+            <RailHeader icon={<Cpu size={14} className="text-[#3373AB]" />} title="Budget-Friendly Picks" railRef={budgetRailRef} />
             <div ref={budgetRailRef} className="flex gap-3 overflow-x-auto pb-2 scroll-smooth">
-              {budgetProducts.map(p => <RailCard key={p.id} product={p} badge="Best Price" />)}
+              {budgetProducts.map(p => <RailCard key={p.id} product={p} />)}
             </div>
           </div>
         )}
 
         {/* Recently Viewed rail */}
         {recentlyViewedProducts.length > 0 && (
-          <div className="mb-10">
-            <RailHeader icon={<Clock size={13} className="text-[#3373AB]" />} title="Recently Viewed" railRef={recentRailRef} />
+          <div className="mb-14">
+            <RailHeader icon={<Clock size={14} className="text-[#3373AB]" />} title="Recently Viewed" railRef={recentRailRef} />
             <div ref={recentRailRef} className="flex gap-3 overflow-x-auto pb-2 scroll-smooth">
               {recentlyViewedProducts.map(p => <RailCard key={p.id} product={p} />)}
             </div>
@@ -652,13 +668,13 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         )}
 
         {/* Full directory */}
-        <div ref={directoryRef} className={`flex items-center justify-between border-t pt-8 mb-6 ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
-          <h3 className={`text-sm font-extrabold uppercase tracking-wide ${isDark ? 'text-white' : 'text-gray-900'}`}>Full Component Directory</h3>
+        <div ref={directoryRef} className={`border-t pt-8 mb-6 ${isDark ? 'border-gray-800' : 'border-gray-200'}`}>
+          <h3 className={`text-sm lg:text-sm font-extrabold tracking-wide mb-3 lg:mb-0 ${isDark ? 'text-white' : 'text-gray-900'}`} style={{ fontFamily: "'Jarvane', serif" }}>FULL COMPONENT DIRECTORY</h3>
           <button
             onClick={() => setMobileFiltersOpen(true)}
-            className={`lg:hidden flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border ${isDark ? 'border-gray-700 text-gray-300' : 'border-gray-200 text-gray-700'}`}
+            className={`lg:hidden w-full flex items-center justify-center gap-1.5 text-xs font-semibold px-3 py-2.5 border bg-gray-50 hover:bg-gray-100 transition-colors ${isDark ? 'border-gray-700 text-gray-300 bg-gray-800 hover:bg-gray-700' : 'border-gray-200 text-gray-700 bg-gray-50 hover:bg-gray-100'}`}
           >
-            <Filter size={13} /> Filters {activeFilters.length > 0 && <span className="bg-[#3373AB] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{activeFilters.length}</span>}
+            <Filter size={14} /> Filters{activeFilters.length > 0 && <span className="bg-[#3373AB] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center ml-1">{activeFilters.length}</span>}
           </button>
         </div>
 
@@ -713,7 +729,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 <Cpu size={48} className="animate-spin text-[#3373AB]" />
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 lg:gap-4">
                 {displayedProducts.map((product) => {
                   const topRated = product.rating >= 4.5;
                   const inBasket = cartProductIds.has(product.id);
@@ -723,59 +739,28 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                     <div
                       key={product.id}
                       onClick={() => handleCardClick(product.id, product.name)}
-                      className={`flex flex-col border bg-white box-border group transition-all duration-200 cursor-pointer active:scale-[0.98] hover:-translate-y-0.5 ${isDark ? 'bg-[#212121] border-gray-800 hover:border-[#3373AB]/50' : 'border-gray-100 hover:border-[#3373AB]/40 hover:shadow-[0_10px_28px_rgba(0,0,0,0.08)]'} ${isComparing ? 'ring-2 ring-[#3373AB]' : ''}`}
+                      className={`flex flex-col bg-white box-border cursor-pointer lg:hover:shadow lg:hover:scale-[1.02] transition-all duration-200 ${isDark ? 'bg-[#212121]' : 'bg-white'} ${isComparing ? 'ring-2 ring-[#3373AB]' : ''} border border-gray-100 lg:border-0 rounded-sm lg:rounded-none`}
                     >
-                      <div className={`relative h-[150px] flex items-center justify-center p-4 border-b ${isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#FAFBFC] border-gray-100'}`}>
-                        {topRated && (
-                          <span className="absolute top-2 left-2 bg-[#3373AB] text-white text-xs font-mono font-bold uppercase px-1.5 py-0.5 tracking-wider">
-                            Top Rated
-                          </span>
-                        )}
-                        <button
-                          onClick={(e) => toggleCompare(product.id, e)}
-                          title="Add to compare"
-                          className={`absolute bottom-2 left-2 w-6 h-6 flex items-center justify-center border transition-colors opacity-0 group-hover:opacity-100 ${isComparing ? 'bg-[#3373AB] border-[#3373AB] text-white opacity-100' : `${isDark ? 'border-gray-700 bg-[#1a1a1a]' : 'border-gray-200 bg-white'} text-gray-400 hover:text-[#3373AB]`}`}
-                        >
-                          <GitCompare size={12} />
-                        </button>
-                        <button
-                          onClick={(e) => toggleWishlist(product.id, e)}
-                          title="Save for later"
-                          className={`absolute top-2 right-2 w-6 h-6 flex items-center justify-center transition-colors ${isWishlisted ? 'text-[#D95907]' : (isDark ? 'text-gray-600' : 'text-gray-300')} hover:text-[#D95907]`}
-                        >
-                          <Heart size={14} className={isWishlisted ? 'fill-[#D95907]' : ''} />
-                        </button>
-                        <img src={product.image} alt={product.name} referrerPolicy="no-referrer" className="max-w-full max-h-full h-auto w-auto object-contain group-hover:scale-105 transition-transform duration-300" />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                          <button
-                            onClick={(e) => openQuickView(product, e)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-[#111] text-xs font-bold uppercase px-3 py-1.5 flex items-center gap-1.5"
-                          >
-                            <Eye size={12} /> Quick View
-                          </button>
-                        </div>
+                      <span className="inline-block text-[10px] lg:text-xs bg-yellow-400/15 text-yellow-700 font-semibold uppercase tracking-wide px-1.5 py-0.5 mt-1.5 ml-1.5 lg:mt-0 lg:ml-0 lg:bg-transparent lg:text-[#768B9C] lg:font-normal lg:uppercase lg:tracking-normal lg:px-0 lg:py-0 lg:relative lg:pt-[14px] lg:pl-[14px] lg:mb-1">
+                        {product.category}
+                      </span>
+                      <h3 className="text-xs lg:text-sm font-bold text-[#0062BD] leading-tight line-clamp-2 mb-1 lg:mb-2.5 px-1.5 lg:px-[14px] text-left">
+                        {product.name}
+                      </h3>
+                      <div className="flex items-center justify-center py-1 lg:py-2.5 lg:px-[14px]">
+                        <img src={product.image} alt={product.name} referrerPolicy="no-referrer" className="w-full h-auto object-contain max-h-[110px] lg:max-h-full" />
                       </div>
-
-                      <div className="p-3.5 flex flex-col flex-1">
-                        <span className="text-xs text-[#768B9C] uppercase tracking-wide group-hover:text-[#3373AB] transition-colors truncate">
-                          {product.category}
-                        </span>
-                        <h3 className={`text-sm font-bold leading-tight line-clamp-2 mb-1.5 transition-colors ${isDark ? 'text-[#5BA3DD] group-hover:text-white' : 'text-[#0062BD] group-hover:text-[#3373AB]'}`}>
-                          {product.name}
-                        </h3>
-                        <p className="text-xs text-gray-400 truncate mb-1.5">{product.vendorName}</p>
-                        {renderStars(product.rating)}
-                        {inBasket && (
-                          <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1"><Check size={10} /> In your basket</p>
-                        )}
-
-                        <div className="mt-auto flex items-center justify-between pt-2.5">
-                          <span className={`text-base font-bold ${isDark ? 'text-gray-100' : 'text-[#333E48]'}`}>RWF {product.price.toFixed(2)}</span>
+                      <div className="mt-auto px-1.5 lg:px-[14px] pb-1.5 lg:pb-[14px]">
+                        <div className="flex justify-between items-center">
+                          <span className="text-[13px] lg:text-base font-semibold lg:font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                           <button
                             onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                            className="flex items-center gap-1 bg-[#D95907] text-white text-xs font-bold uppercase px-2.5 py-1.5 hover:bg-[#B84B05] transition-colors shadow-sm"
+                            className="bg-[#D95907] text-white w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center shadow-md hover:bg-[#B84B05] hover:scale-110 active:scale-95 border-2 border-white/40 hover:border-white transition-all duration-200 relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D95907] focus-visible:ring-offset-2"
+                            title="Add to cart"
+                            style={{ borderRadius: '50%' }}
                           >
-                            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i> Add
+                            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
+                            <Plus size={10} className="absolute -top-0.5 -right-0.5 text-white" />
                           </button>
                         </div>
                       </div>

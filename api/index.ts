@@ -21,7 +21,10 @@ async function getDb(): Promise<Db> {
   }
   const uri = process.env.MONGODB_URI;
   if (!uri) throw new Error('MONGODB_URI not set in environment variables');
-  cachedClient = new MongoClient(uri);
+  cachedClient = new MongoClient(uri, {
+    serverSelectionTimeoutMS: 10000,
+    connectTimeoutMS: 10000,
+  });
   await cachedClient.connect();
   cachedDb = cachedClient.db('rtgroup');
   console.log('Connected to MongoDB');

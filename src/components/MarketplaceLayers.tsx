@@ -49,32 +49,36 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
   function renderGrid(products: Product[]) {
     if (products.length === 0) return null;
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2 lg:gap-px lg:bg-[#e5e5e5] lg:border lg:border-[#e5e5e5]">
         {products.map((product) => (
-          <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className={`flex flex-col p-[14px] box-border ${isDark ? 'bg-[#222]' : 'bg-white'} hover:shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer`} style={{ minHeight: '341px' }}>
-            <span className="text-xs text-[#768B9C] no-underline block mb-1">
+          <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className={`flex flex-col box-border cursor-pointer transition-all duration-200 ${isDark ? 'bg-[#222]' : 'bg-white'} border border-gray-100 lg:border-0 rounded-sm lg:rounded-none lg:p-[14px] lg:hover:shadow lg:hover:scale-[1.02]`}>
+            <span className="inline-block lg:hidden text-[10px] bg-yellow-400/15 text-yellow-700 font-semibold uppercase tracking-wide px-1.5 py-0.5 mt-1.5 ml-1.5">
               {product.category}
             </span>
-            <h3 className="text-sm font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
+            <span className="hidden lg:block text-xs text-[#768B9C] no-underline mb-1">
+              {product.category}
+            </span>
+            <h3 className="text-xs lg:text-sm font-bold text-[#0062BD] leading-tight line-clamp-2 mb-1 lg:mb-2.5 px-1.5 lg:px-0 text-left">
               {product.name}
             </h3>
-            <div className="flex-1 flex items-center justify-center py-2.5">
+            <div className="flex items-center justify-center py-1 lg:py-2.5">
               <img
                 src={product.image}
                 alt={product.name}
-                className="max-w-full max-h-full h-auto w-auto object-contain"
+                className="w-full lg:max-w-full h-auto object-contain max-h-[110px] lg:max-h-full"
               />
             </div>
-            <div className="mt-2.5">
+            <div className="mt-auto px-1.5 lg:px-0 pb-1.5 lg:pb-0">
               <div className="flex justify-between items-center">
-                <span className="text-base font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
+                <span className="text-[13px] lg:text-base font-semibold lg:font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                 <button
                   onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                  className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:bg-[#D95907]/60 transition-all relative"
+                  className="bg-[#D95907] text-white w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center shadow-md hover:bg-[#B84B05] hover:scale-110 active:scale-95 border-2 border-white/40 hover:border-white transition-all duration-200 relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D95907] focus-visible:ring-offset-2"
                   title="Add to cart"
+                  style={{ borderRadius: '50%' }}
                 >
                   <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
-                  <Plus size={10} className="absolute -top-0.5 -right-0.5" />
+                  <Plus size={10} className="absolute -top-0.5 -right-0.5 text-white" />
                 </button>
               </div>
             </div>
@@ -125,32 +129,36 @@ export default function MarketplaceLayers({ addToCart, theme = 'light', onSelect
               Microcontrollers, Wireless & Dev Boards
             </h3>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-px bg-[#e5e5e5] border border-[#e5e5e5]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 lg:gap-px lg:bg-[#e5e5e5] lg:border lg:border-[#e5e5e5]">
             {embeddedDeals.map((product) => (
-              <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className={`flex flex-col p-[14px] box-border ${isDark ? 'bg-[#222]' : 'bg-white'} hover:shadow hover:scale-[1.02] transition-all duration-200 cursor-pointer`} style={{ minHeight: '341px' }}>
-                <span className="text-xs text-[#768B9C] no-underline block mb-1">
+              <div key={product.id} onClick={() => handleCardClick(product.id, product.name)} className={`flex flex-col box-border cursor-pointer transition-all duration-200 ${isDark ? 'bg-[#222]' : 'bg-white'} border border-gray-100 lg:border-0 rounded-sm lg:rounded-none lg:p-[14px] lg:hover:shadow lg:hover:scale-[1.02]`}>
+                <span className="inline-block lg:hidden text-[10px] bg-yellow-400/15 text-yellow-700 font-semibold uppercase tracking-wide px-1.5 py-0.5 mt-1.5 ml-1.5">
                   {product.category}
                 </span>
-                <h3 className="text-sm font-bold text-[#0062BD] leading-tight line-clamp-2 mb-2.5">
+                <span className="hidden lg:block text-xs text-[#768B9C] no-underline mb-1">
+                  {product.category}
+                </span>
+                <h3 className="text-xs lg:text-sm font-bold text-[#0062BD] leading-tight line-clamp-2 mb-1 lg:mb-2.5 px-1.5 lg:px-0 text-left">
                   {product.name}
                 </h3>
-                <div className="flex-1 flex items-center justify-center py-2.5">
+                <div className="flex items-center justify-center py-1 lg:py-2.5">
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="max-w-full max-h-full h-auto w-auto object-contain"
+                    className="w-full lg:max-w-full h-auto object-contain max-h-[110px] lg:max-h-full"
                   />
                 </div>
-                <div className="mt-2.5">
+                <div className="mt-auto px-1.5 lg:px-0 pb-1.5 lg:pb-0">
                   <div className="flex justify-between items-center">
-                    <span className="text-base font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
+                    <span className="text-[13px] lg:text-base font-semibold lg:font-normal text-[#333E48]">RWF {product.price.toFixed(2)}</span>
                     <button
                       onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                      className="bg-[#D95907]/80 text-white w-7 h-7 rounded-full flex items-center justify-center shadow-sm hover:bg-[#D95907]/60 transition-all relative"
-                      title="Add to cart"
-                    >
-                      <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
-                      <Plus size={10} className="absolute -top-0.5 -right-0.5" />
+                  className="bg-[#D95907] text-white w-8 h-8 lg:w-9 lg:h-9 flex items-center justify-center shadow-md hover:bg-[#B84B05] hover:scale-110 active:scale-95 border-2 border-white/40 hover:border-white transition-all duration-200 relative cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D95907] focus-visible:ring-offset-2"
+                  title="Add to cart"
+                  style={{ borderRadius: '50%' }}
+                >
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
+                  <Plus size={10} className="absolute -top-0.5 -right-0.5 text-white" />
                     </button>
                   </div>
                 </div>

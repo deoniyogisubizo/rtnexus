@@ -299,8 +299,8 @@ export default function Navigation({
         {/* LAYER 1 — Brand bar: logo, search, account & cart controls    */}
         {/* ============================================================ */}
         <div className={`w-full border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
-          <div className="h-[88px] px-4 md:px-6 flex items-center">
-            {/* MOBILE LAYOUT — left: menu+theme, center: logo, right: notif+cart */}
+          <div className="lg:h-[88px] h-14 px-4 md:px-6 flex items-center">
+            {/* MOBILE LAYOUT — left: menu, center: logo, right: notif+cart */}
             <div className="flex lg:hidden items-center w-full">
               <div className="flex items-center gap-0 shrink-0">
                 <button
@@ -308,14 +308,7 @@ export default function Navigation({
                   className={`flex items-center justify-center p-2 rounded-none ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}
                   aria-label="Toggle menu"
                 >
-                  {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-                </button>
-                <button
-                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                  className={`flex items-center justify-center p-2 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
-                  aria-label="Toggle color theme"
-                >
-                  {theme === 'dark' ? <Sun size={28} /> : <Moon size={28} />}
+                  {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
                 </button>
               </div>
 
@@ -328,7 +321,7 @@ export default function Navigation({
                 <img
                   src="/logo/logo.png"
                   alt="RT Group"
-                  className="h-14 scale-200 w-auto object-contain"
+                  className="h-10 scale-180 w-auto object-contain"
                 />
               </div>
 
@@ -339,8 +332,8 @@ export default function Navigation({
                     className={`relative flex items-center justify-center p-2 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
                     aria-label="Notifications"
                   >
-                    <Bell size={28} />
-                    <span className="badge-pulse absolute -top-0.5 -right-0.5 h-5 w-5 flex items-center justify-center bg-[#3373AB] text-white text-[10px] font-mono font-black rounded-full ring-2 ring-white">
+                    <Bell size={22} />
+                    <span className="badge-pulse absolute -top-0.5 -right-0.5 h-4 w-4 flex items-center justify-center bg-[#3373AB] text-white text-[9px] font-mono font-black rounded-full ring-2 ring-white">
                       3
                     </span>
                   </button>
@@ -380,14 +373,14 @@ export default function Navigation({
                   title="Open RT Cart"
                   aria-label="Cart"
                 >
-                  <ShoppingCart size={28} className="drop-shadow-sm" />
+                  <ShoppingCart size={22} className="drop-shadow-sm" />
                   {totalCartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-5 w-5 bg-[#3373AB] text-white text-[10px] font-mono font-black flex items-center justify-center rounded-full shadow-lg ring-2 ring-white">
+                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#3373AB] text-white text-[9px] font-mono font-black flex items-center justify-center rounded-full shadow-lg ring-2 ring-white">
                       {totalCartCount}
                     </span>
                   )}
                   {totalCartCount === 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-emerald-400 rounded-full shadow-sm ring-1 ring-white" />
+                    <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 bg-emerald-400 rounded-full shadow-sm ring-1 ring-white" />
                   )}
                 </button>
               </div>
@@ -846,6 +839,16 @@ export default function Navigation({
         style={{ boxShadow: '0 -4px 20px rgba(0,0,0,0.15)' }}
       >
         <div className="px-6 py-4 flex flex-col max-h-[70vh] overflow-y-auto">
+          <button
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className={`w-full text-left px-3 py-3 text-sm font-semibold border-b transition-colors flex items-center justify-between ${focusRing} ${theme === 'dark' ? 'text-gray-300 border-gray-800' : 'text-gray-700 border-gray-100'}`}
+          >
+            <span className="flex items-center gap-2">
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            </span>
+            <span className="text-xs text-gray-400">Toggle</span>
+          </button>
           {NAV_LINKS.map((link) => {
             const isActive = currentView === link.key;
             return (
