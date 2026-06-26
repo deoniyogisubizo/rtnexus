@@ -16,7 +16,7 @@ import {
 
 const statusBadge = (status: string, colors: Record<string, string>) => {
   const color = colors[status] || 'bg-gray-100 text-gray-600';
-  return <span className={`text-[10px] font-semibold px-1.5 py-[1px] ${color}`}>{status}</span>;
+  return <span className={`text-xs font-semibold px-1.5 py-[1px] ${color}`}>{status}</span>;
 };
 
 import {
@@ -138,16 +138,16 @@ const sectionLabels: Record<string, string> = Object.fromEntries(flatItems.map(i
 const INITIAL_CATEGORIES: Category[] = [];
 
 function TrendIndicator({ value }: { value: number }) {
-  if (value > 0) return <span className="flex items-center gap-[2px] text-[10px] font-semibold text-emerald-600"><TrendingUp size={10} />+{value}%</span>;
-  if (value < 0) return <span className="flex items-center gap-[2px] text-[10px] font-semibold text-red-600"><TrendingDown size={10} />{value}%</span>;
-  return <span className="flex items-center gap-[2px] text-[10px] font-semibold text-gray-400"><Minus size={10} />0%</span>;
+  if (value > 0) return <span className="flex items-center gap-[2px] text-xs font-semibold text-emerald-600"><TrendingUp size={10} />+{value}%</span>;
+  if (value < 0) return <span className="flex items-center gap-[2px] text-xs font-semibold text-red-600"><TrendingDown size={10} />{value}%</span>;
+  return <span className="flex items-center gap-[2px] text-xs font-semibold text-gray-400"><Minus size={10} />0%</span>;
 }
 
 /* ─────── PAGINATION ─────── */
 function Pagination({ current, total, onChange }: { current: number; total: number; onChange: (page: number) => void }) {
   if (total <= 1) return null;
   return (
-    <div className="flex items-center justify-between px-2 py-2 bg-gray-50 border-t border-gray-200 text-[10px]">
+    <div className="flex items-center justify-between px-2 py-2 bg-gray-50 border-t border-gray-200 text-xs">
       <span className="text-gray-500">Page {current} of {total}</span>
       <div className="flex items-center gap-[2px]">
         <button onClick={() => onChange(current - 1)} disabled={current <= 1} className="px-2 py-[3px] text-gray-600 bg-white border border-gray-200 hover:bg-gray-100 disabled:opacity-40 disabled:cursor-not-allowed outline-none">Prev</button>
@@ -160,7 +160,7 @@ function Pagination({ current, total, onChange }: { current: number; total: numb
   );
 }
 
-const PRODS_CACHE_KEY = 'rtnexus_products_cache_v2';
+const PRODS_CACHE_KEY = 'rtgroup_products_cache_v2';
 
 function loadCachedProducts(): Product[] {
   try {
@@ -323,9 +323,9 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
         {/* Mobile: header with logo + close */}
         <div className="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200">
           <div className="flex items-center gap-2">
-            <img src="/logo/logoonly.png" alt="RTNEXUS" className="h-7 w-7  object-contain" />
+            <img src="/logo/logoonly.png" alt="RT GROUP" className="h-7 w-7  object-contain" />
             <div className="leading-tight">
-              <span className="text-[9px] font-mono text-[#3373AB] font-bold tracking-[0.15em] block">RTNEXUS</span>
+              <span className="text-xs font-mono text-[#3373AB] font-bold tracking-[0.15em] block">RT GROUP</span>
               <span className="text-xs font-bold tracking-tight block text-gray-700">Admin Panel</span>
             </div>
           </div>
@@ -337,8 +337,8 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
         {/* Desktop: logo */}
         <div className="hidden md:flex items-center justify-center border-b border-gray-200 shrink-0 px-3 py-2">
           <div className="flex items-center gap-2.5 overflow-hidden">
-            <img src="/logo/logoonly.png" alt="RTNEXUS" className="h-10 w-10 scale-100 object-contain shrink-0 group-hover:hidden" />
-            <img src="/logo/logo.png" alt="RTNEXUS" className="h-10 w-50 scale-300 object-contain shrink-0 hidden group-hover:block" />
+            <img src="/logo/logoonly.png" alt="RT GROUP" className="h-10 w-10 scale-100 object-contain shrink-0 group-hover:hidden" />
+            <img src="/logo/logo.png" alt="RT GROUP" className="h-10 w-50 scale-300 object-contain shrink-0 hidden group-hover:block" />
           </div>
         </div>
 
@@ -369,7 +369,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                   {/* Group header — icon + bold name */}
                   <div className="px-3 pt-0 pb-0.5 md:px-3 md:pt-2 flex items-center gap-2">
                     <span className="shrink-0 text-gray-400">{group.groupIcon}</span>
-                    <span className={`text-[7px] font-mono uppercase tracking-[0.2em] md:font-bold md:text-[10px] md:tracking-wider ${isGroupActive ? 'text-[#3373AB]' : 'text-gray-400 md:text-gray-700'}`}>
+                    <span className={`text-[14px] font-mono uppercase tracking-[0.2em] md:font-bold md:text-xs md:tracking-wider ${isGroupActive ? 'text-[#3373AB]' : 'text-gray-400 md:text-gray-700'}`}>
                       {group.label}
                     </span>
                   </div>
@@ -390,7 +390,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                             : 'text-gray-400 hover:text-white hover:bg-[#3373AB] hover:shadow-sm border-l-2 border-transparent'
                           }`}
                       >
-                        <span className="text-[13px] md:text-[12px] font-medium tracking-wide text-black md:group-hover:text-inherit transition-all duration-200">
+                        <span className="text-sm md:text-xs font-medium tracking-wide text-black md:group-hover:text-inherit transition-all duration-200">
                           {item.label}
                         </span>
                       </button>
@@ -409,7 +409,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
               <div className="border border-gray-300 rounded-full p-0.5">
                 <ChevronDown size={12} />
               </div>
-              <span className="text-[7px] font-medium tracking-wide">Scroll for more</span>
+              <span className="text-[14px] font-medium tracking-wide">Scroll for more</span>
             </div>
           </div>
         )}
@@ -426,13 +426,13 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
             "
           >
             <ArrowLeft size={16} className="shrink-0 transition-all duration-300" />
-            <span className="text-[11px] font-medium md:hidden md:group-hover:inline">
+            <span className="text-xs font-medium md:hidden md:group-hover:inline">
               Back to Page View
             </span>
           </button>
           <div className="flex items-center gap-1.5 px-3 py-1.5 md:px-0 md:justify-center md:group-hover:px-3 md:group-hover:justify-start">
             <span className="h-1 w-1 bg-emerald-400 shrink-0"></span>
-            <span className="text-[7px] font-mono text-gray-400 md:hidden md:group-hover:inline">
+            <span className="text-[14px] font-mono text-gray-400 md:hidden md:group-hover:inline">
               System Online v2.1.0
             </span>
           </div>
@@ -458,7 +458,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
             >
               <Menu size={16} />
             </button>
-            <span className="text-[11px] font-medium text-gray-900">{sectionLabels[activeSection] || activeSection}</span>
+            <span className="text-xs font-medium text-gray-900">{sectionLabels[activeSection] || activeSection}</span>
             {sectionHistory.length > 0 && (
               <button onClick={goBack} className="ml-1 p-1 text-gray-400 hover:text-[#3373AB] outline-none transition-colors" title="Go back">
                 <ArrowLeft size={12} />
@@ -483,16 +483,16 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
             </div>
             <button className="relative p-1.5 text-gray-500 hover:text-gray-900 hover:bg-gray-100 outline-none">
               <Bell size={15} />
-              <span className="absolute -top-[2px] -right-[2px] h-3.5 w-3.5 bg-red-500 text-white text-[7px] font-bold flex items-center justify-center">3</span>
+              <span className="absolute -top-[2px] -right-[2px] h-3.5 w-3.5 bg-red-500 text-white text-[14px] font-bold flex items-center justify-center">3</span>
             </button>
-            <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-[10px] font-bold">A</div>
+            <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-xs font-bold rounded-full" style={{ borderRadius: '50%' }}>A</div>
           </div>
         </header>
 
         {/* Toast Notification */}
         {notification && (
           <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-slideDown">
-            <div className={`px-4 py-2 text-[11px] font-semibold flex items-center justify-between border-l-4 max-w-md w-full ${
+            <div className={`px-4 py-2 text-xs font-semibold flex items-center justify-between border-l-4 max-w-md w-full ${
               notification.type === 'success' ? 'bg-emerald-50 text-emerald-800 border-emerald-500' : 'bg-red-50 text-red-800 border-red-500'
             }`}>
               <span className="flex items-center gap-1.5">
@@ -511,7 +511,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-gray-50/80 backdrop-blur-[1px]">
             <div className="flex flex-col items-center gap-3">
               <Loader2 size={28} className="text-[#3373AB] animate-spin" />
-              <span className="text-[10px] font-mono text-gray-400 tracking-wider uppercase">Loading...</span>
+              <span className="text-xs font-mono text-gray-400 tracking-wider uppercase">Loading...</span>
             </div>
           </div>
         )}
@@ -549,15 +549,15 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           <div className="relative">
             <button onClick={() => { setShowProductGroup(!showProductGroup); setShowProfileMenu(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
               <Package size={20} />
-              <span className="text-[8px] font-medium">Products</span>
+              <span className="text-[14px] font-medium">Products</span>
             </button>
             {showProductGroup && (
               <>
                 <div className="fixed inset-0 z-40" onClick={() => setShowProductGroup(false)} />
                 <div className="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 shadow-lg min-w-[180px] z-50 rounded-lg overflow-hidden">
-                  <div className="px-3 py-2 text-[8px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 bg-gray-50">Commerce</div>
+                  <div className="px-3 py-2 text-[14px] font-bold text-gray-400 uppercase tracking-wider border-b border-gray-100 bg-gray-50">Commerce</div>
                   {sidebarGroups.find(g => g.label === 'Commerce')?.items.filter(i => i.id !== 'billing').map(item => (
-                    <button key={item.id} onClick={() => { navigateTo(item.id); setShowProductGroup(false); setMobileOpen(false); }} className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-[11px] hover:bg-gray-50 text-gray-700">
+                    <button key={item.id} onClick={() => { navigateTo(item.id); setShowProductGroup(false); setMobileOpen(false); }} className="flex items-center gap-2 w-full text-left px-3 py-2.5 text-xs hover:bg-gray-50 text-gray-700">
                       <span className="text-[#3373AB]">{item.icon}</span>
                       {item.label}
                     </button>
@@ -570,26 +570,26 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           {/* Notification Bell */}
           <button onClick={() => { setShowNotifMessage(true); setShowProductGroup(false); setShowProfileMenu(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500 relative">
             <Bell size={20} />
-            <span className="text-[8px] font-medium">Alerts</span>
-            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-red-500 text-white text-[5px] font-bold flex items-center justify-center rounded-full">3</span>
+            <span className="text-[14px] font-medium">Alerts</span>
+            <span className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-red-500 text-white text-[14px] font-bold flex items-center justify-center rounded-full">3</span>
           </button>
 
           {/* Center Add Button */}
-          <button onClick={() => { setShowAddModal(true); setShowProductGroup(false); setShowProfileMenu(false); }} className="bg-[#3373AB] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg -mt-6 border-4 border-white hover:bg-[#255C8E] transition-colors">
+          <button onClick={() => { setShowAddModal(true); setShowProductGroup(false); setShowProfileMenu(false); }} className="bg-[#3373AB] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-lg -mt-6 border-4 border-white hover:bg-[#255C8E] transition-colors" style={{ borderRadius: '50%' }}>
             <Plus size={28} strokeWidth={3} />
           </button>
 
           {/* Settings Gear */}
           <button onClick={() => { navigateTo('admin-settings'); setShowProductGroup(false); setShowProfileMenu(false); setShowNotifMessage(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1 text-gray-500">
             <Settings size={20} />
-            <span className="text-[8px] font-medium">Settings</span>
+            <span className="text-[14px] font-medium">Settings</span>
           </button>
 
           {/* Profile */}
           <div className="relative">
             <button onClick={() => { setShowProfileMenu(!showProfileMenu); setShowProductGroup(false); setShowNotifMessage(false); }} className="flex flex-col items-center gap-0.5 px-2 py-1">
-              <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-[9px] font-bold rounded-full">A</div>
-              <span className="text-[8px] font-medium text-gray-500">Profile</span>
+              <div className="h-7 w-7 bg-gradient-to-br from-[#3373AB] to-[#1d4f7a] flex items-center justify-center text-white text-xs font-bold rounded-full" style={{ borderRadius: '50%' }}>A</div>
+              <span className="text-[14px] font-medium text-gray-500">Profile</span>
             </button>
             {showProfileMenu && (
               <>
@@ -597,7 +597,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                 <div className="absolute bottom-full right-0 mb-2 bg-white border border-gray-200 shadow-lg min-w-[200px] z-50 rounded-lg overflow-hidden">
                   <div className="px-4 py-3 border-b border-gray-100">
                     <p className="text-xs font-bold text-gray-900">Administrator</p>
-                    <p className="text-[10px] text-gray-500">Full system control</p>
+                    <p className="text-xs text-gray-500">Full system control</p>
                   </div>
                   <button onClick={() => { navigateTo('admin-settings'); setShowProfileMenu(false); }} className="flex items-center gap-2 w-full text-left px-4 py-2.5 text-xs hover:bg-gray-50 text-gray-700">
                     <Settings size={14} className="text-gray-400" />
@@ -627,7 +627,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
               <div className="w-10 h-1 bg-gray-300 rounded-full" />
             </div>
             <div className="px-5 pb-6">
-              <p className="text-[11px] font-bold text-gray-900 uppercase tracking-wider text-center mb-3">Add New</p>
+              <p className="text-xs font-bold text-gray-900 uppercase tracking-wider text-center mb-3">Add New</p>
               <div className="space-y-0.5">
                 {[
                   { label: 'Add Product', icon: <Package size={16} />, section: 'products' as AdminSection },
@@ -638,7 +638,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
                 ].map(item => (
                   <button key={item.label} onClick={() => { navigateTo(item.section); setShowAddModal(false); setMobileOpen(false); }} className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 rounded-lg transition-colors">
                     <span className="text-[#3373AB]">{item.icon}</span>
-                    <span className="text-[12px] font-medium">{item.label}</span>
+                    <span className="text-xs font-medium">{item.label}</span>
                   </button>
                 ))}
               </div>
@@ -654,7 +654,7 @@ export default function AdminDashboard({ onBack }: { onBack?: () => void }) {
           <div className="relative bg-white border border-gray-200 shadow-xl p-6 max-w-xs w-full text-center rounded-lg">
             <Bell size={24} className="mx-auto text-gray-300 mb-2" />
             <p className="text-sm font-bold text-gray-900 uppercase tracking-wider">Under Development</p>
-            <p className="text-[11px] text-gray-500 mt-1">This feature is currently under development.</p>
+            <p className="text-xs text-gray-500 mt-1">This feature is currently under development.</p>
             <button onClick={() => setShowNotifMessage(false)} className="mt-4 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-5 py-1.5 outline-none rounded transition-colors">OK</button>
           </div>
         </div>
@@ -669,7 +669,7 @@ function PlaceholderSection({ title, description }: { title: string; description
     <div className="bg-white border-b border-gray-200 p-8 text-center">
       <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider">{title}</h3>
       {description && <p className="text-xs text-gray-400 mt-1">{description}</p>}
-      <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-[11px] text-gray-500">
+      <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 text-xs text-gray-500">
         <Clock size={12} />
         Coming Soon
       </div>
@@ -723,7 +723,7 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
       <div className="grid grid-cols-1 md:grid-cols-3 border-b border-gray-200">
         <div className="border-r border-gray-200 last:border-r-0 bg-white px-4 py-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Total Revenue</p>
+            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Total Revenue</p>
             <DollarSign size={16} className="text-[#3373AB]" />
           </div>
           <div className="flex items-end gap-2">
@@ -733,14 +733,14 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
             <TrendIndicator value={rev?.change ?? 0} />
           </div>
           {rev && (
-            <p className="text-[9px] text-gray-400 mt-1">
+            <p className="text-xs text-gray-400 mt-1">
               Today: RWF {rev.today.toFixed(2)} &middot; Yesterday: RWF {rev.yesterday.toFixed(2)}
             </p>
           )}
         </div>
         <div className="border-r border-gray-200 last:border-r-0 bg-white px-4 py-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Active Clients</p>
+            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Active Clients</p>
             <Users size={16} className="text-[#3373AB]" />
           </div>
           <div className="flex items-end gap-2">
@@ -750,7 +750,7 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
         </div>
         <div className="border-r border-gray-200 last:border-r-0 bg-white px-4 py-5">
           <div className="flex items-center justify-between mb-1">
-            <p className="text-[10px] font-medium text-gray-400 uppercase tracking-wider">Global Engagement</p>
+            <p className="text-xs font-medium text-gray-400 uppercase tracking-wider">Global Engagement</p>
             <BarChart3 size={16} className="text-[#3373AB]" />
           </div>
           <div className="flex items-end gap-2">
@@ -765,15 +765,15 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
       {/* Pillar 2: B2B Marketplace Snapshot */}
       <div className="border-b border-gray-200 bg-white px-4 py-4">
         <div className="flex items-center justify-between mb-4">
-          <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
             <ShoppingCart size={14} className="text-[#3373AB]" />
             Marketplace
           </h4>
           <div className="flex items-center gap-2">
-            <button onClick={() => onNavigate?.('products')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-[10px] font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
+            <button onClick={() => onNavigate?.('products')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-xs font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
               + Add Product
             </button>
-            <button onClick={() => onNavigate?.('orders')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-[10px] font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
+            <button onClick={() => onNavigate?.('orders')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-xs font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
               Manage Orders
             </button>
           </div>
@@ -791,11 +791,11 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
           <div className="flex items-center justify-between px-3 py-2 bg-gray-50 border-l-2 border-gray-700">
             <div className="flex items-center gap-2">
               <AlertTriangle size={14} className="text-gray-600 shrink-0" />
-              <p className="text-[11px] text-gray-700">
+              <p className="text-xs text-gray-700">
                 <span className="font-semibold">{lowStockCount}</span> product{lowStockCount > 1 ? 's' : ''} low in stock
               </p>
             </div>
-            <button onClick={() => onNavigate?.('products')} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2.5 py-1 hover:bg-[#3373AB]/5 outline-none">
+            <button onClick={() => onNavigate?.('products')} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2.5 py-1 hover:bg-[#3373AB]/5 outline-none">
               View
             </button>
           </div>
@@ -806,26 +806,26 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
       <div className="grid grid-cols-1 md:grid-cols-2 border-b border-gray-200">
         <div className="border-r border-gray-200 bg-white px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
               <BookOpen size={14} className="text-[#3373AB]" />
               RTTI
             </h4>
-            <button onClick={() => onNavigate?.('courses')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-[10px] font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
+            <button onClick={() => onNavigate?.('courses')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-xs font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
               Manage Courses
             </button>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-gray-50 border border-gray-100 px-2.5 py-3 text-center">
               <p className="text-lg font-bold text-gray-900 leading-none">{rttiData?.totalStudents ?? '—'}</p>
-              <p className="text-[9px] text-gray-500 mt-1">Students Enrolled</p>
+              <p className="text-xs text-gray-500 mt-1">Students Enrolled</p>
             </div>
             <div className="bg-gray-50 border border-gray-100 px-2.5 py-3 text-center">
               <p className="text-lg font-bold text-gray-900 leading-none">{rttiData?.totalCourses ?? '—'}</p>
-              <p className="text-[9px] text-gray-500 mt-1">Courses</p>
+              <p className="text-xs text-gray-500 mt-1">Courses</p>
             </div>
             <div className="bg-gray-50 border border-gray-100 px-2.5 py-3 text-center">
               <p className="text-lg font-bold text-gray-900 leading-none">{rttiData?.totalTeachers ?? '—'}</p>
-              <p className="text-[9px] text-gray-500 mt-1">Teachers</p>
+              <p className="text-xs text-gray-500 mt-1">Teachers</p>
             </div>
           </div>
           <div className="flex items-center justify-between text-xs mt-3 pt-2 border-t border-gray-100">
@@ -835,11 +835,11 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
         </div>
         <div className="bg-white px-4 py-4">
           <div className="flex items-center justify-between mb-4">
-            <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+            <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
               <Monitor size={14} className="text-[#3373AB]" />
               Media & Ads
             </h4>
-            <button onClick={() => onNavigate?.('ads')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-[10px] font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
+            <button onClick={() => onNavigate?.('ads')} className="border-2 border-dashed border-[#3373AB]/40 text-[#3373AB] text-xs font-semibold px-3 py-1.5 hover:bg-[#3373AB]/5 outline-none">
               Manage Ads
             </button>
           </div>
@@ -867,7 +867,7 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
       {/* Pillar 5: Action Center */}
       <div className="border-b border-gray-200 bg-white px-4 py-4">
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-[11px] font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
+          <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
             <Bell size={14} className="text-[#3373AB]" />
             Action Center
           </h4>
@@ -875,7 +875,7 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Left: Stock & Performance */}
           <div className="md:col-span-3 space-y-3">
-            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Stock Alert by Category</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Stock Alert by Category</p>
             {minStockPerCategory.length > 0 ? (
               <div className="space-y-1.5">
                 {minStockPerCategory.slice(0, 4).map((item: any) => (
@@ -883,13 +883,13 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
                     <div className="flex items-center gap-2.5 min-w-0">
                       <Package size={13} className="text-gray-500 shrink-0" />
                       <div className="min-w-0">
-                        <p className="text-[10px] font-medium text-gray-800 truncate">{item.product.name}</p>
-                        <p className="text-[9px] text-gray-400 truncate">{item.category}</p>
+                        <p className="text-xs font-medium text-gray-800 truncate">{item.product.name}</p>
+                        <p className="text-xs text-gray-400 truncate">{item.category}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 shrink-0">
-                      <span className="text-[10px] font-bold text-gray-900">{item.product.stock} left</span>
-                      <button onClick={() => onNavigate?.('products')} className="text-[9px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 outline-none">
+                      <span className="text-xs font-bold text-gray-900">{item.product.stock} left</span>
+                      <button onClick={() => onNavigate?.('products')} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 outline-none">
                         Restock
                       </button>
                     </div>
@@ -897,15 +897,15 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
                 ))}
               </div>
             ) : (
-              <p className="text-[10px] text-gray-400 text-center py-4">All products well stocked</p>
+              <p className="text-xs text-gray-400 text-center py-4">All products well stocked</p>
             )}
             <div className="grid grid-cols-2 gap-2 pt-1">
               <div className="bg-gray-50 border border-gray-100 px-3 py-2">
-                <p className="text-[8px] text-gray-400 uppercase tracking-wider">Most Sold Category</p>
+                <p className="text-[14px] text-gray-400 uppercase tracking-wider">Most Sold Category</p>
                 <p className="text-xs font-bold text-gray-900 mt-0.5">{mostSoldCategory || '—'}</p>
               </div>
               <div className="bg-gray-50 border border-gray-100 px-3 py-2">
-                <p className="text-[8px] text-gray-400 uppercase tracking-wider">Most Sold Product</p>
+                <p className="text-[14px] text-gray-400 uppercase tracking-wider">Most Sold Product</p>
                 <p className="text-xs font-bold text-gray-900 mt-0.5 truncate">{mostSoldProduct || '—'}</p>
               </div>
             </div>
@@ -913,17 +913,17 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
 
           {/* Right: Action Items with CTA */}
           <div className="md:col-span-2 space-y-2">
-            <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Requires Action</p>
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Requires Action</p>
             {stats.pendingOrders > 0 && (
               <div className="flex items-center justify-between px-3 py-2.5 bg-gray-50 border-l-2 border-[#3373AB]">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <ShoppingCart size={13} className="text-gray-500 shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-gray-800">{stats.pendingOrders} pending orders</p>
-                    <p className="text-[8px] text-gray-400">Fulfillment needed</p>
+                    <p className="text-xs font-medium text-gray-800">{stats.pendingOrders} pending orders</p>
+                    <p className="text-[14px] text-gray-400">Fulfillment needed</p>
                   </div>
                 </div>
-                <button onClick={() => onNavigate?.('orders')} className="text-[9px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
+                <button onClick={() => onNavigate?.('orders')} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
                   Fulfill
                 </button>
               </div>
@@ -933,11 +933,11 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Megaphone size={13} className="text-gray-500 shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-gray-800">{stats.pendingAds} pending ads</p>
-                    <p className="text-[8px] text-gray-400">Awaiting review</p>
+                    <p className="text-xs font-medium text-gray-800">{stats.pendingAds} pending ads</p>
+                    <p className="text-[14px] text-gray-400">Awaiting review</p>
                   </div>
                 </div>
-                <button onClick={() => onNavigate?.('ads')} className="text-[9px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
+                <button onClick={() => onNavigate?.('ads')} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
                   Review
                 </button>
               </div>
@@ -947,17 +947,17 @@ function OverviewSection({ kpiData, stats, products, courses, ads, orders, broad
                 <div className="flex items-center gap-2.5 min-w-0">
                   <Package size={13} className="text-gray-500 shrink-0" />
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium text-gray-800">{lowStockCount} low stock items</p>
-                    <p className="text-[8px] text-gray-400">Restock recommended</p>
+                    <p className="text-xs font-medium text-gray-800">{lowStockCount} low stock items</p>
+                    <p className="text-[14px] text-gray-400">Restock recommended</p>
                   </div>
                 </div>
-                <button onClick={() => onNavigate?.('products')} className="text-[9px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
+                <button onClick={() => onNavigate?.('products')} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-1 hover:bg-[#3373AB]/5 outline-none shrink-0">
                   Restock
                 </button>
               </div>
             )}
             {stats.pendingOrders === 0 && stats.pendingAds === 0 && lowStockCount === 0 && (
-              <p className="text-[10px] text-gray-400 text-center py-6">No pending actions</p>
+              <p className="text-xs text-gray-400 text-center py-6">No pending actions</p>
             )}
           </div>
         </div>
@@ -973,7 +973,7 @@ function TableWrapper({ title, children, onAdd, totalItems }: { title: string; c
       <div className="border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         <div>
           <h3 className="text-xs font-bold text-gray-900 tracking-wide">{title}</h3>
-          {totalItems !== undefined && <span className="text-[10px] text-gray-400">{totalItems} items</span>}
+          {totalItems !== undefined && <span className="text-xs text-gray-400">{totalItems} items</span>}
         </div>
         <div className="flex items-center gap-1.5">
           {onAdd && (
@@ -1245,23 +1245,23 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2.5 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
             <div className="flex items-center gap-2 flex-1 min-w-0">
-              <span className="text-[10px] font-semibold text-[#3373AB] whitespace-nowrap">{selectedIds.size} selected</span>
+              <span className="text-xs font-semibold text-[#3373AB] whitespace-nowrap">{selectedIds.size} selected</span>
               <div className="flex items-center gap-1.5 overflow-x-auto">
                 {selectedProducts.slice(0, 8).map(p => (
                   <div key={p.id} className="flex items-center gap-1.5 bg-white border border-gray-200 rounded px-1.5 py-1 shrink-0">
                     <img src={p.image} alt={p.name} className="h-5 w-5 rounded object-cover" />
-                    <span className="text-[9px] text-gray-600 max-w-[80px] truncate">{p.name}</span>
+                    <span className="text-xs text-gray-600 max-w-[80px] truncate">{p.name}</span>
                     <button onClick={() => toggleSelect(p.id)} className="text-gray-300 hover:text-gray-500 outline-none"><X size={9} /></button>
                   </div>
                 ))}
                 {selectedProducts.length > 8 && (
-                  <span className="text-[9px] text-gray-400">+{selectedProducts.length - 8} more</span>
+                  <span className="text-xs text-gray-400">+{selectedProducts.length - 8} more</span>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} />
                 Delete All
               </button>
@@ -1270,21 +1270,21 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
         )}
 
         <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-gray-50/50">
-          <select value={filterCat} onChange={e => setFilterCat(e.target.value)} className="text-[10px] border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
+          <select value={filterCat} onChange={e => setFilterCat(e.target.value)} className="text-xs border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
             <option value="">All Categories</option>
             {[...new Set<string>(products.map((p: Product) => p.category))].sort().map(c => <option key={c} value={c}>{c}</option>)}
           </select>
-          <input type="number" placeholder="Min RWF" value={filterMinPrice} onChange={e => setFilterMinPrice(e.target.value)} className="w-20 text-[10px] border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]" />
-          <span className="text-[9px] text-gray-400">—</span>
-          <input type="number" placeholder="Max RWF" value={filterMaxPrice} onChange={e => setFilterMaxPrice(e.target.value)} className="w-20 text-[10px] border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]" />
-          <select value={filterStock} onChange={e => setFilterStock(e.target.value)} className="text-[10px] border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
+          <input type="number" placeholder="Min RWF" value={filterMinPrice} onChange={e => setFilterMinPrice(e.target.value)} className="w-20 text-xs border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]" />
+          <span className="text-xs text-gray-400">—</span>
+          <input type="number" placeholder="Max RWF" value={filterMaxPrice} onChange={e => setFilterMaxPrice(e.target.value)} className="w-20 text-xs border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]" />
+          <select value={filterStock} onChange={e => setFilterStock(e.target.value)} className="text-xs border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
             <option value="">All Stock</option>
             <option value="in">In Stock (&gt;0)</option>
             <option value="low">Low Stock (1-10)</option>
             <option value="out">Out of Stock</option>
           </select>
           {(filterCat || filterMinPrice || filterMaxPrice || filterStock) && (
-            <button onClick={() => { setFilterCat(''); setFilterMinPrice(''); setFilterMaxPrice(''); setFilterStock(''); }} className="text-[10px] text-gray-500 hover:text-red-500 ml-auto outline-none">Clear Filters</button>
+            <button onClick={() => { setFilterCat(''); setFilterMinPrice(''); setFilterMaxPrice(''); setFilterStock(''); }} className="text-xs text-gray-500 hover:text-red-500 ml-auto outline-none">Clear Filters</button>
           )}
         </div>
 
@@ -1294,14 +1294,14 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10">
                     <input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" />
                   </th>
                   {['Image', 'ID', 'Name', 'Category', 'Price', 'Stock', 'Vendor', 'Rating', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -1316,16 +1316,16 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
                       <td className="px-3 py-2">
                         <img src={p.image} alt={p.name} className="h-8 w-8 rounded object-cover border border-gray-200 bg-gray-50" />
                       </td>
-                      <td className="px-3 py-2.5 font-mono text-[10px] text-gray-400">{p.id}</td>
+                      <td className="px-3 py-2.5 font-mono text-xs text-gray-400">{p.id}</td>
                       <td className="px-3 py-2.5 font-medium text-gray-900 max-w-[180px] truncate" title={p.name}>{p.name}</td>
-                      <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-[9px] font-medium whitespace-nowrap">{p.category}</span></td>
+                      <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-xs font-medium whitespace-nowrap">{p.category}</span></td>
                       <td className="px-3 py-2.5 font-mono font-semibold text-gray-900 whitespace-nowrap">RWF {p.price.toFixed(2)}</td>
                       <td className="px-3 py-2.5">
-                        <span className={`text-[10px] font-mono font-semibold px-1.5 py-[2px] whitespace-nowrap ${p.stock > 10 ? 'bg-emerald-50 text-emerald-700' : p.stock > 0 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{p.stock}</span>
+                        <span className={`text-xs font-mono font-semibold px-1.5 py-[2px] whitespace-nowrap ${p.stock > 10 ? 'bg-emerald-50 text-emerald-700' : p.stock > 0 ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{p.stock}</span>
                       </td>
                       <td className="px-3 py-2.5 text-gray-500 max-w-[120px] truncate" title={p.vendorName}>{p.vendorName}</td>
                       <td className="px-3 py-2.5">
-                        <span className="flex items-center gap-1 text-amber-500 text-[10px] whitespace-nowrap">
+                        <span className="flex items-center gap-1 text-amber-500 text-xs whitespace-nowrap">
                           <Star size={9} fill="currentColor" /> {p.rating}
                         </span>
                       </td>
@@ -1351,13 +1351,13 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
             <form onSubmit={handleSubmit} className="max-w-md mx-auto space-y-5">
               {/* Product Name */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Product Name</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Product Name</label>
                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="Enter product name" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all" required />
               </div>
 
               {/* Category */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Category</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Category</label>
                 <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all bg-white" required>
                   <option value="" disabled>-- select category --</option>
                   {categories.map((c: Category) => <option key={c.id} value={c.name}>{c.name}</option>)}
@@ -1367,34 +1367,34 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
               {/* Price & Stock row */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Price (RWF)</label>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Price (RWF)</label>
                   <input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} placeholder="0.00" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all" required />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">In Stock Qty</label>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">In Stock Qty</label>
                   <input type="number" value={form.stock} onChange={e => setForm({ ...form, stock: e.target.value })} placeholder="0" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all" />
                 </div>
               </div>
 
               {/* Vendor */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Vendor</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Vendor</label>
                 <input value={form.vendorName} onChange={e => setForm({ ...form, vendorName: e.target.value })} placeholder="Vendor name" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all" />
               </div>
 
               {/* Description */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Description</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Description</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3} placeholder="Describe the product in detail" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all resize-vertical" />
               </div>
 
               {/* Table of Specification */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider">Specifications</label>
+                  <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Specifications</label>
                   <div className="flex items-center gap-1">
-                    <button type="button" onClick={addSpecCol} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 transition-all">+ Column</button>
-                    <button type="button" onClick={addSpecRow} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 transition-all">+ Row</button>
+                    <button type="button" onClick={addSpecCol} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 transition-all">+ Column</button>
+                    <button type="button" onClick={addSpecRow} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 transition-all">+ Row</button>
                   </div>
                 </div>
                 <div className="overflow-x-auto border border-gray-200">
@@ -1416,49 +1416,49 @@ function ProductsSection({ products, setProducts, searchQuery, notify, categorie
                   </table>
                 </div>
                 {(form.specTable[0]?.length || 0) > 1 && (
-                  <button type="button" onClick={() => removeSpecCol(form.specTable[0].length - 1)} className="text-[10px] text-red-400 hover:text-red-600 mt-1 outline-none">Remove last column</button>
+                  <button type="button" onClick={() => removeSpecCol(form.specTable[0].length - 1)} className="text-xs text-red-400 hover:text-red-600 mt-1 outline-none">Remove last column</button>
                 )}
               </div>
 
               {/* Video URL */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Video URL <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">YouTube Video URL <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
                 <input value={form.videoUrl} onChange={e => setForm({ ...form, videoUrl: e.target.value })} placeholder="https://youtube.com/watch?v=..." className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs" />
               </div>
 
               {/* Guide Book / Documentation */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Guide Book / Documentation Link <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Guide Book / Documentation Link <span className="text-gray-400 font-normal normal-case">(optional)</span></label>
                 <input value={form.guideBook} onChange={e => setForm({ ...form, guideBook: e.target.value })} placeholder="https://link-to-guide-or-documentation" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs" />
               </div>
 
               {/* Where to use */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Where It Will Be Used</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Where It Will Be Used</label>
                 <textarea value={form.whereToUse} onChange={e => setForm({ ...form, whereToUse: e.target.value })} rows={2} placeholder="Describe where this product is typically used" className="w-full border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all resize-vertical" />
               </div>
 
               {/* Product Images */}
               <div>
-                <label className="block text-[11px] font-bold text-gray-700 uppercase tracking-wider mb-1.5">Product Images</label>
+                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1.5">Product Images</label>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <input value={form.mainImageUrl} onChange={e => setForm({ ...form, mainImageUrl: e.target.value })} placeholder="Paste image URL..." className="flex-1 border border-gray-300 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono" />
-                    <button type="button" onClick={addImageUrl} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-[11px] font-semibold px-3 py-2 outline-none whitespace-nowrap">Add URL</button>
+                    <button type="button" onClick={addImageUrl} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-3 py-2 outline-none whitespace-nowrap">Add URL</button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-gray-400 font-mono">or</span>
+                    <span className="text-xs text-gray-400 font-mono">or</span>
                     <div className="flex gap-2">
                       <input type="file" id="prod-img-upload" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                      <button type="button" onClick={() => document.getElementById('prod-img-upload')?.click()} className="text-[11px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Upload from Device</button>
+                      <button type="button" onClick={() => document.getElementById('prod-img-upload')?.click()} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Upload from Device</button>
                       <input type="file" id="prod-img-camera" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload} />
-                      <button type="button" onClick={() => document.getElementById('prod-img-camera')?.click()} className="text-[11px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Take Photo</button>
+                      <button type="button" onClick={() => document.getElementById('prod-img-camera')?.click()} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Take Photo</button>
                     </div>
                   </div>
                 </div>
                 {form.images.length > 0 && (
                   <div className="mt-3">
-                    <div className="text-[10px] text-gray-500 font-semibold mb-1.5">{form.images.length} image(s) added</div>
+                    <div className="text-xs text-gray-500 font-semibold mb-1.5">{form.images.length} image(s) added</div>
                     <div className="flex flex-wrap gap-2">
                       {form.images.map((img, idx) => (
                         <div key={idx} className="relative group">
@@ -1596,10 +1596,10 @@ function OrdersSection({ orders, setOrders, searchQuery, notify }: any) {
         {/* Bulk action bar */}
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkCancel} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkCancel} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <X size={11} /> Cancel Selected
               </button>
             </div>
@@ -1608,12 +1608,12 @@ function OrdersSection({ orders, setOrders, searchQuery, notify }: any) {
 
         {/* Status filter */}
         <div className="flex items-center gap-2 px-4 py-2 border-b border-gray-200 bg-gray-50/50">
-          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="text-[10px] border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
+          <select value={filterStatus} onChange={e => setFilterStatus(e.target.value)} className="text-xs border border-gray-200 bg-white px-2 py-1.5 outline-none focus:border-[#3373AB]">
             <option value="">All Statuses</option>
             {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
           </select>
           {filterStatus && (
-            <button onClick={() => setFilterStatus('')} className="text-[10px] text-gray-500 hover:text-red-500 ml-auto outline-none">Clear</button>
+            <button onClick={() => setFilterStatus('')} className="text-xs text-gray-500 hover:text-red-500 ml-auto outline-none">Clear</button>
           )}
         </div>
 
@@ -1623,12 +1623,12 @@ function OrdersSection({ orders, setOrders, searchQuery, notify }: any) {
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Tracking', 'ETA', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -1643,7 +1643,7 @@ function OrdersSection({ orders, setOrders, searchQuery, notify }: any) {
                       <td className="px-3 py-2.5 text-gray-500 max-w-[180px] truncate">{o.items}</td>
                       <td className="px-3 py-2.5 font-mono font-semibold text-gray-900">RWF {o.total.toFixed(2)}</td>
                       <td className="px-3 py-2.5">{statusBadge(o.status, statusColors)}</td>
-                      <td className="px-3 py-2.5 font-mono text-gray-500 text-[10px]">{o.tracking}</td>
+                      <td className="px-3 py-2.5 font-mono text-gray-500 text-xs">{o.tracking}</td>
                       <td className="px-3 py-2.5 text-gray-500">{o.eta}</td>
                       <td className="px-3 py-2.5">
                         <div className="flex items-center gap-[2px]">
@@ -1776,10 +1776,10 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
       <TableWrapper title="Course Catalog" onAdd={openAdd} totalItems={filtered.length}>
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} /> Delete Selected
               </button>
             </div>
@@ -1791,12 +1791,12 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['Title', 'Category', 'Instructor', 'Duration', 'Price', 'Level', 'Students', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -1807,12 +1807,12 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
                   <tr key={c.id} className={`transition-colors ${isSelected ? 'bg-[#3373AB]/5' : 'hover:bg-gray-50'}`}>
                     <td className="px-3 py-2.5"><input type="checkbox" checked={isSelected} onChange={() => toggleSelect(c.id)} className="accent-[#3373AB] cursor-pointer" /></td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">{c.title}</td>
-                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-[9px] font-medium">{c.category}</span></td>
+                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-xs font-medium">{c.category}</span></td>
                     <td className="px-3 py-2.5 text-gray-500">{c.instructor}</td>
                     <td className="px-3 py-2.5 text-gray-500">{c.duration}</td>
                     <td className="px-3 py-2.5 font-mono font-semibold text-gray-900">RWF {c.price.toFixed(2)}</td>
                     <td className="px-3 py-2.5">
-                      <span className={`text-[10px] font-semibold px-1.5 py-[2px] ${c.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' : c.level === 'Intermediate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{c.level}</span>
+                      <span className={`text-xs font-semibold px-1.5 py-[2px] ${c.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' : c.level === 'Intermediate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{c.level}</span>
                     </td>
                     <td className="px-3 py-2.5 font-mono text-gray-500">{c.studentsCount}</td>
                     <td className="px-3 py-2.5">
@@ -1836,53 +1836,53 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Title</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Title</label>
                 <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Category</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Category</label>
                 <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB] bg-white">
                   {['Embedded Systems', 'Networking', 'AI', 'Cybersecurity'].map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Level</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Level</label>
                 <select value={form.level} onChange={e => setForm({ ...form, level: e.target.value as Course['level'] })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB] bg-white">
                   {['Beginner', 'Intermediate', 'Advanced'].map(l => <option key={l}>{l}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Instructor</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Instructor</label>
                 <input value={form.instructor} onChange={e => setForm({ ...form, instructor: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Duration</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Duration</label>
                 <input value={form.duration} onChange={e => setForm({ ...form, duration: e.target.value })} placeholder="e.g. 40 Hours" className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Price (RWF)</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Price (RWF)</label>
                 <input type="number" step="0.01" value={form.price} onChange={e => setForm({ ...form, price: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
               </div>
               <div className="col-span-2">
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Course Images</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Course Images</label>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <input value={form.mainImageUrl} onChange={e => setForm({ ...form, mainImageUrl: e.target.value })} placeholder="Paste image URL..." className="flex-1 border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB] font-mono" />
-                    <button type="button" onClick={addImageUrl} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-[10px] font-semibold px-3 py-2 outline-none whitespace-nowrap">Add URL</button>
+                    <button type="button" onClick={addImageUrl} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-3 py-2 outline-none whitespace-nowrap">Add URL</button>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="text-[9px] text-gray-400 font-mono">or</span>
+                    <span className="text-xs text-gray-400 font-mono">or</span>
                     <div className="flex gap-2">
                       <input type="file" id="course-img-upload" accept="image/*" className="hidden" onChange={handleImageUpload} />
-                      <button type="button" onClick={() => document.getElementById('course-img-upload')?.click()} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Upload from Device</button>
+                      <button type="button" onClick={() => document.getElementById('course-img-upload')?.click()} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Upload from Device</button>
                       <input type="file" id="course-img-camera" accept="image/*" capture="environment" className="hidden" onChange={handleImageUpload} />
-                      <button type="button" onClick={() => document.getElementById('course-img-camera')?.click()} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Take Photo</button>
+                      <button type="button" onClick={() => document.getElementById('course-img-camera')?.click()} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all">Take Photo</button>
                     </div>
                   </div>
                 </div>
                 {form.images.length > 0 && (
                   <div className="mt-2">
-                    <div className="text-[9px] text-gray-500 font-semibold mb-1">{form.images.length} image(s) added</div>
+                    <div className="text-xs text-gray-500 font-semibold mb-1">{form.images.length} image(s) added</div>
                     <div className="flex flex-wrap gap-2">
                       {form.images.map((img, idx) => (
                         <div key={idx} className="relative group">
@@ -1896,8 +1896,8 @@ function CoursesSection({ courses, setCourses, searchQuery, notify }: any) {
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-[11px] font-semibold outline-none hover:bg-gray-50">Cancel</button>
-              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-[11px] font-bold outline-none">
+              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-xs font-semibold outline-none hover:bg-gray-50">Cancel</button>
+              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-xs font-bold outline-none">
                 {editCourse ? 'Update Course' : 'Add Course'}
               </button>
             </div>
@@ -1998,10 +1998,10 @@ function CertificatesSection({ certificates, setCertificates, searchQuery, notif
       <TableWrapper title="Certificate Management" onAdd={openAdd} totalItems={filtered.length}>
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} /> Delete Selected
               </button>
             </div>
@@ -2013,12 +2013,12 @@ function CertificatesSection({ certificates, setCertificates, searchQuery, notif
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['ID', 'Title', 'Recipient', 'Issue Date', 'Expiry Date', 'Status', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -2031,7 +2031,7 @@ function CertificatesSection({ certificates, setCertificates, searchQuery, notif
                     <td className="px-3 py-2.5 font-mono text-[#3373AB] font-semibold">{c.id}</td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">{c.title}</td>
                     <td className="px-3 py-2.5 flex items-center gap-1.5 text-gray-500">
-                      <div className="h-5 w-5 bg-gray-100 flex items-center justify-center text-[8px] font-bold text-gray-500">{c.recipient.charAt(0)}</div>
+                      <div className="h-5 w-5 bg-gray-100 flex items-center justify-center text-[14px] font-bold text-gray-500">{c.recipient.charAt(0)}</div>
                       {c.recipient}
                     </td>
                     <td className="px-3 py-2.5 text-gray-500">{c.issueDate}</td>
@@ -2060,25 +2060,25 @@ function CertificatesSection({ certificates, setCertificates, searchQuery, notif
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Certificate Title</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Certificate Title</label>
                 <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Recipient</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Recipient</label>
                 <input value={form.recipient} onChange={e => setForm({ ...form, recipient: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Issue Date</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Issue Date</label>
                 <input type="date" value={form.issueDate} onChange={e => setForm({ ...form, issueDate: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Expiry Date</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Expiry Date</label>
                 <input type="date" value={form.expiryDate} onChange={e => setForm({ ...form, expiryDate: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-[11px] font-semibold outline-none hover:bg-gray-50">Cancel</button>
-              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-[11px] font-bold outline-none">
+              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-xs font-semibold outline-none hover:bg-gray-50">Cancel</button>
+              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-xs font-bold outline-none">
                 {editCert ? 'Update Certificate' : 'Issue Certificate'}
               </button>
             </div>
@@ -2174,10 +2174,10 @@ function CategoriesSection({ categories, setCategories, searchQuery, notify }: a
       <TableWrapper title="Category Management" onAdd={openAdd} totalItems={filtered.length}>
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} /> Delete Selected
               </button>
             </div>
@@ -2189,12 +2189,12 @@ function CategoriesSection({ categories, setCategories, searchQuery, notify }: a
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['Thumbnail', 'Name', 'Slug', 'Description', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -2210,7 +2210,7 @@ function CategoriesSection({ categories, setCategories, searchQuery, notify }: a
                       </div>
                     </td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">{c.name}</td>
-                    <td className="px-3 py-2.5 font-mono text-[10px] text-gray-500">{c.slug}</td>
+                    <td className="px-3 py-2.5 font-mono text-xs text-gray-500">{c.slug}</td>
                     <td className="px-3 py-2.5 text-gray-500 max-w-[200px] truncate">{c.description}</td>
                     <td className="px-3 py-2.5">
                       <div className="flex items-center gap-[2px]">
@@ -2240,25 +2240,25 @@ function CategoriesSection({ categories, setCategories, searchQuery, notify }: a
                   <svg className="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                 )}
               </div>
-              <span className="text-[9px] text-gray-400 font-mono">Thumbnail Preview</span>
+              <span className="text-xs text-gray-400 font-mono">Thumbnail Preview</span>
             </div>
 
             <div className="space-y-4">
               {/* Name */}
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Category Name</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Category Name</label>
                 <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} placeholder="e.g. IoT Devices" className="w-full border border-gray-200 px-3 py-2.5 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" required />
               </div>
 
               {/* Thumbnail: URL + File Upload */}
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Thumbnail</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Thumbnail</label>
                 <div className="space-y-2">
-                  <input value={form.thumbnail} onChange={e => setForm({ ...form, thumbnail: e.target.value })} placeholder="Paste image URL..." className="w-full border border-gray-200 px-3 py-2.5 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-[10.5px] rounded" />
+                  <input value={form.thumbnail} onChange={e => setForm({ ...form, thumbnail: e.target.value })} placeholder="Paste image URL..." className="w-full border border-gray-200 px-3 py-2.5 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono text-xs rounded" />
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-gray-400 font-mono">or</span>
+                    <span className="text-xs text-gray-400 font-mono">or</span>
                     <input type="file" id="cat-thumb-upload" accept="image/*" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) { const reader = new FileReader(); reader.onload = (ev) => { if (ev.target?.result) setForm({ ...form, thumbnail: ev.target.result as string }); }; reader.readAsDataURL(file); } }} />
-                    <button type="button" onClick={() => document.getElementById('cat-thumb-upload')?.click()} className="text-[10px] font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all rounded">
+                    <button type="button" onClick={() => document.getElementById('cat-thumb-upload')?.click()} className="text-xs font-semibold text-[#3373AB] border border-[#3373AB]/30 px-3 py-1.5 hover:bg-[#3373AB]/5 transition-all rounded">
                       Upload from Device
                     </button>
                   </div>
@@ -2268,19 +2268,19 @@ function CategoriesSection({ categories, setCategories, searchQuery, notify }: a
               {/* Slug + Description */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Slug</label>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Slug</label>
                   <input value={form.slug} onChange={e => setForm({ ...form, slug: e.target.value })} placeholder="iot-devices" className="w-full border border-gray-200 px-3 py-2.5 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all font-mono rounded" required />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Description</label>
+                  <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Description</label>
                   <input value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} placeholder="Brief description..." className="w-full border border-gray-200 px-3 py-2.5 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" />
                 </div>
               </div>
             </div>
 
             <div className="flex items-center justify-center gap-3 pt-5 border-t border-gray-100">
-              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-5 py-2 text-[11px] font-semibold outline-none hover:bg-gray-50 transition-all rounded">Cancel</button>
-              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-6 py-2 text-[11px] font-bold outline-none tracking-wide transition-all rounded">
+              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-5 py-2 text-xs font-semibold outline-none hover:bg-gray-50 transition-all rounded">Cancel</button>
+              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-6 py-2 text-xs font-bold outline-none tracking-wide transition-all rounded">
                 {editCat ? 'Update Category' : 'Add Category'}
               </button>
             </div>
@@ -2357,10 +2357,10 @@ function AdsSection({ ads, setAds, searchQuery, notify }: any) {
       <TableWrapper title="Advertising Requests" totalItems={filtered.length}>
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} /> Delete Selected
               </button>
             </div>
@@ -2372,12 +2372,12 @@ function AdsSection({ ads, setAds, searchQuery, notify }: any) {
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['ID', 'Company', 'Campaign', 'Placement', 'Budget', 'Date', 'Status', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -2390,7 +2390,7 @@ function AdsSection({ ads, setAds, searchQuery, notify }: any) {
                     <td className="px-3 py-2.5 font-mono font-semibold text-[#3373AB]">{a.id}</td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">{a.company}</td>
                     <td className="px-3 py-2.5 text-gray-500">{a.campaign}</td>
-                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-[9px] font-medium">{a.placement}</span></td>
+                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-xs font-medium">{a.placement}</span></td>
                     <td className="px-3 py-2.5 font-mono font-semibold text-gray-900">RWF {a.budget.toFixed(2)}</td>
                     <td className="px-3 py-2.5 text-gray-500">{a.date}</td>
                     <td className="px-3 py-2.5">{statusBadge(a.status, statusColors)}</td>
@@ -2509,10 +2509,10 @@ function TVSection({ broadcasts, setBroadcasts, searchQuery, notify }: any) {
       <TableWrapper title="MTTV Broadcast Management" onAdd={openAdd} totalItems={filtered.length}>
         {selectedIds.size > 0 && (
           <div className="flex items-center gap-3 px-4 py-2 bg-[#3373AB]/5 border-b border-[#3373AB]/20">
-            <span className="text-[10px] font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
+            <span className="text-xs font-semibold text-[#3373AB]">{selectedIds.size} selected</span>
             <div className="flex items-center gap-1.5 ml-auto">
-              <button onClick={clearSelection} className="text-[10px] text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
-              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-[10px] font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
+              <button onClick={clearSelection} className="text-xs text-gray-500 hover:text-gray-700 px-2 py-1 outline-none">Clear</button>
+              <button onClick={handleBulkDelete} className="flex items-center gap-1 text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-3 py-1.5 outline-none rounded">
                 <Trash2 size={11} /> Delete Selected
               </button>
             </div>
@@ -2524,12 +2524,12 @@ function TVSection({ broadcasts, setBroadcasts, searchQuery, notify }: any) {
           </div>
         ) : (
           <>
-            <table className="w-full text-[11px]">
+            <table className="w-full text-xs">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200">
                   <th className="px-3 py-2.5 w-10"><input type="checkbox" checked={allPageSelected} onChange={toggleSelectAll} className="accent-[#3373AB] cursor-pointer" /></th>
                   {['Title', 'Type', 'Category', 'Host', 'Views', 'Scheduled', 'Actions'].map(h => (
-                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-[10px] text-gray-500 uppercase tracking-wider">{h}</th>
+                    <th key={h} className="text-left px-3 py-2.5 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -2541,7 +2541,7 @@ function TVSection({ broadcasts, setBroadcasts, searchQuery, notify }: any) {
                     <td className="px-3 py-2.5"><input type="checkbox" checked={isSelected} onChange={() => toggleSelect(b.id)} className="accent-[#3373AB] cursor-pointer" /></td>
                     <td className="px-3 py-2.5 font-medium text-gray-900">{b.title}</td>
                     <td className="px-3 py-2.5">{statusBadge(b.type, typeColors)}</td>
-                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-[9px] font-medium">{b.category}</span></td>
+                    <td className="px-3 py-2.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-xs font-medium">{b.category}</span></td>
                     <td className="px-3 py-2.5 text-gray-500">{b.host}</td>
                     <td className="px-3 py-2.5 font-mono text-gray-500">{b.views.toLocaleString()}</td>
                     <td className="px-3 py-2.5 text-gray-500">{b.scheduledTime || '—'}</td>
@@ -2566,27 +2566,27 @@ function TVSection({ broadcasts, setBroadcasts, searchQuery, notify }: any) {
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2">
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Title</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Title</label>
                 <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" required />
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Category</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Category</label>
                 <select value={form.category} onChange={e => setForm({ ...form, category: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB] bg-white">
                   {['Live Events', 'Webinars', 'Podcasts', 'Tutorials'].map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Host</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Host</label>
                 <input value={form.host} onChange={e => setForm({ ...form, host: e.target.value })} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
               <div className="col-span-2">
-                <label className="block text-[10px] font-semibold text-gray-500 uppercase mb-1">Description</label>
+                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Description</label>
                 <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3} className="w-full border border-gray-200 px-2.5 py-2 text-xs outline-none focus:border-[#3373AB]" />
               </div>
             </div>
             <div className="flex justify-end gap-2 pt-2 border-t border-gray-100">
-              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-[11px] font-semibold outline-none hover:bg-gray-50">Cancel</button>
-              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-[11px] font-bold outline-none">
+              <button type="button" onClick={() => setShowForm(false)} className="border border-gray-300 text-gray-600 px-4 py-1.5 text-xs font-semibold outline-none hover:bg-gray-50">Cancel</button>
+              <button type="submit" className="bg-[#3373AB] hover:bg-[#255C8E] text-white px-5 py-1.5 text-xs font-bold outline-none">
                 {editBroadcast ? 'Update Broadcast' : 'Add Broadcast'}
               </button>
             </div>
@@ -2844,11 +2844,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <FileText size={18} className="text-[#3373AB]" />
             {domainTitleStr}
           </h2>
-          <p className="text-[10px] text-gray-400 font-mono mt-0.5">{domain === 'all' ? 'Comprehensive system-wide performance & operational report' : `Focused ${domainTitleStr.toLowerCase()} — performance metrics and operational data`}</p>
+          <p className="text-xs text-gray-400 font-mono mt-0.5">{domain === 'all' ? 'Comprehensive system-wide performance & operational report' : `Focused ${domainTitleStr.toLowerCase()} — performance metrics and operational data`}</p>
         </div>
         <div className="flex items-center gap-2">
           {generated && (
-            <button onClick={() => window.print()} className="flex items-center gap-1.5 bg-[#3373AB] hover:bg-[#255C8E] text-white text-[11px] font-semibold px-4 py-2 outline-none">
+            <button onClick={() => window.print()} className="flex items-center gap-1.5 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-4 py-2 outline-none">
               <Printer size={14} />
               Print Report
             </button>
@@ -2867,7 +2867,7 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
               { key: 'session', label: 'Session' },
             ].map(r => (
               <button key={r.key} onClick={() => setQuickRange(r.key as any)}
-                className={`text-[10px] font-semibold px-2.5 py-1.5 border outline-none transition-colors ${
+                className={`text-xs font-semibold px-2.5 py-1.5 border outline-none transition-colors ${
                   dateFrom && dateTo && ((r.key === 'today' && dateFrom === today) ||
                     (r.key === 'week' && dateFrom === new Date(Date.now() - 7*86400000).toISOString().slice(0,10)) ||
                     (r.key === 'month' && dateFrom === new Date(Date.now() - 30*86400000).toISOString().slice(0,10)))
@@ -2880,17 +2880,17 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             ))}
           </div>
           <div>
-            <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">From</label>
-            <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setGenerated(true); }} className="border border-gray-200 px-2.5 py-1.5 text-[11px] outline-none focus:border-[#3373AB] bg-white" />
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">From</label>
+            <input type="date" value={dateFrom} onChange={e => { setDateFrom(e.target.value); setGenerated(true); }} className="border border-gray-200 px-2.5 py-1.5 text-xs outline-none focus:border-[#3373AB] bg-white" />
           </div>
           <div>
-            <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">To</label>
-            <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setGenerated(true); }} className="border border-gray-200 px-2.5 py-1.5 text-[11px] outline-none focus:border-[#3373AB] bg-white" />
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">To</label>
+            <input type="date" value={dateTo} onChange={e => { setDateTo(e.target.value); setGenerated(true); }} className="border border-gray-200 px-2.5 py-1.5 text-xs outline-none focus:border-[#3373AB] bg-white" />
           </div>
           {(domain === 'all' || domain === 'commerce') && (
             <div>
-              <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Category</label>
-              <select value={reportCategory} onChange={e => setReportCategory(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-[11px] outline-none focus:border-[#3373AB] bg-white">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Category</label>
+              <select value={reportCategory} onChange={e => setReportCategory(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-xs outline-none focus:border-[#3373AB] bg-white">
                 <option value="">All Categories</option>
                 {uniqueCategories.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -2898,8 +2898,8 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
           )}
           {(domain === 'all' || domain === 'commerce') && (
             <div>
-              <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Order Status</label>
-              <select value={reportStatus} onChange={e => setReportStatus(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-[11px] outline-none focus:border-[#3373AB] bg-white">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Order Status</label>
+              <select value={reportStatus} onChange={e => setReportStatus(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-xs outline-none focus:border-[#3373AB] bg-white">
                 <option value="">All Statuses</option>
                 {['pending', 'processing', 'shipped', 'delivered', 'cancelled'].map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
               </select>
@@ -2907,8 +2907,8 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
           )}
           {(domain === 'all' || domain === 'commerce') && (
             <div>
-              <label className="block text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">Report Type</label>
-              <select value={reportSubType} onChange={e => setReportSubType(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-[11px] outline-none focus:border-[#3373AB] bg-white">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Report Type</label>
+              <select value={reportSubType} onChange={e => setReportSubType(e.target.value)} className="border border-gray-200 px-2.5 py-1.5 text-xs outline-none focus:border-[#3373AB] bg-white">
                 <option value="all">All Commerce</option>
                 <option value="products">Products</option>
                 <option value="categories">Categories</option>
@@ -2917,12 +2917,12 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
               </select>
             </div>
           )}
-          <button onClick={generateReport} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-[11px] font-semibold px-5 py-2 outline-none flex items-center gap-1.5">
+          <button onClick={generateReport} className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold px-5 py-2 outline-none flex items-center gap-1.5">
             <BarChart3 size={14} />
             Generate Report
           </button>
           {(dateFrom || dateTo || reportCategory || reportStatus || reportSubType !== 'all') && (
-            <button onClick={() => { setDateFrom(''); setDateTo(''); setReportCategory(''); setReportStatus(''); setReportSubType('all'); setGenerated(false); }} className="text-[10px] text-gray-500 hover:text-red-500 outline-none ml-2">
+            <button onClick={() => { setDateFrom(''); setDateTo(''); setReportCategory(''); setReportStatus(''); setReportSubType('all'); setGenerated(false); }} className="text-xs text-gray-500 hover:text-red-500 outline-none ml-2">
               Reset Filters
             </button>
           )}
@@ -2934,7 +2934,7 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
           <div className="text-center">
             <FileText size={40} className="mx-auto mb-3 opacity-30" />
             <p className="text-sm font-medium">Set filters and click "Generate Report"</p>
-            <p className="text-[10px] mt-1">Select a date range and category to view the system report</p>
+            <p className="text-xs mt-1">Select a date range and category to view the system report</p>
           </div>
         </div>
       )}
@@ -3011,11 +3011,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
           <div className="report-section">
             <h3>Tasks Performed</h3>
             <div className="overflow-x-auto border border-gray-200">
-              <table className="w-full text-[11px]">
+              <table className="w-full text-xs">
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-200">
                     {['Task', 'Description', 'Method', 'Status', 'Owner', 'Date', 'Details'].map(h => (
-                      <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                      <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                     ))}
                   </tr>
                 </thead>
@@ -3026,14 +3026,14 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                       <td className="px-3 py-2 text-gray-600 max-w-[250px]">{t.desc}</td>
                       <td className="px-3 py-2 text-gray-500">{howTasksDone[i]?.method || 'Automated'}</td>
                       <td className="px-3 py-2">
-                        <span className={`text-[9px] font-semibold px-1.5 py-[2px] ${
+                        <span className={`text-xs font-semibold px-1.5 py-[2px] ${
                           t.status === 'Completed' ? 'bg-emerald-50 text-emerald-700' :
                           t.status === 'Active' ? 'bg-blue-50 text-blue-700' :
                           'bg-amber-50 text-amber-700'
                         }`}>{t.status}</span>
                       </td>
                       <td className="px-3 py-2 text-gray-500 whitespace-nowrap">{t.owner}</td>
-                      <td className="px-3 py-2 font-mono text-gray-500 text-[10px] whitespace-nowrap">{t.date}</td>
+                      <td className="px-3 py-2 font-mono text-gray-500 text-xs whitespace-nowrap">{t.date}</td>
                       <td className="px-3 py-2 text-gray-500 max-w-[180px]">{t.details}</td>
                     </tr>
                   ))}
@@ -3049,10 +3049,10 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
               {howTasksDone.map((m, i) => (
                 <div key={i} className="border border-gray-200 p-3 bg-gray-50/30">
                   <div className="flex items-center gap-2 mb-1.5">
-                    <span className="h-5 w-5 bg-[#3373AB]/10 text-[#3373AB] flex items-center justify-center text-[9px] font-bold">{i + 1}</span>
-                    <h4 className="text-[11px] font-bold text-gray-900">{m.method}</h4>
+                    <span className="h-5 w-5 bg-[#3373AB]/10 text-[#3373AB] flex items-center justify-center text-xs font-bold">{i + 1}</span>
+                    <h4 className="text-xs font-bold text-gray-900">{m.method}</h4>
                   </div>
-                  <p className="text-[10px] text-gray-600 leading-relaxed">{m.description}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{m.description}</p>
                 </div>
               ))}
             </div>
@@ -3063,11 +3063,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Pricing Generation — Items Requiring Attention</h3>
               <div className="overflow-x-auto border border-gray-200">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-200">
                       {['Product', 'Category', 'Current Price', 'Stock', 'Suggested Price', 'Reason'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3075,15 +3075,15 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                     {pricingNeeds.map((p, i) => (
                       <tr key={i} className={p.stock === 0 && p.currentPrice !== 0 ? 'bg-red-50/30' : ''}>
                         <td className="px-3 py-2 font-medium text-gray-900 max-w-[180px] truncate">{p.name}</td>
-                        <td className="px-3 py-2"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-[9px]">{p.category}</span></td>
+                        <td className="px-3 py-2"><span className="bg-gray-100 text-gray-600 px-1.5 py-[2px] text-xs">{p.category}</span></td>
                         <td className="px-3 py-2 font-mono text-gray-900">RWF {p.currentPrice.toFixed(2)}</td>
                         <td className="px-3 py-2">
-                          <span className={`text-[10px] font-mono font-semibold ${p.stock === 0 ? 'text-red-600' : 'text-gray-900'}`}>{p.stock}</span>
+                          <span className={`text-xs font-mono font-semibold ${p.stock === 0 ? 'text-red-600' : 'text-gray-900'}`}>{p.stock}</span>
                         </td>
                         <td className="px-3 py-2 font-mono text-[#3373AB] font-semibold">
                           {p.suggestedPrice > 0 ? `RWF ${p.suggestedPrice.toFixed(2)}` : '—'}
                         </td>
-                        <td className="px-3 py-2 text-gray-500 max-w-[200px] text-[10px]">{p.reason}</td>
+                        <td className="px-3 py-2 text-gray-500 max-w-[200px] text-xs">{p.reason}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -3098,11 +3098,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Product Inventory Detail</h3>
               <div className="overflow-x-auto border border-gray-200 max-h-72 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Name', 'Category', 'Price', 'Stock', 'Vendor', 'Rating'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3110,17 +3110,17 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                     {filteredProducts.slice(0, 80).map((p: Product) => (
                       <tr key={p.id} className="hover:bg-gray-50">
                         <td className="px-3 py-1.5 font-medium text-gray-900 max-w-[180px] truncate">{p.name}</td>
-                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-[9px]">{p.category}</span></td>
+                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-xs">{p.category}</span></td>
                         <td className="px-3 py-1.5 font-mono text-gray-900">RWF {p.price.toFixed(2)}</td>
-                        <td className="px-3 py-1.5"><span className={`text-[10px] font-mono font-semibold ${p.stock > 10 ? 'text-emerald-600' : p.stock > 0 ? 'text-amber-600' : 'text-red-600'}`}>{p.stock}</span></td>
+                        <td className="px-3 py-1.5"><span className={`text-xs font-mono font-semibold ${p.stock > 10 ? 'text-emerald-600' : p.stock > 0 ? 'text-amber-600' : 'text-red-600'}`}>{p.stock}</span></td>
                         <td className="px-3 py-1.5 text-gray-500 max-w-[120px] truncate">{p.vendorName}</td>
-                        <td className="px-3 py-1.5"><span className="flex items-center gap-1 text-amber-500 text-[10px]"><Star size={9} fill="currentColor" />{p.rating}</span></td>
+                        <td className="px-3 py-1.5"><span className="flex items-center gap-1 text-amber-500 text-xs"><Star size={9} fill="currentColor" />{p.rating}</span></td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
-              {filteredProducts.length > 80 && <p className="text-[10px] text-gray-400 mt-1">Showing 80 of {filteredProducts.length} products</p>}
+              {filteredProducts.length > 80 && <p className="text-xs text-gray-400 mt-1">Showing 80 of {filteredProducts.length} products</p>}
             </div>
           )}
 
@@ -3129,11 +3129,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Category Breakdown</h3>
               <div className="overflow-x-auto border border-gray-200 max-h-72 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Category', 'Products', 'Total Stock', 'Avg Price', 'Total Value', 'Actions'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3146,7 +3146,7 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                         <td className="px-3 py-1.5 font-mono text-gray-900">RWF {cat.avgPrice.toFixed(2)}</td>
                         <td className="px-3 py-1.5 font-mono font-semibold text-[#3373AB]">RWF {cat.totalValue.toFixed(2)}</td>
                         <td className="px-3 py-1.5">
-                          <button onClick={() => { setReportCategory(cat.category); setReportSubType('products'); }} className="text-[9px] text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 outline-none">View Products</button>
+                          <button onClick={() => { setReportCategory(cat.category); setReportSubType('products'); }} className="text-xs text-[#3373AB] border border-[#3373AB]/30 px-2 py-0.5 hover:bg-[#3373AB]/5 outline-none">View Products</button>
                         </td>
                       </tr>
                     ))}
@@ -3161,11 +3161,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Order Tracking Detail</h3>
               <div className="overflow-x-auto border border-gray-200 max-h-72 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Tracking', 'ETA'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3177,7 +3177,7 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                         <td className="px-3 py-1.5 text-gray-500 max-w-[150px] truncate">{o.items}</td>
                         <td className="px-3 py-1.5 font-mono text-gray-900">RWF {o.total.toFixed(2)}</td>
                         <td className="px-3 py-1.5">{statusBadge(o.status, { pending: 'bg-yellow-100 text-yellow-700', processing: 'bg-blue-100 text-blue-700', shipped: 'bg-purple-100 text-purple-700', delivered: 'bg-emerald-100 text-emerald-700', cancelled: 'bg-red-100 text-red-700' })}</td>
-                        <td className="px-3 py-1.5 font-mono text-gray-500 text-[10px]">{o.tracking}</td>
+                        <td className="px-3 py-1.5 font-mono text-gray-500 text-xs">{o.tracking}</td>
                         <td className="px-3 py-1.5 text-gray-500">{o.eta}</td>
                       </tr>
                     ))}
@@ -3201,17 +3201,17 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                   { label: 'Cancelled', value: paymentSummary.cancelledCount, color: 'text-red-600' },
                 ].map(s => (
                   <div key={s.label} className="bg-gray-50 border border-gray-200 p-3">
-                    <p className="text-[9px] font-semibold text-gray-500 uppercase tracking-wider mb-1">{s.label}</p>
+                    <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">{s.label}</p>
                     <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
                   </div>
                 ))}
               </div>
               <div className="overflow-x-auto border border-gray-200 max-h-72 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Order ID', 'Customer', 'Items', 'Total', 'Status', 'Date'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3223,7 +3223,7 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                         <td className="px-3 py-1.5 text-gray-500 max-w-[150px] truncate">{o.items}</td>
                         <td className="px-3 py-1.5 font-mono text-gray-900">RWF {o.total.toFixed(2)}</td>
                         <td className="px-3 py-1.5">{statusBadge(o.status, { pending: 'bg-yellow-100 text-yellow-700', processing: 'bg-blue-100 text-blue-700', shipped: 'bg-purple-100 text-purple-700', delivered: 'bg-emerald-100 text-emerald-700', cancelled: 'bg-red-100 text-red-700' })}</td>
-                        <td className="px-3 py-1.5 text-gray-500 font-mono text-[10px]">{o.date}</td>
+                        <td className="px-3 py-1.5 text-gray-500 font-mono text-xs">{o.date}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -3237,11 +3237,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Course Catalog Detail</h3>
               <div className="overflow-x-auto border border-gray-200 max-h-60 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Title', 'Category', 'Instructor', 'Duration', 'Price', 'Level', 'Students'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3249,11 +3249,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                     {filteredCourses.slice(0, 50).map((c: Course) => (
                       <tr key={c.id} className="hover:bg-gray-50">
                         <td className="px-3 py-1.5 font-medium text-gray-900 max-w-[180px] truncate">{c.title}</td>
-                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-[9px]">{c.category}</span></td>
+                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-xs">{c.category}</span></td>
                         <td className="px-3 py-1.5 text-gray-500">{c.instructor}</td>
                         <td className="px-3 py-1.5 text-gray-500">{c.duration}</td>
                         <td className="px-3 py-1.5 font-mono text-gray-900">RWF {c.price.toFixed(2)}</td>
-                        <td className="px-3 py-1.5"><span className={`text-[9px] font-semibold px-1.5 py-[1px] ${c.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' : c.level === 'Intermediate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{c.level}</span></td>
+                        <td className="px-3 py-1.5"><span className={`text-xs font-semibold px-1.5 py-[1px] ${c.level === 'Beginner' ? 'bg-emerald-50 text-emerald-700' : c.level === 'Intermediate' ? 'bg-amber-50 text-amber-700' : 'bg-red-50 text-red-700'}`}>{c.level}</span></td>
                         <td className="px-3 py-1.5 font-mono text-gray-500">{c.studentsCount}</td>
                       </tr>
                     ))}
@@ -3268,11 +3268,11 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
             <div className="report-section">
               <h3>Broadcast & Ad Campaign Detail</h3>
               <div className="overflow-x-auto border border-gray-200 max-h-60 overflow-y-auto">
-                <table className="w-full text-[11px]">
+                <table className="w-full text-xs">
                   <thead className="sticky top-0 bg-gray-50">
                     <tr className="border-b border-gray-200">
                       {['Title', 'Type', 'Category', 'Host', 'Views', 'Status'].map(h => (
-                        <th key={h} className="text-left px-3 py-2 font-semibold text-[9px] text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
+                        <th key={h} className="text-left px-3 py-2 font-semibold text-xs text-gray-500 uppercase tracking-wider whitespace-nowrap">{h}</th>
                       ))}
                     </tr>
                   </thead>
@@ -3280,8 +3280,8 @@ function SystemReportSection({ domain = 'all', stats, products, orders, courses,
                     {filteredBroadcasts.slice(0, 50).map((b: Broadcast) => (
                       <tr key={b.id} className="hover:bg-gray-50">
                         <td className="px-3 py-1.5 font-medium text-gray-900 max-w-[180px] truncate">{b.title}</td>
-                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-[9px]">{b.type}</span></td>
-                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-[9px]">{b.category}</span></td>
+                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-xs">{b.type}</span></td>
+                        <td className="px-3 py-1.5"><span className="bg-gray-100 text-gray-600 px-1.5 py-[1px] text-xs">{b.category}</span></td>
                         <td className="px-3 py-1.5 text-gray-500">{b.host}</td>
                         <td className="px-3 py-1.5 font-mono text-gray-500">{b.views.toLocaleString()}</td>
                         <td className="px-3 py-1.5">{statusBadge(b.type, { live: 'bg-red-50 text-red-700', webinar: 'bg-blue-50 text-blue-700', podcast: 'bg-purple-50 text-purple-700', tutorial: 'bg-emerald-50 text-emerald-700' })}</td>
@@ -3367,21 +3367,21 @@ function AdminSettingsSection({ onBack, notify }: { onBack: () => void; notify: 
         </div>
         <div className="p-5 space-y-4">
           <div>
-            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
             <input value={fullName} onChange={e => setFullName(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter full name" />
           </div>
           <div>
-            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Username</label>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Username</label>
             <input value={username} onChange={e => setUsername(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter username" />
           </div>
           <hr className="border-gray-100" />
-          <p className="text-[9px] font-semibold text-gray-400 uppercase tracking-wider">Change Password</p>
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Change Password</p>
           <div>
-            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Current Password</label>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Current Password</label>
             <input type="password" value={oldPassword} onChange={e => setOldPassword(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Enter current password" />
           </div>
           <div>
-            <label className="block text-[10px] font-semibold text-gray-500 uppercase tracking-wider mb-1.5">New Password</label>
+            <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">New Password</label>
             <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="w-full border border-gray-200 px-3 py-2 text-xs outline-none focus:border-[#3373AB] focus:ring-1 focus:ring-[#3373AB]/20 transition-all rounded" placeholder="Leave blank to keep current" />
           </div>
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">

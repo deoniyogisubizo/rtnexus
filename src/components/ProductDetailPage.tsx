@@ -34,7 +34,7 @@ function StarRating({ rating, isDark }: { rating: number; isDark: boolean }) {
       {Array.from({ length: empty }, (_, i) => (
         <Star key={`e${i}`} size={11} className={isDark ? 'text-gray-600' : 'text-gray-300'} />
       ))}
-      <span className={`text-[10px] font-mono ml-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{rating.toFixed(1)}</span>
+      <span className={`text-xs font-mono ml-1 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{rating.toFixed(1)}</span>
     </span>
   );
 }
@@ -154,9 +154,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
 
           <div className="md:col-span-3 space-y-6">
             <div>
-              <p className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">{product.category}</p>
+              <p className="text-xs font-mono font-bold text-[#3373AB] uppercase tracking-widest">{product.category}</p>
               <h1 className={`text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 ${isDark ? 'text-white' : 'text-[#111111]'}`}>{product.name}</h1>
-              <p className="text-[10px] font-mono text-gray-400 uppercase mt-1">OEM: {product.vendorName}</p>
+              <p className="text-xs font-mono text-gray-400 uppercase mt-1">OEM: {product.vendorName}</p>
               {product.rating > 0 && (
                 <div className="mt-1.5">
                   <StarRating rating={product.rating} isDark={isDark} />
@@ -166,9 +166,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
 
             <div ref={barRef} className={`border-t pt-6 pb-6 flex items-center justify-between ${borderCls} ${isDark ? 'bg-[#1a1a1a]' : 'bg-white'} ${showFixedBar ? 'invisible' : ''}`}>
               <div>
-                <span className="text-[10px] font-mono text-gray-400 uppercase block">Single Unit Escrow price</span>
+                <span className="text-xs font-mono text-gray-400 uppercase block">Single Unit Escrow price</span>
                 <span className={`text-2xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF {product.price.toFixed(2)}</span>
-                <span className={`text-[10px] font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                <span className={`text-xs font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Stock: {product.stock} units verified
                 </span>
               </div>
@@ -181,9 +181,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                 </button>
                 <button
                   onClick={(e) => { setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
+                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-xs rounded-none transition-colors outline-none flex items-center gap-1.5"
                 >
-                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
                   <span>Add to Cart</span>
                 </button>
               </div>
@@ -201,8 +201,8 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                 <tbody>
                   {Object.entries(product.specs).map(([key, value]) => (
                     <tr key={key} className={`border-b ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
-                      <td className={`py-2 font-bold w-1/3 leading-tight pr-3 text-[11px] ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{key}</td>
-                      <td className={`py-2 text-[11px] ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{value}</td>
+                      <td className={`py-2 font-bold w-1/3 leading-tight pr-3 text-xs ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>{key}</td>
+                      <td className={`py-2 text-xs ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{value}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -213,7 +213,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
               <div>
                 <h4 className={`text-xs font-bold uppercase border-b pb-1.5 mb-3 tracking-wider ${isDark ? 'text-gray-200 border-gray-700' : 'text-gray-800 border-gray-300'}`}>Detailed Specification Table</h4>
                 <div className="overflow-x-auto">
-                  <table className={`w-full text-[11px] font-mono border ${borderCls}`}>
+                  <table className={`w-full text-xs font-mono border ${borderCls}`}>
                     <tbody>
                       {product.specTable!.map((row, ri) => (
                         <tr key={ri} className={`${ri === 0 ? (isDark ? 'bg-gray-800' : 'bg-gray-100') : ''} border-b ${borderCls}`}>
@@ -231,8 +231,8 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
             )}
 
             <div className={`${isDark ? 'bg-gray-800/50 border-gray-700' : 'bg-gray-50 border-gray-200'} border p-4`}>
-              <h5 className="text-[10px] font-mono font-bold text-[#3373AB] uppercase">Hardware stress report</h5>
-              <p className={`text-[11px] leading-relaxed font-sans mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
+              <h5 className="text-xs font-mono font-bold text-[#3373AB] uppercase">Hardware stress report</h5>
+              <p className={`text-xs leading-relaxed font-sans mt-1 ${isDark ? 'text-gray-400' : 'text-gray-600'}`}>
                 This unit calibrated profile satisfies FCC Part 15 and CE industrial interference regulations. Calibrated at 22°C ambient with 45% standard saturation. Zero defects logic verified by RTTI instrumentation audits.
               </p>
             </div>
@@ -242,7 +242,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
         {embedSrc && (
           <div ref={videoSectionRef} className={`mt-16 pt-8 border-t ${borderCls}`}>
             <div className="border-l-4 border-[#3373AB] pl-4 mb-6">
-              <p className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">VIDEO GUIDE</p>
+              <p className="text-xs font-mono font-bold text-[#3373AB] uppercase tracking-widest">VIDEO GUIDE</p>
               <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                 How to Use & Setup Guide
               </h3>
@@ -280,7 +280,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                 {product.whereToUse && (
                   <div>
                     <h4 className={`text-xs font-bold uppercase mb-2 tracking-wider ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>Quick Start Guide</h4>
-                    <p className={`text-[11px] leading-relaxed font-sans ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <p className={`text-xs leading-relaxed font-sans ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
                       {product.whereToUse}
                     </p>
                   </div>
@@ -292,7 +292,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                       href={product.guideBook}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-[11px] font-semibold text-[#3373AB] hover:underline"
+                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#3373AB] hover:underline"
                     >
                       <i className="fa-solid fa-book-open"></i>
                       <span>Open Documentation / Guide Book</span>
@@ -300,7 +300,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                   </div>
                 )}
                 {!product.whereToUse && !product.guideBook && (
-                  <p className={`text-[11px] font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                  <p className={`text-xs font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
                     Click the play button to watch the product video.
                   </p>
                 )}
@@ -313,14 +313,14 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
           <div className={`mt-16 pt-8 border-t ${borderCls}`}>
             <div className="flex items-center justify-between mb-6">
               <div className="border-l-4 border-[#3373AB] pl-4">
-                <p className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">RELATED MODULES</p>
+                <p className="text-xs font-mono font-bold text-[#3373AB] uppercase tracking-widest">RELATED MODULES</p>
                 <h3 className={`text-sm font-bold uppercase tracking-tight mt-0.5 ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>
                   Familiar Devices & Alternatives
                 </h3>
               </div>
               <button
                 onClick={onBack}
-                className="text-[10px] font-mono text-[#3373AB] hover:underline"
+                className="text-xs font-mono text-[#3373AB] hover:underline"
               >
                 View All in Category
               </button>
@@ -332,7 +332,7 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                   onClick={() => onViewProduct(rp.id)}
                   className={`flex flex-col ${isDark ? 'bg-[#222]' : 'bg-white'} p-3 group hover:scale-[1.02] hover:shadow-lg transition-all duration-200 cursor-pointer`}
                 >
-                  <span className={`text-[9px] font-mono mb-1 ${isDark ? 'text-gray-400' : 'text-[#768B9C]'}`}>{rp.category}</span>
+                  <span className={`text-xs font-mono mb-1 ${isDark ? 'text-gray-400' : 'text-[#768B9C]'}`}>{rp.category}</span>
                   <div className="h-20 flex items-center justify-center mb-2 overflow-hidden">
                     <img
                       src={rp.image}
@@ -340,8 +340,8 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                       className="max-w-full max-h-full object-contain"
                     />
                   </div>
-                  <p className={`text-[11px] font-bold leading-tight line-clamp-2 ${isDark ? 'text-gray-200' : 'text-[#0062BD]'}`}>{rp.name}</p>
-                  <p className={`text-[10px] font-mono mt-auto pt-1 ${isDark ? 'text-gray-400' : 'text-[#333E48]'}`}>RWF {rp.price.toFixed(2)}</p>
+                  <p className={`text-xs font-bold leading-tight line-clamp-2 ${isDark ? 'text-gray-200' : 'text-[#0062BD]'}`}>{rp.name}</p>
+                  <p className={`text-xs font-mono mt-auto pt-1 ${isDark ? 'text-gray-400' : 'text-[#333E48]'}`}>RWF {rp.price.toFixed(2)}</p>
                 </div>
               ))}
             </div>
@@ -354,9 +354,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
           <div className="max-w-7xl mx-auto px-6">
             <div className={`border-t pt-6 pb-6 flex items-center justify-between ${borderCls}`}>
               <div>
-                <span className="text-[10px] font-mono text-gray-400 uppercase block">{product.name}</span>
+                <span className="text-xs font-mono text-gray-400 uppercase block">{product.name}</span>
                 <span className={`text-2xl font-bold font-mono ${isDark ? 'text-white' : 'text-gray-900'}`}>RWF {product.price.toFixed(2)}</span>
-                <span className={`text-[10px] font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
+                <span className={`text-xs font-mono block mt-0.5 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
                   Stock: {product.stock} units verified
                 </span>
               </div>
@@ -369,9 +369,9 @@ export default function ProductDetailPage({ productId, addToCart, cartItems, the
                 </button>
                 <button
                   onClick={(e) => { setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-[10px] rounded-none transition-colors outline-none flex items-center gap-1.5"
+                  className="bg-[#D95907]/80 hover:bg-[#D95907]/60 text-white font-semibold px-4 py-2 text-xs rounded-none transition-colors outline-none flex items-center gap-1.5"
                 >
-                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
                   <span>Add to Cart</span>
                 </button>
               </div>

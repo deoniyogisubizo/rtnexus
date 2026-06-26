@@ -66,7 +66,7 @@ export default function TrustSection() {
     <section className="w-full bg-white text-gray-900 border-b border-gray-200 select-none font-sans">
       <div className="max-w-7xl mx-auto py-12 lg:py-16 px-6">
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10">
-          <p className="text-[10px] font-mono font-bold tracking-widest text-[#3373AB] uppercase">RT GLOBAL METRICS</p>
+          <p className="text-xs font-mono font-bold tracking-widest text-[#3373AB] uppercase">RT GLOBAL METRICS</p>
           <h2 className="text-xl lg:text-2xl font-bold text-gray-900 uppercase tracking-tight mt-1">THE TRUSTED NETWORK OF ENTERPRISE ENGINEERING</h2>
         </div>
 
@@ -84,7 +84,7 @@ export default function TrustSection() {
                 <div className="text-xs font-bold text-gray-800 mt-1 uppercase tracking-wider">
                   {stat.label}
                 </div>
-                <p className="text-[11px] text-gray-500 mt-1 lines-clamp-2 leading-relaxed font-light">
+                <p className="text-xs text-gray-500 mt-1 lines-clamp-2 leading-relaxed font-light">
                   {stat.desc}
                 </p>
               </div>

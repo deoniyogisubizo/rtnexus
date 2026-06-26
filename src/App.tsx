@@ -18,6 +18,10 @@ import ContactSection from './components/ContactSection';
 import AuthExperience from './components/AuthExperience';
 import UserPortals from './components/UserPortals';
 import SearchPage from './components/SearchPage';
+import NexusHub from './components/NexusHub';
+import MacbookLoader from './components/MacbookLoader';
+import './components/MacbookLoader.css';
+import NavLoader from './components/NavLoader';
 import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn, Bot, Send } from 'lucide-react';
 import { encodeId, decodeId } from './utils/idUtils';
 
@@ -56,7 +60,18 @@ export default function App() {
     return saved ? 'portals' : 'home';
   });
   const [user, setUser] = useState<UserSession | null>(() => loadSession());
-  const [authModal, setAuthModal] = useState<{ open: boolean; tab: 'login' | 'register' }>({ open: false, tab: 'login' });
+  const [authOverlay, setAuthOverlay] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
+  const [splashFadeOut, setSplashFadeOut] = useState(false);
+  const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('rtn_splash_shown'));
+
+  useEffect(() => {
+    if (!showSplash) return;
+    sessionStorage.setItem('rtn_splash_shown', '1');
+    const timer = setTimeout(() => setSplashFadeOut(true), 6800);
+    const removeTimer = setTimeout(() => setShowSplash(false), 7200);
+    return () => { clearTimeout(timer); clearTimeout(removeTimer); };
+  }, []);
   
   // Cart escrow states
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -77,7 +92,7 @@ export default function App() {
     if (initialRender.current) { initialRender.current = false; return; }
     setIsNavigating(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    const t = setTimeout(() => setIsNavigating(false), 500);
+    const t = setTimeout(() => setIsNavigating(false), 1800);
     return () => clearTimeout(t);
   }, [view]);
 
@@ -117,6 +132,7 @@ export default function App() {
       case 'rtti': return '/courses';
       case 'classroom': return '/classroom';
       case 'mttv': return '/broadcasts';
+      case 'nexushub': return '/nexus-hub';
       case 'solutions': return '/solutions';
       case 'about': return '/about';
       case 'careers': return '/careers';
@@ -124,6 +140,8 @@ export default function App() {
       case 'adcenter': return '/adcenter';
       case 'search': return '/search';
       case 'portals': return '/portals';
+      case 'login': return '/login';
+      case 'signup': return '/signup';
       default: return '/';
     }
   }
@@ -144,6 +162,7 @@ export default function App() {
     }
     if (main === 'courses' || main === 'rtti') return { v: 'rtti' };
     if (main === 'broadcasts' || main === 'mttv') return { v: 'mttv' };
+    if (main === 'nexus-hub' || main === 'nexushub') return { v: 'nexushub' };
     if (main === 'classroom') return { v: 'classroom' };
     if (main === 'solutions') return { v: 'solutions' };
     if (main === 'about') return { v: 'about' };
@@ -152,6 +171,7 @@ export default function App() {
     if (main === 'adcenter') return { v: 'adcenter' };
     if (main === 'search') return { v: 'search' };
     if (main === 'portals') return { v: 'portals' };
+    if (main === 'login' || main === 'signup') return { v: 'login' };
     return { v: 'home' };
   }
 
@@ -167,7 +187,13 @@ export default function App() {
     const handlePop = () => {
       const parsed = parseViewFromPath(window.location.pathname);
       navRef.current = true;
-      setView(parsed.v);
+      if (parsed.v === 'login') {
+        setView('home');
+        setAuthTab('login');
+        setAuthOverlay(true);
+      } else {
+        setView(parsed.v);
+      }
       setProductDetailId(parsed.pid ?? null);
       setShopPreselectCategory(parsed.cat ?? null);
     };
@@ -245,8 +271,7 @@ export default function App() {
     const sessionWithToken: UserSession = { ...session, token: generateToken() };
     setUser(sessionWithToken);
     saveSession(sessionWithToken);
-    setAuthModal({ open: false, tab: 'login' });
-    setView('portals'); // launch corresponding portal immediately
+    setView('portals');
   };
 
   const handleLogout = () => {
@@ -285,19 +310,22 @@ export default function App() {
 
   // Global AI Chatbot
   const pageDescriptions: Record<string, { title: string; desc: string }> = {
-    home: { title: 'Home', desc: 'RT Nexus industrial ecosystem — hardware, courses, broadcasts & more.' },
+    home: { title: 'Home', desc: 'RT Group industrial ecosystem — hardware, courses, broadcasts & more.' },
     shop: { title: 'RT Shop', desc: 'Browse 5K+ industrial components, dev boards & embedded systems.' },
     rtti: { title: 'RTTI Courses', desc: 'Accredited engineering certifications with live sandbox labs.' },
     classroom: { title: 'Live Classroom', desc: 'Interactive sandbox sessions with AI-powered whiteboards.' },
     mttv: { title: 'MTTV Broadcasts', desc: 'Low-latency engineering streams, webinars & tech debates.' },
     solutions: { title: 'Solutions', desc: 'Who we serve — engineers, businesses, creators & students.' },
+    nexushub: { title: 'RTNEXUS HUB', desc: 'The RT Group e-learning & media hub — RTTI courses & MTTV broadcasts.' },
     adcenter: { title: 'Ad Center', desc: 'Promote your brand to 250K+ engineering builders worldwide.' },
-    about: { title: 'About Us', desc: 'RT Nexus — converging foundries, education & media.' },
+    about: { title: 'About Us', desc: 'RT Group — converging foundries, education & media.' },
     careers: { title: 'Careers', desc: 'Join the federation building the future of hardware engineering.' },
     contact: { title: 'Contact', desc: 'Open support tickets, explore FAQ base & global office registry.' },
     search: { title: 'Search', desc: 'Find products, courses & broadcasts across the ecosystem.' },
     portals: { title: 'Dashboard', desc: 'Your workspace — orders, courses, streams & billing.' },
     product: { title: 'Product Detail', desc: 'View specifications, pricing & documentation for this component.' },
+    login: { title: 'Sign In', desc: 'Secure access portal — sign in or create an account.' },
+    signup: { title: 'Create Account', desc: 'Register for a secure workspace account.' },
   };
   const [showGlobalChat, setShowGlobalChat] = useState(false);
   const [showGlobalChatPopup, setShowGlobalChatPopup] = useState(false);
@@ -330,7 +358,7 @@ export default function App() {
           setView={navigateTo}
           user={user}
           logout={handleLogout}
-          openAuth={(tab) => setAuthModal({ open: true, tab })}
+          openAuth={(tab) => { setAuthTab(tab); setAuthOverlay(true); }}
           cart={cart}
           openCartDrawer={() => { setCartOpen(true); setCheckoutStep('cart'); }}
           triggerSearch={handleSearchTrigger}
@@ -342,15 +370,26 @@ export default function App() {
 
 
 
-      {/* TOP LOADING BAR — activates on page navigation */}
-      <div className="fixed top-0 left-0 right-0 z-[9999] h-[3px] bg-transparent pointer-events-none">
+      <NavLoader visible={isNavigating} />
+
+      {/* AUTH OVERLAY */}
+      {authOverlay && (
         <div
-          className={`h-full bg-[#3373AB] transition-all duration-300 ease-out ${isNavigating ? 'w-full animate-loading-bar' : 'w-0'}`}
-        />
-      </div>
+          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+          onClick={() => setAuthOverlay(false)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <AuthExperience
+              initialTab={authTab}
+              onLoginSuccess={(session) => { setAuthOverlay(false); handleLoginSuccess(session); }}
+              closeAuth={() => setAuthOverlay(false)}
+            />
+          </div>
+        </div>
+      )}
 
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[112px] pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[128px] lg:pt-[176px] pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
         <div key={view} className="animate-fade-in-up w-full">
         {view === 'home' && (
           <div className="w-full">
@@ -395,6 +434,10 @@ export default function App() {
 
         {view === 'classroom' && (
           <LiveClassroom theme={theme} />
+        )}
+
+        {view === 'nexushub' && (
+          <NexusHub setView={navigateTo} theme={theme} />
         )}
 
         {view === 'mttv' && (
@@ -447,7 +490,7 @@ export default function App() {
                 </p>
 
                 <button 
-                  onClick={() => setAuthModal({ open: true, tab: 'login' })}
+                  onClick={() => { setAuthTab('login'); setAuthOverlay(true); }}
                   className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-bold uppercase tracking-widest py-3 px-6 w-full rounded-none transition-colors outline-none"
                 >
                   Onboard Session Portal
@@ -461,19 +504,19 @@ export default function App() {
 
       {/* DETAILED BRUTALIST ENTERPRISE FOOTER — hidden on admin dashboard */}
       {!(view === 'portals' && user?.role === 'admin') && (
-      <footer className="w-full bg-[#111111] text-gray-400 text-xs py-12 px-6 border-t border-neutral-800 select-none font-sans text-left">
+      <footer className="w-full bg-[#111111] text-gray-400 text-xs py-12 px-6 border-t border-neutral-800 select-none font-pro text-left">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
           
           <div className="md:col-span-4 space-y-4">
             <div className="flex items-center group">
-              <img src="/logo/logo.png" alt="RT Nexus" className="h-10 scale-300 ml-10 w-auto object-contain" />
+              <img src="/logo/logo.png" alt="RT Group" className="h-10 scale-300 ml-10 w-auto object-contain" />
             </div>
             
-            <p className="text-[11px] font-sans font-light text-gray-400 leading-relaxed max-w-sm">
-              RT Nexus represents a multi-functional technological federation combining validated cross-border foundries, accredited certification courses, low-latency streaming networks, and custom role workspaces.
+            <p className="text-xs font-sans font-light text-gray-400 leading-relaxed max-w-sm">
+              RT Group represents a multi-functional technological federation combining validated cross-border foundries, accredited certification courses, low-latency streaming networks, and custom role workspaces.
             </p>
 
-            <p className="text-[10px] text-gray-500 font-mono">
+            <p className="text-xs text-gray-500 font-mono">
               STATUS OVERRIDE: ACTIVE • REGENT 2026-AISTUDIO
             </p>
           </div>
@@ -481,10 +524,9 @@ export default function App() {
           <div className="md:col-span-2 text-left">
             <h5 className="font-bold text-xs uppercase tracking-wider text-white mb-4">Core Modules</h5>
             <ul className="space-y-2 text-gray-400">
+              <li><button onClick={() => setView('nexushub')} className="hover:text-white text-left block">RTNEXUS HUB</button></li>
               <li><button onClick={() => setView('shop')} className="hover:text-white text-left block">RT Shop Directory</button></li>
-              <li><button onClick={() => setView('rtti')} className="hover:text-white text-left block">RTTI Instructions</button></li>
               <li><button onClick={() => setView('classroom')} className="hover:text-white text-left block">Live Classroom</button></li>
-              <li><button onClick={() => setView('mttv')} className="hover:text-white text-left block">MTTV Broadcasting</button></li>
             </ul>
           </div>
 
@@ -500,10 +542,10 @@ export default function App() {
 
           <div className="md:col-span-4 text-left">
             <h5 className="font-bold text-xs uppercase tracking-wider text-white mb-4">Accreditation Disclaimer</h5>
-            <p className="text-[10px] leading-relaxed font-mono font-light text-gray-500">
+            <p className="text-xs leading-relaxed font-mono font-light text-gray-500">
               All telemetry, certification badges, drawing canvases, escrow dispatches, and diagnostics are simulated for prototyping purposes in the Google AI Studio container sandbox. Zero actual bank balances, certifications, or foundries liabilities are implied.
             </p>
-            <div className="mt-4 flex gap-4 text-[10px] font-mono text-gray-400">
+            <div className="mt-4 flex gap-4 text-xs font-mono text-gray-400">
               <span>LEDGER: CERTIFIED-256</span>
               <span>REGS: CE/FCC Part15</span>
             </div>
@@ -511,40 +553,21 @@ export default function App() {
 
         </div>
 
-        <div className="max-w-7xl mx-auto border-t border-neutral-800 pt-8 mt-8 text-center text-gray-500 text-[10px] font-mono">
-          © 2026 RT Nexus Enterprise Ltd • Converged Matrix Solutions. Sharp edges rounded-none design layout. All rights reserved.
+        <div className="max-w-7xl mx-auto border-t border-neutral-800 pt-8 mt-8 text-center text-gray-500 text-xs font-mono">
+          © 2026 RT Group Enterprise Ltd • Converged Matrix Solutions. Sharp edges rounded-none design layout. All rights reserved.
         </div>
       </footer>
-      )}
-
-      {/* DIALOG MODAL: SECURE KEY AUTHENTICATION OVERLAY */}
-      {authModal.open && (
-        <div className="fixed inset-0 bg-[#111111]/85 z-50 flex items-start sm:items-center justify-center p-4 overflow-y-auto">
-          <div className="relative max-w-4xl w-full my-4 sm:my-0">
-            <button 
-              onClick={() => setAuthModal({ open: false, tab: 'login' })}
-              className="absolute -top-10 right-0 bg-[#3373AB] hover:bg-[#255C8E] p-2 text-white font-bold outline-none cursor-pointer"
-            >
-              <X size={18} />
-            </button>
-            <AuthExperience 
-              initialTab={authModal.tab}
-              onLoginSuccess={handleLoginSuccess}
-              closeAuth={() => setAuthModal({ open: false, tab: 'login' })}
-            />
-          </div>
-        </div>
       )}
 
       {/* SLIDE CART DRAWER PANEL (For RT shop escrow) */}
       {cartOpen && (
         <div className="fixed inset-0 bg-[#111111]/85 z-50 flex justify-end">
-          <div className="w-full max-w-md bg-white border-l border-gray-250 h-full flex flex-col justify-between text-left text-gray-900 font-sans shadow-2xl">
+          <div className="w-full max-w-md bg-white border-l border-gray-250 h-full flex flex-col justify-between text-left text-gray-900 font-pro shadow-2xl">
             
             {/* Drawer Head */}
             <div className="bg-[#111111] text-white px-6 py-4 flex items-center justify-between border-b border-gray-800">
               <div className="flex flex-col">
-                <span className="text-[9px] font-mono text-[#3373AB] font-bold uppercase tracking-wider">SECURE ESCROW REGISTER</span>
+                <span className="text-xs font-mono text-[#3373AB] font-bold uppercase tracking-wider">SECURE ESCROW REGISTER</span>
                 <span className="text-sm font-bold uppercase tracking-tight mt-1">RT Shop Escrow Basket</span>
               </div>
               <button onClick={() => setCartOpen(false)} className="text-gray-400 hover:text-white cursor-pointer outline-none">
@@ -562,7 +585,7 @@ export default function App() {
                       <p className="text-xs font-sans">Your escrow basket contains zero vetted components currently.</p>
                       <button 
                         onClick={() => { setCartOpen(false); setView('shop'); }} 
-                        className="mt-3 bg-[#3373AB] hover:bg-[#255C8E] text-white text-[9px] font-semibold uppercase tracking-widest px-3 py-1.5"
+                        className="mt-3 bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-semibold uppercase tracking-widest px-3 py-1.5"
                       >
                         Browse RT Shop
                       </button>
@@ -573,7 +596,7 @@ export default function App() {
                         <div key={item.product.id} className="py-3 flex justify-between items-start gap-4">
                           <div className="flex-1">
                             <h5 className="font-bold text-xs uppercase text-gray-900 leading-tight">{item.product.name}</h5>
-                            <span className="text-[10px] text-gray-500 font-mono">OEM: {item.product.vendorName}</span>
+                            <span className="text-xs text-gray-500 font-mono">OEM: {item.product.vendorName}</span>
                             
                             <div className="flex items-center gap-3 mt-2 pr-4 justify-start">
                               <button 
@@ -591,7 +614,7 @@ export default function App() {
                           <div className="text-right">
                             <button 
                               onClick={() => handleRemoveFromCart(item.product.id)}
-                              className="text-[10px] font-mono text-gray-400 hover:text-red-500"
+                              className="text-xs font-mono text-gray-400 hover:text-red-500"
                             >[De-list]</button>
                             <p className="font-mono text-xs font-bold text-gray-950 mt-2">
                               RWF {(item.product.price * item.quantity).toFixed(2)}
@@ -607,12 +630,12 @@ export default function App() {
               {checkoutStep === 'checkout' && (
                 <form onSubmit={handleCheckoutSubmit} className="space-y-4">
                   <div>
-                    <span className="text-[10px] font-mono text-gray-400 font-bold block mb-1">CHOOSE DISPATCH CREDENTIALS</span>
+                    <span className="text-xs font-mono text-gray-400 font-bold block mb-1">CHOOSE DISPATCH CREDENTIALS</span>
                     <p className="text-xs text-gray-600 mb-3">Please nominate your shipping and escrow release accounts:</p>
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Delivery Address</label>
+                    <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Delivery Address</label>
                     <input 
                       type="text" 
                       placeholder="e.g. 42 Patriot Square, Lab B"
@@ -622,7 +645,7 @@ export default function App() {
                   </div>
 
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Vetted Account Key ID</label>
+                    <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Vetted Account Key ID</label>
                     <input 
                       type="text" 
                       placeholder="e.g. NX-DEVEL-ROW-42"
@@ -661,7 +684,7 @@ export default function App() {
                   <p className="text-xs text-gray-500 font-light leading-relaxed">
                     {checkoutSuccessMessage}
                   </p>
-                  <p className="text-[10px] text-gray-400 font-mono mt-4 leading-relaxed font-light bg-gray-50 p-3 border border-gray-200">
+                  <p className="text-xs text-gray-400 font-mono mt-4 leading-relaxed font-light bg-gray-50 p-3 border border-gray-200">
                     Your shipment token order is permanently logged. Access your Customer Profile (Workspace portal) to examine live dispatch coordinates.
                   </p>
                   <button 
@@ -679,10 +702,10 @@ export default function App() {
               <div className="bg-gray-50 border-t border-gray-200 px-6 py-4 flex flex-col gap-4">
                 <div className="flex justify-between items-center text-xs">
                   <div>
-                    <span className="text-[10px] font-mono text-gray-400 uppercase block">Consolidated Escrow Balance</span>
+                    <span className="text-xs font-mono text-gray-400 uppercase block">Consolidated Escrow Balance</span>
                     <span className="text-base font-bold font-mono text-gray-950">RWF {cartTotal.toFixed(2)}</span>
                   </div>
-                  <span className="text-[9px] bg-[#3373AB]/10 text-[#3373AB] px-1.5 py-0.5 uppercase tracking-wide font-mono">HSM Secure Escrow</span>
+                  <span className="text-xs bg-[#3373AB]/10 text-[#3373AB] px-1.5 py-0.5 uppercase tracking-wide font-mono">HSM Secure Escrow</span>
                 </div>
 
                 <div className="flex gap-2">
@@ -708,7 +731,7 @@ export default function App() {
       )}
 
       {/* GLOBAL AI CHATBOT — fixed bottom-right on every page */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-2">
+      <div className="fixed lg:bottom-6 bottom-24 right-6 z-50 flex flex-col items-end gap-2">
         {!showGlobalChat && showGlobalChatPopup && (
           <div className="relative bg-[#111111] text-white px-4 py-2.5 shadow-2xl max-w-[200px] text-xs font-mono animate-fade-in">
             <span>this is nexus ai ask every thing</span>
@@ -723,7 +746,8 @@ export default function App() {
         {!showGlobalChat ? (
           <button
             onClick={() => setShowGlobalChat(true)}
-            className="bg-[#3373AB] hover:bg-[#255C8E] text-white p-3 shadow-2xl transition-all hover:scale-105 rounded-full outline-none"
+            className="bg-[#3373AB] hover:bg-[#255C8E] text-white p-3 shadow-2xl transition-all hover:scale-105 rounded-full outline-none ring-2 ring-white/60"
+            style={{ borderRadius: '50%' }}
           >
             <Bot size={22} />
           </button>
@@ -742,13 +766,13 @@ export default function App() {
 
             {/* Page context greeting */}
             <div className="px-4 py-3 bg-gray-50 border-b border-gray-100">
-              <p className="text-[11px] font-mono text-gray-500">
+              <p className="text-xs font-mono text-gray-500">
                 You are on <span className="font-bold text-gray-900">{pageDescriptions[view]?.title || view}</span>
               </p>
-              <p className="text-[10px] text-gray-400 mt-0.5 leading-relaxed">
-                {pageDescriptions[view]?.desc || 'Explore the RT Nexus ecosystem.'}
+              <p className="text-xs text-gray-400 mt-0.5 leading-relaxed">
+                {pageDescriptions[view]?.desc || 'Explore the RT Group ecosystem.'}
               </p>
-              <p className="text-[11px] font-mono text-[#3373AB] mt-2 font-semibold">
+              <p className="text-xs font-mono text-[#3373AB] mt-2 font-semibold">
                 What is in your agenda with nexus today?
               </p>
             </div>
@@ -778,6 +802,8 @@ export default function App() {
           </div>
         )}
       </div>
+
+      {showSplash && <MacbookLoader fadeOut={splashFadeOut} />}
 
     </div>
   );

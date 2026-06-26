@@ -1,5 +1,5 @@
 /**
- * RT Nexus - Core Types
+ * RT Group - Core Types
  */
 
 export type UserRole = 'visitor' | 'customer' | 'student' | 'instructor' | 'vendor' | 'advertiser' | 'admin' | 'all';

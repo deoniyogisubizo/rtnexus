@@ -57,7 +57,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
 
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
-          <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">OPEN CAREERS PORTAL</p>
+          <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">OPEN CAREERS PORTAL</p>
           <h2 className="text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 text-left">RTTI & NEXUS ASSOCIATE RECRUITING</h2>
         </div>
 
@@ -65,7 +65,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
         <div className="bg-gray-50 border border-gray-200 p-6 mb-8 text-left">
           <h3 className="font-sans font-bold text-xs uppercase tracking-wider text-[#111111] mb-2">Build Vetted Frameworks with RT</h3>
           <p className="text-xs text-gray-600 font-light leading-relaxed max-w-4xl">
-            RT Nexus is deploying critical systems nodes around IoT grids, accredited university licensing tracks, and telemetry broadcast systems. We are recruiting experienced secure-element design investigators, educational curators, and high-frequency stream developers to join our centers.
+            RT Group is deploying critical systems nodes around IoT grids, accredited university licensing tracks, and telemetry broadcast systems. We are recruiting experienced secure-element design investigators, educational curators, and high-frequency stream developers to join our centers.
           </p>
         </div>
 
@@ -89,13 +89,13 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
               <div>
                 <div className="flex justify-between items-start gap-4">
                   <div>
-                    <span className="text-[10px] font-mono text-gray-400 font-bold uppercase block">{job.id} • {job.department.toUpperCase()}</span>
+                    <span className="text-xs font-mono text-gray-400 font-bold uppercase block">{job.id} • {job.department.toUpperCase()}</span>
                     <h4 className="font-bold font-sans text-xs sm:text-sm text-gray-950 uppercase tracking-tight mt-1 leading-snug group-hover:text-[#3373AB]">{job.title}</h4>
                   </div>
-                  <span className="bg-[#111111] text-white text-[9px] font-mono px-2 py-0.5 uppercase tracking-wide whitespace-nowrap">{job.type}</span>
+                  <span className="bg-[#111111] text-white text-xs font-mono px-2 py-0.5 uppercase tracking-wide whitespace-nowrap">{job.type}</span>
                 </div>
 
-                <div className="flex gap-4 text-[10px] font-mono mt-3 text-gray-400">
+                <div className="flex gap-4 text-xs font-mono mt-3 text-gray-400">
                   <span className="flex items-center gap-1">
                     <MapPin size={10} />
                     {job.location}
@@ -112,10 +112,10 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
               </div>
 
               <div className="border-t border-gray-100 pt-4 mt-6 flex justify-between items-center bg-transparent">
-                <span className="text-[10px] text-gray-400 font-mono">POSTED 2D AGO</span>
+                <span className="text-xs text-gray-400 font-mono">POSTED 2D AGO</span>
                 <button 
                   onClick={() => handleOpenApplyModal(job)}
-                  className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-[10px] font-bold uppercase tracking-wider px-4 py-2 rounded-none transition-colors outline-none"
+                  className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-bold uppercase tracking-wider px-4 py-2 rounded-none transition-colors outline-none"
                 >
                   Onboard Application
                 </button>
@@ -132,7 +132,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
               {/* Header */}
               <div className="bg-[#111111] text-white px-6 py-4 flex items-center justify-between border-b border-gray-800">
                 <div className="flex flex-col">
-                  <span className="text-[10px] font-mono font-bold text-[#3373AB] uppercase">APPLICANT SUBMISSION MATRIX</span>
+                  <span className="text-xs font-mono font-bold text-[#3373AB] uppercase">APPLICANT SUBMISSION MATRIX</span>
                   <span className="text-xs font-bold font-sans uppercase tracking-tight mt-1">ROLE DOSSIER {selectedJob.id}</span>
                 </div>
                 <button 
@@ -147,14 +147,14 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
               <div className="p-6 overflow-y-auto space-y-6">
                 <div>
                   <h3 className="text-xs font-sans font-bold text-gray-900 uppercase">{selectedJob.title}</h3>
-                  <p className="text-[10px] font-mono text-gray-400 uppercase mt-0.5">Location: {selectedJob.location} • Tenure: {selectedJob.type}</p>
+                  <p className="text-xs font-mono text-gray-400 uppercase mt-0.5">Location: {selectedJob.location} • Tenure: {selectedJob.type}</p>
                 </div>
 
                 {!applied ? (
                   <form onSubmit={handleApplySubmit} className="space-y-4">
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Full Legal Name</label>
+                        <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Full Legal Name</label>
                         <input 
                           type="text" 
                           placeholder="Applicant Name"
@@ -165,7 +165,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Email Address</label>
+                        <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Email Address</label>
                         <input 
                           type="email" 
                           placeholder="Email"
@@ -178,7 +178,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">External Resume / CV Link</label>
+                      <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">External Resume / CV Link</label>
                       <input 
                         type="url" 
                         placeholder="Link to PDF, Github, or LinkedIn profile"
@@ -190,7 +190,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
                     </div>
 
                     <div>
-                      <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Cover statement (Optional)</label>
+                      <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Cover statement (Optional)</label>
                       <textarea 
                         rows={3}
                         placeholder="Briefly state your alignment with hardware secure elements, teaching sandboxes, or video stream architectures..."
@@ -213,13 +213,13 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
                     <Check className="mx-auto text-emerald-600" size={24} />
                     <h4 className="font-sans font-bold text-xs uppercase text-gray-900">APPLICATION PACK INGESTED</h4>
                     
-                    <p className="text-[11px] text-gray-600 leading-relaxed font-sans font-light">
+                    <p className="text-xs text-gray-600 leading-relaxed font-sans font-light">
                       Successfully logged the application profile for <span className="font-semibold">{applicantName}</span>. A secure RTTI recruitment coordinator has registered the resume variables and will emit a configuration message to <span className="font-semibold">{applicantEmail}</span> within 48 hours.
                     </p>
                     
                     <button 
                       onClick={() => setSelectedJob(null)}
-                      className="mt-4 bg-[#111111] text-white py-1.5 px-4 font-mono text-[9px] uppercase tracking-wider rounded-none outline-none"
+                      className="mt-4 bg-[#111111] text-white py-1.5 px-4 font-mono text-xs uppercase tracking-wider rounded-none outline-none"
                     >
                       Close Dossier
                     </button>
@@ -228,7 +228,7 @@ export default function CareersSection({ theme = 'light' }: CareersSectionProps)
               </div>
 
               {/* Requirements reminder pane */}
-              <div className="bg-gray-50 border-t border-gray-200 p-4 font-mono text-[10px] text-gray-500">
+              <div className="bg-gray-50 border-t border-gray-200 p-4 font-mono text-xs text-gray-500">
                 <span className="font-semibold text-gray-700 block uppercase mb-1">Minimum verification specs:</span>
                 • Advanced C/C++ or ASM parameters. • G-1 Secure clearance capabilities. • 2 references logged on original corporate foundries.
               </div>

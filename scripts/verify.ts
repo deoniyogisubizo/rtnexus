@@ -7,14 +7,14 @@ async function verify() {
   if (!uri) { console.error('MONGODB_URI not set'); process.exit(1); }
   const client = new MongoClient(uri);
   await client.connect();
-  const db = client.db('rtnexus');
+  const db = client.db('rtgroup');
   const collections = await db.listCollections().toArray();
-  console.log(`\nCollections in rtnexus (${collections.length}):`);
+  console.log(`\nCollections in rtgroup (${collections.length}):`);
   for (const col of collections) {
     const count = await db.collection(col.name).countDocuments();
     console.log(`  • ${col.name}: ${count} documents`);
   }
-  const admin = await db.collection('Users').findOne({ username: 'rtnexus' });
+  const admin = await db.collection('Users').findOne({ username: 'rtgroup' });
   console.log(`\nAdmin user: ${admin ? 'FOUND' : 'NOT FOUND'}`);
   const products = await db.collection('Products').find().limit(2).toArray();
   console.log(`Sample products: ${products.length > 0 ? products.map(p => p.name).join(', ') : 'NONE'}`);

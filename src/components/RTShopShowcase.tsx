@@ -95,7 +95,7 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                   <div>
                     {categoryNames.size > 0 && (
                       <div>
-                        <div className={`text-[9px] font-mono uppercase tracking-widest px-3 pt-2 pb-1 ${textMuted}`}>Categories</div>
+                        <div className={`text-xs font-mono uppercase tracking-widest px-3 pt-2 pb-1 ${textMuted}`}>Categories</div>
                         {results.filter(r => r.type === 'category').map(r => (
                           <button
                             key={r.label}
@@ -110,14 +110,14 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                     )}
                     {productResults.length > 0 && (
                       <div>
-                        <div className={`text-[9px] font-mono uppercase tracking-widest px-3 pt-2 pb-1 ${textMuted}`}>Products</div>
+                        <div className={`text-xs font-mono uppercase tracking-widest px-3 pt-2 pb-1 ${textMuted}`}>Products</div>
                         {productResults.slice(0, 5).map(r => (
                           <button
                             key={r.product.id}
                             onClick={() => { onSelectProduct(r.product.id); setFocused(false); }}
                             className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-3 hover:${isDark ? 'bg-gray-700' : 'bg-gray-50'} transition-colors`}
                           >
-                            <span className="font-mono font-bold text-[11px] text-[#D95907] whitespace-nowrap w-24 text-right">
+                            <span className="font-mono font-bold text-xs text-[#D95907] whitespace-nowrap w-24 text-right">
                               RWF {r.product.price.toFixed(2)}
                             </span>
                             <span className={`truncate ${isDark ? 'text-gray-200' : 'text-gray-800'}`}>{r.label}</span>
@@ -163,7 +163,7 @@ export default function RTShopShowcase({ setView, theme = 'light', onSelectProdu
                   </div>
                 )}
               </div>
-              <span className={`text-xs sm:text-sm lg:text-[10px] font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'} group-hover:text-[#3373AB] lg:group-hover:underline transition-all duration-200`}>{name}</span>
+              <span className={`text-xs sm:text-sm lg:text-xs font-mono tracking-widest uppercase font-bold sm:font-black ${isDark ? 'text-gray-200' : 'text-gray-800'} group-hover:text-[#3373AB] lg:group-hover:underline transition-all duration-200`}>{name}</span>
             </div>
           ))}
         </div>

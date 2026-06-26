@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import styled from 'styled-components';
 import { UserRole, UserSession } from '../types';
 import { Shield, CheckCircle, Chrome, Linkedin, Mail, Lock, ArrowLeft, Eye, EyeOff, BadgeCheck, XCircle, Lightbulb } from 'lucide-react';
 import { signup, signin, checkUserExists, checkUsername, sendOtp, verifyOtp, resetPassword } from '../services/api';
@@ -246,7 +247,9 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
         });
         tokenClient.requestAccessToken();
       } else {
-        setLoginError('Google Identity Services not loaded. Check your ad blocker or refresh the page.');
+        const redirectUri = `${window.location.origin}/auth/callback`;
+        const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=token&scope=openid%20profile%20email&nonce=${Date.now()}`;
+        window.location.href = url;
       }
       return;
     }
@@ -261,7 +264,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
   };
 
   return (
-    <div className="w-full max-w-4xl bg-white border border-gray-200 grid grid-cols-1 md:grid-cols-12 rounded-none overflow-hidden select-none font-sans text-left text-gray-900 shadow-2xl">
+    <div className="w-full max-w-4xl bg-white border border-gray-200 grid grid-cols-1 md:grid-cols-12 rounded-none overflow-y-auto md:overflow-hidden select-none font-sans text-left text-gray-900 shadow-2xl max-h-[90vh] md:max-h-none">
       
       {/* LEFT COLUMN: BRAND + SOCIAL SSO */}
       <div className="md:col-span-5 bg-[#111111] text-white p-4 sm:p-8 flex flex-col justify-between border-r border-[#3373AB] relative">
@@ -273,32 +276,34 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
         </div>
 
         <div className="z-10 text-left">
-          <img src="/logo/logo.png" alt="RT Nexus" className="h-10 scale-300 ml-10 w-auto object-contain mb-6" />
+          <img src="/logo/logo.png" alt="RT Group" className="h-10 scale-300 ml-10 w-auto object-contain mb-6" />
           
-          <h3 className="font-sans font-bold text-lg text-white uppercase tracking-tight leading-none mb-3">SECURE ACCESS PORTAL</h3>
-          <p className="text-xs text-gray-400 font-light leading-relaxed font-sans">
+          <StyledTyping>
+            <div className="animation">hello again!</div>
+          </StyledTyping>
+          <p className="text-sm text-gray-400 font-light leading-relaxed font-sans">
             Sign in with your credentials or use a social single sign-on provider to access your workspace instantly.
           </p>
 
           <div className="space-y-3 mt-8 hidden md:block">
-            <span className="text-[10px] font-mono text-gray-500 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
+            <span className="text-sm font-mono text-gray-500 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
             
-            <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
+            <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-100 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
               <Chrome size={15} className="text-[#4285F4]" />
               <span className="font-semibold">Continue with Google</span>
             </button>
-            <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
+            <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
               <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill="#F25022" d="M11.37 12.73H2.67V4.03h8.7v8.7z"/><path fill="#00A4EF" d="M21.37 12.73h-8.7V4.03h8.7v8.7z"/><path fill="#FFB900" d="M11.37 22.03H2.67v-8.7h8.7v8.7z"/><path fill="#7FBA00" d="M21.37 22.03h-8.7v-8.7h8.7v8.7z"/></svg>
               <span className="font-semibold">Continue with Microsoft</span>
             </button>
-            <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
+            <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30">
               <Linkedin size={15} className="text-white" />
               <span className="font-semibold">Continue with LinkedIn</span>
             </button>
           </div>
         </div>
 
-        <div className="h-10 border-t border-neutral-800 flex items-center justify-between text-[9px] font-mono text-gray-500 z-10 pt-4 mt-6">
+        <div className="h-10 border-t border-neutral-800 hidden md:flex items-center justify-between text-sm font-mono text-gray-500 z-10 pt-4 mt-6">
           <span>ALGORITHM: SHA-512</span>
           <span>Sovereign Identity Key</span>
         </div>
@@ -313,8 +318,8 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                 <Shield size={22} />
               </div>
               <h4 className="font-bold text-sm text-gray-900 uppercase tracking-wider">Welcome, {pendingOAuth.name.split(' ')[0]}!</h4>
-              <p className="text-[11px] text-gray-500 mt-1 font-sans">{pendingOAuth.email}</p>
-              <p className="text-[10px] text-gray-400 mt-3 font-sans">Choose your workspace to get started</p>
+              <p className="text-sm text-gray-500 mt-1 font-sans">{pendingOAuth.email}</p>
+              <p className="text-sm text-gray-400 mt-3 font-sans">Choose your workspace to get started</p>
             </div>
             <div className="space-y-2.5">
               {[
@@ -336,8 +341,8 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                 >
                   <span className="text-lg">{opt.icon}</span>
                   <div className="flex-1">
-                    <p className="text-xs font-bold text-gray-800 group-hover:text-[#3373AB] transition-colors">{opt.label}</p>
-                    <p className="text-[10px] text-gray-400 font-sans">{opt.desc}</p>
+                    <p className="text-sm font-bold text-gray-800 group-hover:text-[#3373AB] transition-colors">{opt.label}</p>
+                    <p className="text-sm text-gray-400 font-sans">{opt.desc}</p>
                   </div>
                 </button>
               ))}
@@ -345,7 +350,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             <button
               type="button"
               onClick={() => setPendingOAuth(null)}
-              className="text-[11px] text-gray-400 hover:text-gray-600 text-center mt-4 underline outline-none"
+              className="text-sm text-gray-400 hover:text-gray-600 text-center mt-4 underline outline-none"
             >
               ← Use a different account
             </button>
@@ -357,7 +362,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
               <Shield size={24} />
             </div>
             <h4 className="font-bold text-sm text-gray-900 uppercase">{successMsg.includes('granted') ? 'ACCESS GRANTED' : 'ACCOUNT CREATED'}</h4>
-            <p className="text-xs text-gray-500 max-w-sm font-light leading-relaxed">{successMsg}</p>
+            <p className="text-sm text-gray-500 max-w-sm font-light leading-relaxed">{successMsg}</p>
           </div>
         )}
         {!pendingOAuth && !successMsg && (
@@ -365,13 +370,13 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             <div className="flex border-b border-gray-200 pb-3 mb-6 gap-6">
               <button 
                 onClick={() => { setActiveTab('login'); setLoginError(''); }}
-                className={`text-xs uppercase tracking-wider font-bold transition-colors pb-1 outline-none ${activeTab === 'login' ? 'border-b-2 border-[#3373AB] text-[#3373AB]' : 'text-gray-400 hover:text-gray-700'}`}
+                className={`text-sm uppercase tracking-wider font-bold transition-colors pb-1 outline-none ${activeTab === 'login' ? 'border-b-2 border-[#3373AB] text-[#3373AB]' : 'text-gray-400 hover:text-gray-700'}`}
               >
                 Sign In
               </button>
               <button 
                 onClick={() => { setActiveTab('register'); setLoginError(''); }}
-                className={`text-xs uppercase tracking-wider font-bold transition-colors pb-1 outline-none ${activeTab === 'register' ? 'border-b-2 border-[#3373AB] text-[#3373AB]' : 'text-gray-400 hover:text-gray-700'}`}
+                className={`text-sm uppercase tracking-wider font-bold transition-colors pb-1 outline-none ${activeTab === 'register' ? 'border-b-2 border-[#3373AB] text-[#3373AB]' : 'text-gray-400 hover:text-gray-700'}`}
               >
                 Create Account
               </button>
@@ -381,7 +386,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             {activeTab === 'login' && !showForgot && (
               <form onSubmit={handleLogin} className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">
+                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">
                     <Mail size={11} className="inline mr-1" />
                     Email / Username / Phone
                   </label>
@@ -390,13 +395,13 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                     placeholder="e.g. user@email.com or username"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                    className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">
+                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">
                     <Lock size={11} className="inline mr-1" />
                     Password
                   </label>
@@ -406,7 +411,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB] pr-8"
+                      className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB] pr-8"
                       required
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 outline-none">
@@ -416,22 +421,22 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                 </div>
 
                 {loginError && (
-                  <p className="text-[11px] text-red-500 font-sans">{loginError}</p>
+                  <p className="text-sm text-red-500 font-sans">{loginError}</p>
                 )}
 
                 <button 
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-[#111111] hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
+                  className="w-full bg-[#111111] hover:bg-neutral-800 disabled:bg-gray-300 disabled:cursor-not-allowed text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
                 >
                   {loading ? 'Authenticating...' : 'Sign In'}
                 </button>
 
                 <div className="flex items-center justify-between pt-1">
-                  <button type="button" onClick={() => { setShowForgot(true); setFpIdentifier(identifier); }} className="text-[10px] sm:text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
+                  <button type="button" onClick={() => { setShowForgot(true); setFpIdentifier(identifier); }} className="text-sm text-[#3373AB] hover:underline font-semibold outline-none">
                     Forgot account?
                   </button>
-                  <button type="button" onClick={() => setActiveTab('register')} className="text-[10px] sm:text-[11px] text-[#3373AB] hover:underline font-semibold outline-none">
+                  <button type="button" onClick={() => setActiveTab('register')} className="text-sm text-[#3373AB] hover:underline font-semibold outline-none">
                     Don't have an account? Sign up
                   </button>
                 </div>
@@ -441,28 +446,28 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             {/* FORGOT PASSWORD FLOW */}
             {activeTab === 'login' && showForgot && (
               <div className="space-y-4">
-                <button onClick={resetForgotFlow} className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 outline-none mb-2">
+                <button onClick={resetForgotFlow} className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 outline-none mb-2">
                   <ArrowLeft size={13} /> Back to sign in
                 </button>
 
                 {fpStep === 1 && (
                   <div>
-                    <p className="text-xs text-gray-600 font-sans mb-4">Enter the email address or username associated with your account.</p>
+                    <p className="text-sm text-gray-600 font-sans mb-4">Enter the email address or username associated with your account.</p>
                     <div>
-                      <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Email or Username</label>
+                      <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Email or Username</label>
                       <input 
                         type="text" 
                         placeholder="e.g. user@email.com"
                         value={fpIdentifier}
                         onChange={(e) => setFpIdentifier(e.target.value)}
-                        className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                        className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                       />
                     </div>
-                    {fpError && <p className="text-[11px] text-red-500 font-sans mt-2">{fpError}</p>}
+                    {fpError && <p className="text-sm text-red-500 font-sans mt-2">{fpError}</p>}
                     <button 
                       onClick={handleForgotCheck}
                       disabled={loading}
-                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
+                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
                     >
                       {loading ? 'Checking...' : 'Send OTP'}
                     </button>
@@ -471,24 +476,24 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
                 {fpStep === 2 && (
                   <div>
-                    {fpMessage && <p className="text-[11px] text-emerald-600 font-sans mb-4">{fpMessage}</p>}
-                    <p className="text-xs text-gray-600 font-sans mb-4">Enter the 6-digit verification code sent to your registered contact.</p>
+                    {fpMessage && <p className="text-sm text-emerald-600 font-sans mb-4">{fpMessage}</p>}
+                    <p className="text-sm text-gray-600 font-sans mb-4">Enter the 6-digit verification code sent to your registered contact.</p>
                     <div>
-                      <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">OTP Verification Code</label>
+                      <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">OTP Verification Code</label>
                       <input 
                         type="text" 
                         placeholder="000000"
                         maxLength={6}
                         value={fpOtp}
                         onChange={(e) => setFpOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                        className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB] tracking-widest text-center font-mono"
+                        className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB] tracking-widest text-center font-mono"
                       />
                     </div>
-                    {fpError && <p className="text-[11px] text-red-500 font-sans mt-2">{fpError}</p>}
+                    {fpError && <p className="text-sm text-red-500 font-sans mt-2">{fpError}</p>}
                     <button 
                       onClick={handleOtpVerify}
                       disabled={loading || fpOtp.length !== 6}
-                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
+                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
                     >
                       {loading ? 'Verifying...' : 'Verify OTP'}
                     </button>
@@ -497,34 +502,34 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
                 {fpStep === 3 && (
                   <div>
-                    <p className="text-xs text-gray-600 font-sans mb-4">Choose a new password for your account.</p>
+                    <p className="text-sm text-gray-600 font-sans mb-4">Choose a new password for your account.</p>
                     <div className="space-y-3">
                       <div>
-                        <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">New Password</label>
+                        <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">New Password</label>
                         <input 
                           type="password" 
                           placeholder="At least 6 characters"
                           value={fpNewPassword}
                           onChange={(e) => setFpNewPassword(e.target.value)}
-                          className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                          className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Confirm New Password</label>
+                        <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Confirm New Password</label>
                         <input 
                           type="password" 
                           placeholder="Re-enter new password"
                           value={fpConfirmPassword}
                           onChange={(e) => setFpConfirmPassword(e.target.value)}
-                          className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                          className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                         />
                       </div>
                     </div>
-                    {fpError && <p className="text-[11px] text-red-500 font-sans mt-2">{fpError}</p>}
+                    {fpError && <p className="text-sm text-red-500 font-sans mt-2">{fpError}</p>}
                     <button 
                       onClick={handlePasswordReset}
                       disabled={loading}
-                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
+                      className="w-full bg-[#3373AB] hover:bg-[#255C8E] disabled:bg-gray-300 text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none mt-4"
                     >
                       {loading ? 'Updating...' : 'Update Password'}
                     </button>
@@ -535,10 +540,10 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                   <div className="text-center py-8 space-y-4">
                     <CheckCircle size={32} className="text-emerald-500 mx-auto" />
                     <h4 className="font-bold text-sm text-gray-900 uppercase">Password Updated</h4>
-                    <p className="text-xs text-gray-500">Your password has been successfully reset.</p>
+                    <p className="text-sm text-gray-500">Your password has been successfully reset.</p>
                     <button 
                       onClick={resetForgotFlow}
-                      className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-mono uppercase tracking-widest px-6 py-3 transition-colors rounded-none outline-none"
+                      className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-sm font-mono uppercase tracking-widest px-6 py-3 transition-colors rounded-none outline-none"
                     >
                       Back to Sign In
                     </button>
@@ -550,28 +555,28 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             {/* SIGNUP TAB - STEP 1 */}
             {activeTab === 'register' && signupStep === 1 && (
               <form onSubmit={handleSignupStep1} className="space-y-4">
-                <p className="text-[11px] text-gray-500 font-mono mb-4 font-bold">Step 1 of 2 — Personal Information</p>
+                <p className="text-sm text-gray-500 font-mono mb-4 font-bold">Step 1 of 2 — Personal Information</p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Full Name</label>
+                    <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Full Name</label>
                     <input 
                       type="text" 
                       placeholder="e.g. Jane Doe"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                      className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                       required
                     />
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Email</label>
+                    <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Email</label>
                     <input 
                       type="email" 
                       placeholder="e.g. jane@domain.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                      className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                       required
                     />
                   </div>
@@ -579,13 +584,13 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Phone Number</label>
+                    <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Phone Number</label>
                     <div className="flex gap-2 relative">
                       <div className="relative flex-shrink-0">
                         <button
                           type="button"
                           onClick={() => setCountryOpen(!countryOpen)}
-                          className="h-full bg-white border border-gray-200 text-xs px-1.5 py-2 text-gray-700 outline-none focus:border-[#3373AB] hover:bg-gray-50 w-16 flex items-center gap-0.5 justify-center"
+                          className="h-full bg-white border border-gray-200 text-sm px-1.5 py-2 text-gray-700 outline-none focus:border-[#3373AB] hover:bg-gray-50 w-16 flex items-center gap-0.5 justify-center"
                         >
                           <span className="text-base leading-none">{countryOptions.find(c => c.code === countryCode)?.label.split(' ')[0]}</span>
                           <svg className={`w-2.5 h-2.5 text-gray-400 transition-transform ${countryOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
@@ -599,7 +604,7 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                                   key={opt.code}
                                   type="button"
                                   onClick={() => { setCountryCode(opt.code); setCountryOpen(false); }}
-                                  className={`w-full text-left px-2.5 py-1.5 text-xs hover:bg-gray-100 outline-none ${countryCode === opt.code ? 'bg-[#3373AB]/10 font-bold text-[#3373AB]' : 'text-gray-700'}`}
+                                  className={`w-full text-left px-2.5 py-1.5 text-sm hover:bg-gray-100 outline-none ${countryCode === opt.code ? 'bg-[#3373AB]/10 font-bold text-[#3373AB]' : 'text-gray-700'}`}
                                 >
                                   {opt.label}
                                 </button>
@@ -613,20 +618,20 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                         placeholder="e.g. 788 123 456"
                         value={localNumber}
                         onChange={(e) => setLocalNumber(e.target.value.replace(/[^0-9]/g, ''))}
-                        className="flex-1 bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                        className="flex-1 bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                         required
                       />
                     </div>
                   </div>
                   <div>
-                    <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Username (unique)</label>
+                    <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Username (unique)</label>
                     <div className="relative">
                       <input 
                         type="text" 
                         placeholder="e.g. jane_doe"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        className={`w-full bg-white border px-3 py-2 text-xs text-gray-800 outline-none pr-8 ${
+                        className={`w-full bg-white border px-3 py-2 text-sm text-gray-800 outline-none pr-8 ${
                           usernameStatus === 'available' ? 'border-emerald-500' :
                           usernameStatus === 'taken' ? 'border-red-400' :
                           'border-gray-200 focus:border-[#3373AB]'
@@ -648,13 +653,13 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                     {usernameStatus === 'taken' && usernameSuggestions.length > 0 && (
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         <Lightbulb size={11} className="text-amber-500" />
-                        <span className="text-[10px] text-gray-500">Suggestions:</span>
+                        <span className="text-sm text-gray-500">Suggestions:</span>
                         {usernameSuggestions.map((s, i) => (
                           <button
                             key={i}
                             type="button"
                             onClick={() => { setUsername(s); setUsernameStatus('idle'); }}
-                            className="text-[10px] bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 font-mono border border-gray-200 outline-none"
+                            className="text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 px-1.5 py-0.5 font-mono border border-gray-200 outline-none"
                           >
                             {s}
                           </button>
@@ -662,19 +667,19 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                       </div>
                     )}
                     {usernameStatus === 'available' && (
-                      <p className="text-[10px] text-emerald-600 mt-1 font-medium">Username is available.</p>
+                      <p className="text-sm text-emerald-600 mt-1 font-medium">Username is available.</p>
                     )}
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Password</label>
+                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Password</label>
                   <input 
                     type="password" 
                     placeholder="At least 6 characters"
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
-                    className="w-full bg-white border border-gray-200 px-3 py-2 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
+                    className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
                     required
                     minLength={6}
                   />
@@ -682,12 +687,12 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
                 <button 
                   type="submit"
-                  className="w-full bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
+                  className="w-full bg-[#3373AB] hover:bg-[#255C8E] text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
                 >
                   Continue — Workspace Setup
                 </button>
 
-                <p className="text-[10px] text-gray-400 text-center">
+                <p className="text-sm text-gray-400 text-center">
                   Already have an account?{' '}
                   <button type="button" onClick={() => setActiveTab('login')} className="text-[#3373AB] hover:underline font-semibold outline-none">Sign in</button>
                 </p>
@@ -698,23 +703,23 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
             {activeTab === 'register' && signupStep === 2 && (
               <form onSubmit={handleSignupSubmit} className="space-y-4">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-[11px] text-gray-500 font-mono font-bold">Step 2 of 2 — Role & Agreement</p>
-                  <button type="button" onClick={() => setSignupStep(1)} className="text-[11px] text-[#3373AB] hover:underline outline-none">← Back</button>
+                  <p className="text-sm text-gray-500 font-mono font-bold">Step 2 of 2 — Role & Agreement</p>
+                  <button type="button" onClick={() => setSignupStep(1)} className="text-sm text-[#3373AB] hover:underline outline-none">← Back</button>
                 </div>
 
                 <div className="bg-gray-50 p-3 border border-gray-200 space-y-1 mb-2">
-                  <p className="text-[11px] text-gray-700 font-semibold">Reviewing:</p>
-                  <p className="text-[10px] text-gray-500"><span className="font-semibold">Name:</span> {fullName}</p>
-                  <p className="text-[10px] text-gray-500"><span className="font-semibold">Email:</span> {email}</p>
-                  <p className="text-[10px] text-gray-500"><span className="font-semibold">Username:</span> {username}</p>
+                  <p className="text-sm text-gray-700 font-semibold">Reviewing:</p>
+                  <p className="text-sm text-gray-500"><span className="font-semibold">Name:</span> {fullName}</p>
+                  <p className="text-sm text-gray-500"><span className="font-semibold">Email:</span> {email}</p>
+                  <p className="text-sm text-gray-500"><span className="font-semibold">Username:</span> {username}</p>
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Select Workspace Role</label>
+                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">Select Workspace Role</label>
                   <select 
                     value={selectedRole} 
                     onChange={(e) => setSelectedRole(e.target.value as UserRole)}
-                    className="w-full bg-white border border-gray-200 text-xs px-2.5 py-2 text-gray-700 outline-none focus:border-[#3373AB]"
+                    className="w-full bg-white border border-gray-200 text-sm px-2.5 py-2 text-gray-700 outline-none focus:border-[#3373AB]"
                   >
                     <option value="all">All in One — Choose workspace on access</option>
                     <option value="customer">Marketplace Customer (Buyer)</option>
@@ -733,17 +738,17 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                     className="h-3 w-3 mt-0.5 accent-[#3373AB] rounded-none cursor-pointer"
                     required
                   />
-                  <p className="text-[10px] text-gray-500 font-sans leading-snug">
+                  <p className="text-sm text-gray-500 font-sans leading-snug">
                     I agree to the ledger operations standards. Every compiled program and hardware dispatch complies with safety specifications.
                   </p>
                 </div>
 
-                {loginError && <p className="text-[11px] text-red-500 font-sans">{loginError}</p>}
+                {loginError && <p className="text-sm text-red-500 font-sans">{loginError}</p>}
 
                 <button 
                   type="submit"
                   disabled={!agreement || loading}
-                  className="w-full bg-[#111111] hover:bg-neutral-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white text-xs font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
+                  className="w-full bg-[#111111] hover:bg-neutral-800 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed text-white text-sm font-mono uppercase tracking-widest py-3 text-center transition-colors rounded-none outline-none"
                 >
                   {loading ? 'Creating Account...' : 'Create Secure Account'}
                 </button>
@@ -755,17 +760,17 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
         {/* Mobile social login — bottom */}
         {!pendingOAuth && !successMsg && (
           <div className="md:hidden mt-6 pt-6 border-t border-gray-200">
-            <span className="text-[10px] font-mono text-gray-400 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
+            <span className="text-sm font-mono text-gray-400 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
             <div className="space-y-3">
-              <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
-                <Chrome size={15} className="text-[#4285F4]" />
+              <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-yellow-100 hover:bg-yellow-200 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-yellow-800 font-sans border border-yellow-300 rounded-none shadow-sm hover:shadow-md">
+                <Chrome size={15} className="text-yellow-700" />
                 <span className="font-semibold">Continue with Google</span>
               </button>
-              <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
+              <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill="#F25022" d="M11.37 12.73H2.67V4.03h8.7v8.7z"/><path fill="#00A4EF" d="M21.37 12.73h-8.7V4.03h8.7v8.7z"/><path fill="#FFB900" d="M11.37 22.03H2.67v-8.7h8.7v8.7z"/><path fill="#7FBA00" d="M21.37 22.03h-8.7v-8.7h8.7v8.7z"/></svg>
                 <span className="font-semibold">Continue with Microsoft</span>
               </button>
-              <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-xs px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-sm hover:shadow-md">
+              <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-sm hover:shadow-md">
                 <Linkedin size={15} className="text-white" />
                 <span className="font-semibold">Continue with LinkedIn</span>
               </button>
@@ -777,3 +782,32 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
     </div>
   );
 }
+
+const StyledTyping = styled.div`
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+  }
+
+  @keyframes blink-caret {
+    50% {
+      border-color: transparent;
+    }
+  }
+
+  .animation {
+    font:
+      bold 200% Consolas,
+      Monaco,
+      monospace;
+    border-right: 0.1em solid white;
+    width: 13.2ch;
+    margin: 0 0 0.5em 0;
+    white-space: nowrap;
+    overflow: hidden;
+    animation:
+      typing 5s steps(13, end),
+      blink-caret 0.5s step-end infinite alternate;
+  }
+`;

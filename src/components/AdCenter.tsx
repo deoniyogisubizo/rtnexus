@@ -59,7 +59,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
 
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
-          <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold">BUSINESS ADVERTISING PORTAL</p>
+          <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">BUSINESS ADVERTISING PORTAL</p>
           <h2 className="text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1">RT NEXUS CAMPAIGN BUILDER & SPONSORSHIPS</h2>
         </div>
 
@@ -75,7 +75,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
 
             {/* Target Select Placement option */}
             <div className="mb-6 text-left">
-              <label className="text-[11px] font-mono font-bold text-gray-400 uppercase block mb-2">Select Placement Zone</label>
+              <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-2">Select Placement Zone</label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {Object.entries(placementsMeta).map(([key, value]) => {
                   const isCur = placement === key;
@@ -86,8 +86,8 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                       className={`p-3.5 border text-left cursor-pointer transition-all ${isCur ? 'border-[#3373AB] bg-white text-[#111111] shadow-sm' : 'border-gray-200 bg-gray-100/50 hover:bg-white text-gray-500'}`}
                     >
                       <h5 className="font-bold text-xs uppercase tracking-tight font-sans text-gray-950">{value.title}</h5>
-                      <p className="text-[10px] text-gray-500 mt-1 leading-snug line-clamp-2">{value.desc}</p>
-                      <span className="text-[9px] font-mono text-[#3373AB] font-bold block mt-2">CPM rate: RWF {value.baseCpm} per 1K impress</span>
+                      <p className="text-xs text-gray-500 mt-1 leading-snug line-clamp-2">{value.desc}</p>
+                      <span className="text-xs font-mono text-[#3373AB] font-bold block mt-2">CPM rate: RWF {value.baseCpm} per 1K impress</span>
                     </div>
                   );
                 })}
@@ -96,7 +96,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
 
             {/* Durations Slider */}
             <div className="mb-6 text-left">
-              <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 uppercase font-bold mb-1.5">
+              <div className="flex justify-between items-center text-xs font-mono text-gray-400 uppercase font-bold mb-1.5">
                 <span>Deployment duration</span>
                 <span className="text-[#3373AB] font-bold">{duration} Days</span>
               </div>
@@ -108,7 +108,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                 onChange={(e) => setDuration(Number(e.target.value))}
                 className="w-full justify-self-stretch h-1 bg-gray-200 rounded-none appearance-none cursor-pointer accent-[#3373AB]"
               />
-              <div className="flex justify-between text-[9px] font-mono text-gray-400 mt-1">
+              <div className="flex justify-between text-xs font-mono text-gray-400 mt-1">
                 <span>7 Days</span>
                 <span>90 Days (Quarterly)</span>
               </div>
@@ -116,7 +116,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
 
             {/* Budget Slider */}
             <div className="mb-8 text-left">
-              <div className="flex justify-between items-center text-[10px] font-mono text-gray-400 uppercase font-bold mb-1.5">
+              <div className="flex justify-between items-center text-xs font-mono text-gray-400 uppercase font-bold mb-1.5">
                 <span>Maximum Campaign Budget Limit</span>
                 <span className="text-[#3373AB] text-sm font-semibold">RWF {budget.toLocaleString()}</span>
               </div>
@@ -129,7 +129,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                 onChange={(e) => setBudget(Number(e.target.value))}
                 className="w-full justify-self-stretch h-1 bg-gray-200 rounded-none appearance-none cursor-pointer accent-[#3373AB]"
               />
-              <div className="flex justify-between text-[9px] font-mono text-gray-400 mt-1">
+              <div className="flex justify-between text-xs font-mono text-gray-400 mt-1">
                 <span>RWF 500</span>
                 <span>RWF 25,000 (Sponsor Enterprise)</span>
               </div>
@@ -137,21 +137,21 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
 
             {/* Live calculation results cards - Sharp grids rounded-none */}
             <div className="border border-neutral-300 bg-[#111111] text-white p-5 text-left">
-              <span className="text-[#3373AB] font-mono text-[9px] font-bold tracking-wider uppercase">SIMULATED CONVERSION HUD</span>
+              <span className="text-[#3373AB] font-mono text-xs font-bold tracking-wider uppercase">SIMULATED CONVERSION HUD</span>
               
               <div className="grid grid-cols-2 gap-4 mt-4">
                 <div className="border-l-2 border-[#3373AB] pl-3">
-                  <span className="text-[10px] font-mono text-gray-400 uppercase whitespace-nowrap">Est. Impressions</span>
+                  <span className="text-xs font-mono text-gray-400 uppercase whitespace-nowrap">Est. Impressions</span>
                   <p className="text-xl font-bold font-mono text-white mt-1">{estimatedImpressions.toLocaleString()}</p>
                 </div>
 
                 <div className="border-l-2 border-[#3373AB] pl-3">
-                  <span className="text-[10px] font-mono text-gray-400 uppercase whitespace-nowrap">Est. Clicks (Vetted CRM)</span>
+                  <span className="text-xs font-mono text-gray-400 uppercase whitespace-nowrap">Est. Clicks (Vetted CRM)</span>
                   <p className="text-xl font-bold font-mono text-amber-400 mt-1">{estimatedClicks.toLocaleString()}</p>
                 </div>
               </div>
 
-              <p className="text-[10px] text-gray-400 mt-4 leading-relaxed font-mono font-light border-t border-neutral-800 pt-3">
+              <p className="text-xs text-gray-400 mt-4 leading-relaxed font-mono font-light border-t border-neutral-800 pt-3">
                 Disclaimer: Conversion ratios are based on average Q1-2026 performance loops over verified B2B foundry leads. Actual response parameters may float with hardware inventory levels.
               </p>
             </div>
@@ -167,7 +167,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
             {!submitted ? (
               <form onSubmit={handleApplyCampaign} className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Registered Corporation Name</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Registered Corporation Name</label>
                   <input 
                     type="text" 
                     placeholder="e.g. Acme Semiconductor Ltd"
@@ -179,7 +179,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Contact Corporate Email</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Contact Corporate Email</label>
                   <input 
                     type="email" 
                     placeholder="e.g. operations@acme.com"
@@ -191,7 +191,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Brief Campaign Targets</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Brief Campaign Targets</label>
                   <textarea 
                     rows={4}
                     placeholder="Describe your targeting parameters, e.g., Looking to promote our certified LoRa transceiver module directly to sensor researchers..."
@@ -202,7 +202,7 @@ export default function AdCenter({ theme = 'light' }: AdCenterProps) {
                 </div>
 
                 {/* Pre-packaged selected info helper */}
-                <div className="bg-gray-50 p-3 border border-gray-250 font-mono text-[10px] text-gray-600">
+                <div className="bg-gray-50 p-3 border border-gray-250 font-mono text-xs text-gray-600">
                   <span className="flex justify-between">
                     <span>Target Zone:</span>
                     <span className="font-bold text-gray-900 uppercase">{placement}</span>

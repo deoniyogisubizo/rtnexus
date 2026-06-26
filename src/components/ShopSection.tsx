@@ -256,7 +256,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         {[1, 2, 3, 4, 5].map(i => (
           <Star key={i} size={size} className={i <= rounded ? 'fill-[#D95907] text-[#D95907]' : 'fill-gray-200 text-gray-200'} />
         ))}
-        <span className={`text-[10px] ml-1 font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{rating.toFixed(1)}</span>
+        <span className={`text-xs ml-1 font-mono ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>{rating.toFixed(1)}</span>
       </div>
     );
   }
@@ -270,7 +270,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
       >
         <div className={`relative h-[110px] flex items-center justify-center p-3 border-b ${isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#FAFBFC] border-gray-100'}`}>
           {badge && (
-            <span className="absolute top-1.5 left-1.5 bg-[#3373AB] text-white text-[8px] font-mono font-bold uppercase px-1 py-0.5 tracking-wider">
+            <span className="absolute top-1.5 left-1.5 bg-[#3373AB] text-white text-[14px] font-mono font-bold uppercase px-1 py-0.5 tracking-wider">
               {badge}
             </span>
           )}
@@ -283,15 +283,15 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
           <img src={product.image} alt={product.name} referrerPolicy="no-referrer" className="max-w-full max-h-full object-contain group-hover:scale-105 transition-transform duration-300" />
         </div>
         <div className="p-2.5">
-          <p className={`text-[11px] font-bold leading-snug line-clamp-2 mb-1 ${isDark ? 'text-[#5BA3DD]' : 'text-[#0062BD]'}`}>{product.name}</p>
+          <p className={`text-xs font-bold leading-snug line-clamp-2 mb-1 ${isDark ? 'text-[#5BA3DD]' : 'text-[#0062BD]'}`}>{product.name}</p>
           {renderStars(product.rating, 9)}
           <div className="flex items-center justify-between mt-1.5">
-            <span className={`text-[12px] font-bold ${isDark ? 'text-gray-100' : 'text-[#333E48]'}`}>RWF {product.price.toFixed(0)}</span>
+            <span className={`text-xs font-bold ${isDark ? 'text-gray-100' : 'text-[#333E48]'}`}>RWF {product.price.toFixed(0)}</span>
             <button
               onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
               className="bg-[#D95907] text-white w-5 h-5 flex items-center justify-center hover:bg-[#B84B05] transition-colors"
             >
-              <i className="fa-solid fa-cart-arrow-down" style={{ fontSize: '8px' }}></i>
+              <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'10px'}}></i>
             </button>
           </div>
         </div>
@@ -360,12 +360,12 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
 
         {!focused && !q && categoryList.length > 0 && (
           <div className="flex items-center gap-2 mt-2.5 overflow-x-auto pb-1">
-            <span className={`text-[10px] font-mono uppercase tracking-wider flex-shrink-0 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Popular:</span>
+            <span className={`text-xs font-mono uppercase tracking-wider flex-shrink-0 ${isDark ? 'text-gray-600' : 'text-gray-400'}`}>Popular:</span>
             {categoryList.slice(0, 6).map(c => (
               <button
                 key={c.id}
                 onClick={() => { setSelectedCategory(c.name); scrollToDirectory(); }}
-                className={`text-[11px] px-3 py-1 border flex-shrink-0 transition-colors ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB] hover:text-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB] hover:text-[#3373AB]'}`}
+                className={`text-xs px-3 py-1 border flex-shrink-0 transition-colors ${isDark ? 'border-gray-700 text-gray-400 hover:border-[#3373AB] hover:text-[#3373AB]' : 'border-gray-200 text-gray-500 hover:border-[#3373AB] hover:text-[#3373AB]'}`}
               >
                 {c.name}
               </button>
@@ -388,7 +388,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
               <div>
                 {cats.length > 0 && (
                   <div>
-                    <div className={`text-[10px] font-mono uppercase tracking-widest px-4 pt-3 pb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Categories</div>
+                    <div className={`text-xs font-mono uppercase tracking-widest px-4 pt-3 pb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Categories</div>
                     {cats.map(r => (
                       <button
                         key={r.label}
@@ -403,7 +403,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 )}
                 {prods.length > 0 && (
                   <div>
-                    <div className={`text-[10px] font-mono uppercase tracking-widest px-4 pt-3 pb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Products</div>
+                    <div className={`text-xs font-mono uppercase tracking-widest px-4 pt-3 pb-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>Products</div>
                     {prods.slice(0, 6).map(r => (
                       <button
                         key={r.product.id}
@@ -445,7 +445,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             <SlidersHorizontal size={14} className="text-[#3373AB]" />
             <span>Refine Results</span>
           </span>
-          <button onClick={handleResetFilters} className="text-[10px] font-mono hover:text-[#3373AB] cursor-pointer text-gray-400">
+          <button onClick={handleResetFilters} className="text-xs font-mono hover:text-[#3373AB] cursor-pointer text-gray-400">
             [RESET]
           </button>
         </div>
@@ -459,7 +459,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         </button>
 
         <div className="mb-5">
-          <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Refine Within Results</label>
+          <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Refine Within Results</label>
           <div className={`flex items-center border px-2.5 py-1.5 ${isDark ? 'bg-[#1a1a1a] border-gray-700' : 'bg-white border-gray-200'}`}>
             <input
               type="text"
@@ -473,7 +473,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         </div>
 
         <div className="mb-5">
-          <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Foundry Category</label>
+          <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Foundry Category</label>
           <div className="flex flex-col gap-1 max-h-64 overflow-y-auto">
             {categories.map((cat) => (
               <button
@@ -482,7 +482,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 className={`text-left text-xs py-1.5 px-2.5 transition-colors font-sans flex items-center justify-between ${selectedCategory === cat ? 'bg-[#3373AB] text-white font-semibold' : `${isDark ? 'hover:bg-gray-800 text-gray-300' : 'hover:bg-gray-100 text-gray-600'}`}`}
               >
                 <span>{cat}</span>
-                <span className={`text-[10px] font-mono ${selectedCategory === cat ? 'text-white/70' : 'text-gray-400'}`}>
+                <span className={`text-xs font-mono ${selectedCategory === cat ? 'text-white/70' : 'text-gray-400'}`}>
                   {cat === 'All' ? products.length : (categoryCounts[cat] || 0)}
                 </span>
               </button>
@@ -491,7 +491,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         </div>
 
         <div className="mb-5">
-          <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1.5">Original Factory</label>
+          <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1.5">Original Factory</label>
           <select
             value={selectedBrand}
             onChange={(e) => setSelectedBrand(e.target.value)}
@@ -502,7 +502,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         </div>
 
         <div className="mb-6">
-          <div className="flex justify-between items-center text-[10px] font-mono font-bold text-gray-400 uppercase mb-1.5">
+          <div className="flex justify-between items-center text-xs font-mono font-bold text-gray-400 uppercase mb-1.5">
             <span>Maximum Price Limit</span>
             <span className="text-[#3373AB] font-bold">RWF {maxPrice}</span>
           </div>
@@ -511,15 +511,15 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             onChange={(e) => setMaxPrice(Number(e.target.value))}
             className="w-full justify-self-stretch h-1 bg-gray-200 rounded-none appearance-none cursor-pointer accent-[#3373AB]"
           />
-          <div className="flex justify-between text-[9px] font-mono text-gray-400 mt-1">
+          <div className="flex justify-between text-xs font-mono text-gray-400 mt-1">
             <span>RWF 30</span>
             <span>RWF 100,000</span>
           </div>
         </div>
 
         <div className={`p-3 border ${isDark ? 'bg-[#1a1a1a] border-gray-700' : 'bg-white border-gray-200'}`}>
-          <h5 className={`text-[10px] font-semibold uppercase ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>Escrow Logistics</h5>
-          <p className="text-[10px] text-gray-500 mt-1 leading-relaxed">
+          <h5 className={`text-xs font-semibold uppercase ${isDark ? 'text-gray-200' : 'text-gray-900'}`}>Escrow Logistics</h5>
+          <p className="text-xs text-gray-500 mt-1 leading-relaxed">
             All transactions are logged on the physical ledger. Hardware products undergo active stress tests at RTTI laboratories before freight courier dispatch.
           </p>
         </div>
@@ -546,7 +546,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
         <div className={`relative overflow-hidden flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 pb-8 mb-10 border-b-2 ${isDark ? 'border-gray-800' : 'border-gray-100'}`}>
           <div className={`absolute -top-10 -right-10 w-72 h-72 rounded-full pointer-events-none ${isDark ? 'bg-[#3373AB]/10' : 'bg-[#3373AB]/[0.06]'}`} />
           <div className="border-l-4 border-[#3373AB] pl-5 relative z-10">
-            <p className="text-[11px] font-mono font-bold tracking-widest text-[#3373AB] flex items-center gap-1.5">
+            <p className="text-xs font-mono font-bold tracking-widest text-[#3373AB] flex items-center gap-1.5">
               <ShieldCheck size={13} /> B2B FOUNDRY MARKETPLACE
             </p>
             <h2 className={`text-2xl lg:text-4xl font-extrabold uppercase tracking-tight mt-1.5 leading-none ${isDark ? 'text-white' : 'text-[#111111]'}`}>
@@ -577,7 +577,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
               ].map((stat, i) => (
                 <div key={stat.label} className={`px-5 py-3 text-center ${i > 0 ? (isDark ? 'border-l border-gray-800' : 'border-l border-gray-200') : ''}`}>
                   <p className={`text-xl font-extrabold ${isDark ? 'text-white' : 'text-[#111111]'}`}>{stat.value}</p>
-                  <p className="text-[9px] font-mono uppercase tracking-wider text-gray-400 whitespace-nowrap">{stat.label}</p>
+                  <p className="text-xs font-mono uppercase tracking-wider text-gray-400 whitespace-nowrap">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -612,8 +612,8 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                     )}
                   </div>
                   <div className="p-2.5">
-                    <p className={`text-[11px] font-bold truncate ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{c.name}</p>
-                    <p className="text-[9px] text-gray-400 font-mono">{c.count} parts</p>
+                    <p className={`text-xs font-bold truncate ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{c.name}</p>
+                    <p className="text-xs text-gray-400 font-mono">{c.count} parts</p>
                   </div>
                 </button>
               ))}
@@ -658,7 +658,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             onClick={() => setMobileFiltersOpen(true)}
             className={`lg:hidden flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 border ${isDark ? 'border-gray-700 text-gray-300' : 'border-gray-200 text-gray-700'}`}
           >
-            <Filter size={13} /> Filters {activeFilters.length > 0 && <span className="bg-[#3373AB] text-white text-[10px] rounded-full w-4 h-4 flex items-center justify-center">{activeFilters.length}</span>}
+            <Filter size={13} /> Filters {activeFilters.length > 0 && <span className="bg-[#3373AB] text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{activeFilters.length}</span>}
           </button>
         </div>
 
@@ -675,7 +675,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 Showing <span className={`font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{Math.min(displayCount, filteredProducts.length)}</span> of <span className={`font-bold ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>{filteredProducts.length}</span> verified component records
               </p>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-mono text-gray-400 uppercase">Sort Order</span>
+                <span className="text-xs font-mono text-gray-400 uppercase">Sort Order</span>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
@@ -694,7 +694,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
             {activeFilters.length > 0 && (
               <div className="flex items-center gap-2 flex-wrap mb-6">
                 {activeFilters.map((f, i) => (
-                  <button key={i} onClick={f.onRemove} className="flex items-center gap-1.5 text-[11px] font-mono bg-[#3373AB]/10 text-[#3373AB] px-2.5 py-1 border border-[#3373AB]/30 hover:bg-[#3373AB]/20 transition-colors">
+                  <button key={i} onClick={f.onRemove} className="flex items-center gap-1.5 text-xs font-mono bg-[#3373AB]/10 text-[#3373AB] px-2.5 py-1 border border-[#3373AB]/30 hover:bg-[#3373AB]/20 transition-colors">
                     {f.label} <X size={10} />
                   </button>
                 ))}
@@ -727,7 +727,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                     >
                       <div className={`relative h-[150px] flex items-center justify-center p-4 border-b ${isDark ? 'bg-[#1a1a1a] border-gray-800' : 'bg-[#FAFBFC] border-gray-100'}`}>
                         {topRated && (
-                          <span className="absolute top-2 left-2 bg-[#3373AB] text-white text-[9px] font-mono font-bold uppercase px-1.5 py-0.5 tracking-wider">
+                          <span className="absolute top-2 left-2 bg-[#3373AB] text-white text-xs font-mono font-bold uppercase px-1.5 py-0.5 tracking-wider">
                             Top Rated
                           </span>
                         )}
@@ -749,7 +749,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
                           <button
                             onClick={(e) => openQuickView(product, e)}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-[#111] text-[10px] font-bold uppercase px-3 py-1.5 flex items-center gap-1.5"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity bg-white text-[#111] text-xs font-bold uppercase px-3 py-1.5 flex items-center gap-1.5"
                           >
                             <Eye size={12} /> Quick View
                           </button>
@@ -757,25 +757,25 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                       </div>
 
                       <div className="p-3.5 flex flex-col flex-1">
-                        <span className="text-[10px] text-[#768B9C] uppercase tracking-wide group-hover:text-[#3373AB] transition-colors truncate">
+                        <span className="text-xs text-[#768B9C] uppercase tracking-wide group-hover:text-[#3373AB] transition-colors truncate">
                           {product.category}
                         </span>
-                        <h3 className={`text-[13px] font-bold leading-tight line-clamp-2 mb-1.5 transition-colors ${isDark ? 'text-[#5BA3DD] group-hover:text-white' : 'text-[#0062BD] group-hover:text-[#3373AB]'}`}>
+                        <h3 className={`text-sm font-bold leading-tight line-clamp-2 mb-1.5 transition-colors ${isDark ? 'text-[#5BA3DD] group-hover:text-white' : 'text-[#0062BD] group-hover:text-[#3373AB]'}`}>
                           {product.name}
                         </h3>
-                        <p className="text-[10px] text-gray-400 truncate mb-1.5">{product.vendorName}</p>
+                        <p className="text-xs text-gray-400 truncate mb-1.5">{product.vendorName}</p>
                         {renderStars(product.rating)}
                         {inBasket && (
-                          <p className="text-[10px] text-emerald-600 font-semibold mt-1 flex items-center gap-1"><Check size={10} /> In your basket</p>
+                          <p className="text-xs text-emerald-600 font-semibold mt-1 flex items-center gap-1"><Check size={10} /> In your basket</p>
                         )}
 
                         <div className="mt-auto flex items-center justify-between pt-2.5">
-                          <span className={`text-[15px] font-bold ${isDark ? 'text-gray-100' : 'text-[#333E48]'}`}>RWF {product.price.toFixed(2)}</span>
+                          <span className={`text-base font-bold ${isDark ? 'text-gray-100' : 'text-[#333E48]'}`}>RWF {product.price.toFixed(2)}</span>
                           <button
                             onClick={(e) => { e.stopPropagation(); setCartButtonRect(e.currentTarget.getBoundingClientRect()); setCartProduct(product); }}
-                            className="flex items-center gap-1 bg-[#D95907] text-white text-[10px] font-bold uppercase px-2.5 py-1.5 hover:bg-[#B84B05] transition-colors shadow-sm"
+                            className="flex items-center gap-1 bg-[#D95907] text-white text-xs font-bold uppercase px-2.5 py-1.5 hover:bg-[#B84B05] transition-colors shadow-sm"
                           >
-                            <i className="fa-solid fa-cart-arrow-down" style={{ fontSize: '10px' }}></i> Add
+                            <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i> Add
                           </button>
                         </div>
                       </div>
@@ -806,10 +806,10 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                       onClick={() => { setSelectedBrand(v.name); scrollToDirectory(); }}
                       className={`text-left p-3 border transition-colors ${isDark ? 'border-gray-800 hover:border-[#3373AB]/50 bg-[#212121]' : 'border-gray-200 hover:border-[#3373AB]/40 bg-white'}`}
                     >
-                      <p className={`text-[11px] font-semibold truncate flex items-center gap-1 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
+                      <p className={`text-xs font-semibold truncate flex items-center gap-1 ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
                         <Package size={11} className="text-[#3373AB] flex-shrink-0" /> {v.name}
                       </p>
-                      <p className="text-[9px] text-gray-400 font-mono mt-1">{v.count} parts listed</p>
+                      <p className="text-xs text-gray-400 font-mono mt-1">{v.count} parts listed</p>
                       {renderStars(v.avgRating, 9)}
                     </button>
                   ))}
@@ -847,7 +847,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
               <span className="text-xs font-mono text-gray-400 flex-shrink-0">Comparing ({compareList.length}/3):</span>
               {compareProducts.map(p => (
                 <div key={p.id} className="flex items-center gap-1.5 bg-white/10 px-2 py-1 flex-shrink-0">
-                  <span className="text-[11px] truncate max-w-[100px]">{p.name}</span>
+                  <span className="text-xs truncate max-w-[100px]">{p.name}</span>
                   <button onClick={() => toggleCompare(p.id)}><X size={11} /></button>
                 </div>
               ))}
@@ -879,16 +879,16 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                     <div className={`h-24 flex items-center justify-center mb-2 ${isDark ? 'bg-[#1a1a1a]' : 'bg-[#FAFBFC]'}`}>
                       <img src={p.image} alt={p.name} referrerPolicy="no-referrer" className="max-h-full object-contain" />
                     </div>
-                    <p className="text-[12px] font-bold mb-1">{p.name}</p>
-                    <p className="text-[10px] text-gray-400 mb-2">{p.vendorName}</p>
-                    <div className="space-y-1.5 text-[11px]">
+                    <p className="text-xs font-bold mb-1">{p.name}</p>
+                    <p className="text-xs text-gray-400 mb-2">{p.vendorName}</p>
+                    <div className="space-y-1.5 text-xs">
                       <p><span className="text-gray-400">Category:</span> {p.category}</p>
                       <p><span className="text-gray-400">Price:</span> RWF {p.price.toFixed(2)}</p>
                       <div className="flex items-center gap-1"><span className="text-gray-400">Rating:</span> {renderStars(p.rating, 9)}</div>
                     </div>
                     <button
                       onClick={() => { addToCart(p, 1); setShowCompareModal(false); setNotification(`Added "${p.name}" to the RT Escrow Basket.`); setTimeout(() => setNotification(null), 3000); }}
-                      className="w-full mt-3 bg-[#D95907] text-white text-[10px] font-bold uppercase py-2"
+                      className="w-full mt-3 bg-[#D95907] text-white text-xs font-bold uppercase py-2"
                     >
                       Add to Cart
                     </button>
@@ -908,7 +908,7 @@ export default function ShopSection({ addToCart, searchQuery, cartItems, theme =
                 <img src={quickViewProduct.image} alt={quickViewProduct.name} referrerPolicy="no-referrer" className="max-w-full max-h-full object-contain" />
               </div>
               <div className="p-6 flex flex-col">
-                <span className="text-[10px] text-[#3373AB] uppercase tracking-wide font-mono">{quickViewProduct.category}</span>
+                <span className="text-xs text-[#3373AB] uppercase tracking-wide font-mono">{quickViewProduct.category}</span>
                 <h3 className="text-lg font-bold leading-tight mt-1 mb-2">{quickViewProduct.name}</h3>
                 <p className="text-xs text-gray-400 mb-2">{quickViewProduct.vendorName}</p>
                 {renderStars(quickViewProduct.rating, 13)}

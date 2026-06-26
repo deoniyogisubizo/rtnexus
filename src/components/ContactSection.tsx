@@ -57,7 +57,7 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
 
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 text-left">
-          <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">SUPPORT & CONTACT SYSTEM</p>
+          <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold text-left">SUPPORT & CONTACT SYSTEM</p>
           <h2 className="text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1 text-left">ESTABLISH CHANNELS WITH RT NEXUS GLOBALLY</h2>
         </div>
 
@@ -71,7 +71,7 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
             {!ticketLogged ? (
               <form onSubmit={handleTicketSubmit} className="space-y-4">
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Name</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Corporate Name</label>
                   <input 
                     type="text" 
                     placeholder="e.g. Alistair Miller"
@@ -83,7 +83,7 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Contact Email node</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Contact Email node</label>
                   <input 
                     type="email" 
                     placeholder="e.g. operations@foundry.com"
@@ -95,7 +95,7 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
                 </div>
 
                 <div>
-                  <label className="text-[10px] font-mono font-bold text-gray-400 uppercase block mb-1">Detailed Technical Query</label>
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">Detailed Technical Query</label>
                   <textarea 
                     rows={4}
                     placeholder="Provide diagnostic logs, order IDs, or syllabus tracking details..."
@@ -118,7 +118,7 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
               <div className="text-center py-6 animate-fade-in space-y-4">
                 <Check className="mx-auto text-emerald-600 h-10 w-10 bg-emerald-50 p-2" />
                 <h5 className="font-sans font-bold text-xs uppercase text-gray-900">TICKET DETECTED & REGISTERED</h5>
-                <p className="text-[11px] text-gray-500 leading-relaxed font-sans font-light">
+                <p className="text-xs text-gray-500 leading-relaxed font-sans font-light">
                   Successfully registered the query under hash address <span className="font-mono text-gray-800">#RT-{Math.floor(Math.random()	* 890000 + 100000)}</span>. An operational engineer in regional support will review inputs and emit a diagnostic response file to <span className="font-semibold">{formEmail}</span> within 2 hours.
                 </p>
                 <button 
@@ -190,9 +190,9 @@ export default function ContactSection({ theme = 'light', standalone }: ContactS
                     <span className="font-sans font-bold text-xs uppercase tracking-tight text-gray-950">{office.city}</span>
                     <MapPin size={12} className="text-[#3373AB]" />
                   </div>
-                  <p className="text-[11px] text-gray-500 font-light leading-relaxed">{office.address}</p>
+                  <p className="text-xs text-gray-500 font-light leading-relaxed">{office.address}</p>
                 </div>
-                <div className="mt-4 border-t border-gray-200 pt-3 flex justify-between items-center font-mono text-[10px]">
+                <div className="mt-4 border-t border-gray-200 pt-3 flex justify-between items-center font-mono text-xs">
                   <span className="text-gray-400">Direct Link</span>
                   <a href={`tel:${office.phone.replace(/\s+/g, '')}`} className="font-bold text-[#3373AB] hover:underline whitespace-nowrap">{office.phone}</a>
                 </div>

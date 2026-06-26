@@ -1,24 +1,214 @@
-import { useState, useEffect } from 'react';
-import { Workflow } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import {
+  Workflow,
+  GraduationCap,
+  Radio,
+  LayoutDashboard,
+  type LucideIcon,
+} from 'lucide-react';
 
 interface HeroSectionProps {
   setView: (view: string) => void;
   theme: 'light' | 'dark';
 }
 
-const HERO_SLIDES = ['/animation/rtshop.png', '/animation/rtlearn.png'];
+interface HeroSlide {
+  image: string;
+  mobileImage?: string;
+  eyebrow: string;
+  headline: string;
+  subtext: string;
+  primary: { label: string; view: string };
+  secondary: { label: string; view: string };
+}
+
+const HERO_SLIDES: HeroSlide[] = [
+  {
+    image: '/animation/rtshop.png',
+    mobileImage: '/animation/rtshopmobile.png',
+    eyebrow: 'RT SHOP — COMPONENTS & IOT HARDWARE',
+    headline: 'Premium Components. Shelf-Beating Prices.',
+    subtext:
+      'Microcontrollers, IoT shields, sensors and biometrics — sourced and stocked for makers and businesses across Rwanda.',
+    primary: { label: 'Shop IoT Devices', view: 'shop' },
+    secondary: { label: 'Browse Categories', view: 'shop' },
+  },
+  {
+    image: '/animation/rtlearn.png',
+    mobileImage: '/animation/rtlearnmobile.png',
+    eyebrow: 'RTTI LEARN — CERTIFIED TRAINING TRACKS',
+    headline: 'Train On Real Hardware. Get RTB Certified.',
+    subtext:
+      'Structured tracks, hands-on labs, and an RTB-recognized certification path for the next generation of embedded engineers.',
+    primary: { label: 'View Certification Track', view: 'rtti' },
+    secondary: { label: 'Start Learning', view: 'rtti' },
+  },
+];
+
+interface SystemModule {
+  tag: string;
+  tagClass: string;
+  title: string;
+  desc: string;
+  icon: LucideIcon;
+  view: string;
+  dashed?: boolean;
+  mono?: boolean;
+}
+
+const SHOP_MODULE: SystemModule = {
+  tag: 'COMMERCE GRID',
+  tagClass: 'bg-[#3373AB]',
+  title: 'RT Shop',
+  desc: 'Microcontrollers, IoT shields, biometrics',
+  icon: Workflow,
+  view: 'shop',
+};
+
+const SECONDARY_MODULES: SystemModule[] = [
+  {
+    tag: 'EDUCATION SYSTEM',
+    tagClass: 'bg-gray-500',
+    title: 'RTTI Learn',
+    desc: 'Certifications & labs',
+    icon: GraduationCap,
+    view: 'rtti',
+  },
+  {
+    tag: 'BROADCASTING NODE',
+    tagClass: 'bg-gray-500',
+    title: 'MTTV Media',
+    desc: 'Webinars & podcasts',
+    icon: Radio,
+    view: 'mttv',
+  },
+];
+
+const PORTAL_MODULE: SystemModule = {
+  tag: 'ROLE WORKSPACES',
+  tagClass: 'bg-[#3373AB]',
+  title: 'RT-Portal Core',
+  desc: 'Dashboards for every role',
+  icon: LayoutDashboard,
+  view: 'portals',
+  dashed: true,
+  mono: true,
+};
+
+function usePrefersReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return reduced;
+}
+
+function FancyButton({
+  label,
+  solid,
+  onClick,
+}: {
+  label: string;
+  solid?: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`fancy-btn shadow-lg ${solid ? 'fancy-btn-solid' : ''}`}
+    >
+      <span className="f-top-key" />
+      <span className="f-text">{label}</span>
+      <span className="f-bot-key-1" />
+      <span className="f-bot-key-2" />
+    </button>
+  );
+}
+
+function ModuleTile({
+  mod,
+  busDot,
+  onClick,
+}: {
+  mod: SystemModule;
+  busDot?: boolean;
+  onClick: () => void;
+}) {
+  const Icon = mod.icon;
+  return (
+    <div
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') onClick();
+      }}
+      className={`relative w-full p-3 text-left cursor-pointer transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E8C547] focus-visible:outline-offset-2 ${mod.dashed
+          ? 'border border-dashed border-[#3373AB]/30 bg-white/60 hover:bg-white/90'
+          : 'border border-gray-200 bg-white/60 hover:border-[#3373AB]/50'
+        }`}
+    >
+      {busDot && (
+        <span
+          aria-hidden
+          className="hidden md:block absolute -left-[19px] top-1/2 -translate-y-1/2 w-[7px] h-[7px] rotate-45 bg-[#3373AB]"
+        />
+      )}
+      <div
+        className={`absolute -top-[9px] left-3 ${mod.tagClass} text-white px-1.5 py-0.5 text-xs font-mono uppercase font-bold`}
+      >
+        {mod.tag}
+      </div>
+      <div className="flex justify-between items-center">
+        <div>
+          <h4
+            className={`font-extrabold uppercase tracking-wide ${mod.mono
+                ? 'font-mono text-xs text-[#3373AB]'
+                : 'font-sans text-sm text-gray-900'
+              }`}
+          >
+            {mod.title}
+          </h4>
+          <p className="text-xs text-gray-500 mt-0.5 font-medium leading-snug">
+            {mod.desc}
+          </p>
+        </div>
+        {mod.dashed ? (
+          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+        ) : (
+          <Icon className="text-[#3373AB]" size={16} />
+        )}
+      </div>
+    </div>
+  );
+}
 
 export default function HeroSection({ setView, theme }: HeroSectionProps) {
   const isDark = theme === 'dark';
   const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
-    const t = setInterval(() => setSlide((p) => (p + 1) % HERO_SLIDES.length), 5000);
+    if (paused) return;
+    const t = setInterval(
+      () => setSlide((p) => (p + 1) % HERO_SLIDES.length),
+      5000
+    );
     return () => clearInterval(t);
-  }, []);
+  }, [paused]);
 
   return (
-    <section className="relative w-full h-[75vh] lg:h-screen border-b-4 border-[#3373AB] overflow-hidden select-none">
+    <section
+      aria-label="Featured highlights"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      className="relative w-full h-[75vh] lg:h-screen border-b-4 border-[#3373AB] overflow-hidden select-none pt-[var(--rtn-header-height,0px)]"
+    >
       <style>{`
         @font-face {
           font-family: 'Jarvane';
@@ -28,10 +218,20 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
           font-style: normal;
         }
         @keyframes heroOverlayIn {
-          from { opacity: 0; transform: translateX(40px); }
-          to { opacity: 1; transform: translateX(0); }
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
         }
-        .hero-overlay-in { animation: heroOverlayIn 0.6s ease-out both; }
+        .hero-overlay-in { animation: heroOverlayIn 0.5s ease-out both; }
+
+        @keyframes busPulse {
+          0% { top: 4%; opacity: 0; }
+          12% { opacity: 1; }
+          50% { top: 92%; opacity: 1; }
+          62% { opacity: 0; }
+          100% { top: 92%; opacity: 0; }
+        }
+        .bus-pulse { animation: busPulse 4.5s ease-in-out infinite; }
+
         .fancy-btn {
           background-color: transparent;
           border: 2px solid #fff;
@@ -50,6 +250,7 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
           transition: all 0.3s ease-in-out;
           user-select: none;
           font-size: 12px;
+          box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         }
         .fancy-btn::before {
           content: " ";
@@ -101,188 +302,136 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
         .fancy-btn:hover {
           background: rgba(255,255,255,0.08);
           border-color: rgba(255,255,255,0.9);
-          box-shadow: 0 0 20px rgba(232,197,71,0.15);
-          transform: translateY(-1px);
+          box-shadow: 0 0 16px rgba(232,197,71,0.12), 0 6px 18px rgba(0,0,0,0.35);
+          transform: translateY(-2px);
         }
-        .fancy-btn:hover::before {
-          width: 0.75rem;
-          background: #E8C547;
-        }
-        .fancy-btn:hover .f-text {
-          color: #E8C547;
-          padding-left: 1.5em;
-        }
-        .fancy-btn:hover .f-top-key {
-          left: -2px;
-          width: 0px;
-        }
-        .fancy-btn:hover .f-bot-key-1,
-        .fancy-btn:hover .f-bot-key-2 {
-          right: 0;
-          width: 0;
+        .fancy-btn:hover::before { width: 0.75rem; background: #E8C547; }
+        .fancy-btn:hover .f-text { color: #E8C547; padding-left: 1.5em; }
+        .fancy-btn:hover .f-top-key { left: -2px; width: 0px; }
+        .fancy-btn:hover .f-bot-key-1, .fancy-btn:hover .f-bot-key-2 { right: 0; width: 0; }
+        .fancy-btn:focus-visible {
+          outline: 2px solid #E8C547;
+          outline-offset: 3px;
         }
         .fancy-btn-solid {
           background-color: #3373AB;
           border-color: #3373AB;
+          box-shadow: 0 4px 16px rgba(51,115,171,0.3), 0 6px 18px rgba(0,0,0,0.25);
         }
         .fancy-btn-solid:hover {
           background: rgba(255,255,255,0.1);
           border-color: #E8C547;
-          box-shadow: 0 0 25px rgba(232,197,71,0.2), 0 4px 12px rgba(0,0,0,0.3);
-          transform: translateY(-2px);
+          box-shadow: 0 0 24px rgba(232,197,71,0.25), 0 8px 22px rgba(0,0,0,0.4);
+          transform: translateY(-3px);
         }
-        .fancy-btn-solid:hover::before {
-          background: #E8C547;
-        }
-        .fancy-btn-solid:hover .f-text {
-          color: #E8C547;
+        .fancy-btn-solid:hover::before { background: #E8C547; }
+        .fancy-btn-solid:hover .f-text { color: #E8C547; }
+
+        @media (prefers-reduced-motion: reduce) {
+          .hero-overlay-in { animation: none; }
+          .bus-pulse { animation: none; opacity: 0; }
         }
       `}</style>
 
       {/* Full‑width background crossfade */}
       <div className={`absolute inset-0 ${isDark ? 'bg-black' : 'bg-white'}`}>
-        {HERO_SLIDES.map((src, i) => (
-          <div key={src} className={`absolute inset-0 transition-opacity duration-700 ${i === slide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-            <div
-              className="absolute inset-0 bg-cover md:bg-contain bg-top bg-no-repeat"
-              style={{ backgroundImage: `url(${src})` }}
-            />
-            {/* Dark overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            {i === 0 ? (
-              <div className="absolute left-1/2 -translate-x-1/2 md:left-16 md:translate-x-0 bottom-[30%] md:bottom-[38%] w-full px-4 md:px-0">
-                <div className="border-2 border-dashed border-white/50 bg-black/30 p-4 md:p-8 max-w-2xl text-center mx-auto md:mx-0">
-                  <h2 className="text-[#E8C547] text-lg sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
-                    GETS OUR PRODUCT ON SHELF PRICE & QUALITY
-                  </h2>
-                  <div className="flex flex-wrap gap-3 mt-6 justify-center">
-                    <button onClick={() => setView('shop')} className="fancy-btn fancy-btn-solid shadow-lg">
-                      <span className="f-top-key" />
-                      <span className="f-text">Shop Your IOT Device</span>
-                      <span className="f-bot-key-1" />
-                      <span className="f-bot-key-2" />
-                    </button>
-                    <button onClick={() => setView('shop')} className="fancy-btn shadow-lg">
-                      <span className="f-top-key" />
-                      <span className="f-text">Jump To Categories</span>
-                      <span className="f-bot-key-1" />
-                      <span className="f-bot-key-2" />
-                    </button>
-                  </div>
+        {HERO_SLIDES.map((s, i) => (
+          <div
+            key={s.image}
+            className={`absolute inset-0 transition-opacity ${reducedMotion ? 'duration-150' : 'duration-700'
+              } ${i === slide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+          >
+            <picture className="absolute inset-0">
+              {s.mobileImage && (
+                <source media="(max-width: 1023px)" srcSet={s.mobileImage} />
+              )}
+              <img
+                src={s.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover object-top"
+              />
+            </picture>
+            {/* Brand-tinted overlay for text legibility */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0B1727]/75 via-[#0B1727]/15 to-transparent" />
+            {/* Left-to-right dimming overlay for desktop */}
+            <div className="absolute inset-0 hidden md:block bg-[linear-gradient(to_right,black_0%,rgba(0,0,0,0.90)_25%,rgba(0,0,0,0.45)_50%,rgba(0,0,0,0.18)_75%,rgba(0,0,0,0.08)_100%)] pointer-events-none" />
+
+            <div className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-full px-4 md:px-0 z-20">
+              <div
+                key={i === slide ? `active-${i}` : `inactive-${i}`}
+                className={`relative w-full max-w-3xl mx-auto md:mx-0 bg-[#0B1727]/90 border-l-4 border-[#E8C547] px-6 py-7 md:px-9 md:py-8 text-center ${i === slide && !reducedMotion ? 'hero-overlay-in' : ''
+                  }`}
+              >
+                <span
+                  aria-hidden
+                  className="hidden md:block absolute -top-px -right-px w-3 h-3 border-t border-r border-white/25"
+                />
+                <span
+                  aria-hidden
+                  className="hidden md:block absolute -bottom-px -right-px w-3 h-3 border-b border-r border-white/25"
+                />
+
+                <p className="font-mono text-[11px] tracking-[0.2em] text-[#E8C547] mb-3 uppercase">
+                  {s.eyebrow}
+                </p>
+                <h2
+                  className="[font-family:'Jarvane',serif] text-2xl sm:text-3xl md:text-4xl text-white leading-[1.15] tracking-wide"
+                  style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+                >
+                  {s.headline}
+                </h2>
+                <p className="mt-3 text-sm text-slate-300/90 max-w-md mx-auto font-medium leading-relaxed">
+                  {s.subtext}
+                </p>
+
+                <div className="flex flex-wrap gap-3 mt-6 justify-center">
+                  <FancyButton
+                    label={s.primary.label}
+                    solid
+                    onClick={() => setView(s.primary.view)}
+                  />
+                  <FancyButton
+                    label={s.secondary.label}
+                    onClick={() => setView(s.secondary.view)}
+                  />
                 </div>
               </div>
-            ) : (
-              <div className="absolute left-1/2 -translate-x-1/2 md:left-16 md:translate-x-0 bottom-[30%] md:bottom-[38%] w-full px-4 md:px-0">
-                <div className="border-2 border-dashed border-white/50 bg-black/30 p-4 md:p-8 max-w-2xl text-center mx-auto md:mx-0">
-                  <h2 className="text-[#E8C547] text-lg sm:text-2xl md:text-3xl font-bold tracking-wide leading-tight [font-family:'Jarvane',serif]" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
-                    LEARN WITH BEST TRACK AND GETS CERTIFIED WITH RTB OFFER
-                  </h2>
-                  <div className="flex flex-wrap gap-3 mt-6 justify-center">
-                    <button onClick={() => setView('rtti')} className="fancy-btn fancy-btn-solid shadow-lg">
-                      <span className="f-top-key" />
-                      <span className="f-text">Gets Certified</span>
-                      <span className="f-bot-key-1" />
-                      <span className="f-bot-key-2" />
-                    </button>
-                    <button onClick={() => setView('rtti')} className="fancy-btn shadow-lg">
-                      <span className="f-top-key" />
-                      <span className="f-text">Get Started</span>
-                      <span className="f-bot-key-1" />
-                      <span className="f-bot-key-2" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         ))}
-        {/* Dimming overlay */}
-        <div className={`absolute inset-0 ${isDark ? 'bg-black/50' : 'bg-black/10'}`} />
-        {/* Grid pattern */}
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #3373AB 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
+        <div
+          className={`absolute inset-0 ${isDark ? 'bg-black/40' : 'bg-black/10'} pointer-events-none`}
+        />
+        <div
+          className="absolute inset-0 opacity-10 pointer-events-none"
+          style={{
+            backgroundImage:
+              'radial-gradient(circle, #3373AB 1px, transparent 1px)',
+            backgroundSize: '24px 24px',
+          }}
+        />
       </div>
 
-      {/* Slide indicator circles */}
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+      {/* Slide progress ticks */}
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
         {HERO_SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => setSlide(i)}
-            className={`relative w-3 h-3 rounded-full transition-all duration-300 ${
-              i === slide ? 'bg-[#3373AB] scale-110' : isDark ? 'bg-white/40 hover:bg-white/70' : 'bg-gray-400 hover:bg-gray-600'
-            }`}
-            aria-label={`Slide ${i + 1}`}
+            aria-label={`Show slide ${i + 1}`}
+            aria-current={i === slide ? 'true' : undefined}
+            className={`h-1.5 rounded-full transition-all duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E8C547] focus-visible:outline-offset-2 ${i === slide
+                ? 'w-8 bg-[#E8C547]'
+                : isDark
+                  ? 'w-4 bg-white/30 hover:bg-white/60'
+                  : 'w-4 bg-gray-400/60 hover:bg-gray-500'
+              }`}
           />
         ))}
       </div>
 
-      {/* Card overlay — hidden on mobile */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-6 flex items-start pt-20 lg:pt-24 h-[75vh] lg:h-screen">
-        <div className="hidden md:flex mx-auto md:ml-auto md:mr-12 w-full max-w-sm border border-white/40 bg-white/70 backdrop-blur-lg p-4 md:p-6 flex-col justify-between shadow-[0_8px_40px_rgba(0,0,0,0.12)] min-h-[300px] md:min-h-[400px]" style={{ transform: 'perspective(800px) rotateX(-5deg) rotate(3deg)' }}>
-          <div className="absolute top-0 right-0 p-3 text-[10px] font-mono text-gray-400 tracking-wider">
-            NEXUS_MATRIX_V1.1
-          </div>
-
-          {/* Layer Graphic mapping elements together */}
-          <div className="relative flex-1 flex flex-col justify-center items-center gap-4">
-            
-            {/* Top tier - RT Shop */}
-            <div className="w-11/12 border border-[#3373AB]/30 bg-white/60 p-3 text-left relative hover:bg-white/90 transition-colors cursor-pointer" onClick={() => setView('shop')}>
-              <div className="absolute -top-[9px] left-3 bg-[#3373AB] text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
-                COMMERCE GRID
-              </div>
-              <div className="flex justify-between items-center">
-                <div>
-                  <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">RT Shop</h4>
-                  <p className="text-xs text-gray-500 mt-0.5 font-medium">Microcontrollers, IoT Shields, Biometrics</p>
-                </div>
-                <Workflow className="text-[#3373AB]" size={16} />
-              </div>
-            </div>
-
-            {/* Middle tier split: RTTI and MTTV */}
-            <div className="w-11/12 grid grid-cols-2 gap-4">
-              <div className="border border-gray-200 bg-white/60 p-3 text-left relative hover:border-[#3373AB]/50 transition-colors cursor-pointer" onClick={() => setView('rtti')}>
-                <div className="absolute -top-[9px] left-3 bg-gray-500 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
-                  EDUCATION SYSTEM
-                </div>
-                <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">RTTI Learn</h4>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">Certifications & labs</p>
-              </div>
-
-              <div className="border border-gray-200 bg-white/60 p-3 text-left relative hover:border-[#3373AB]/50 transition-colors cursor-pointer" onClick={() => setView('mttv')}>
-                <div className="absolute -top-[9px] left-3 bg-gray-500 text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
-                  BROADCASTING NODE
-                </div>
-                <h4 className="font-sans font-extrabold text-sm text-gray-900 uppercase tracking-wide">MTTV Media</h4>
-                <p className="text-xs text-gray-500 mt-0.5 font-medium">Webinars & podcasts</p>
-              </div>
-            </div>
-
-            {/* Bottom tier - Integrated Portals workspace controller */}
-            <div className="w-11/12 border border-dashed border-[#3373AB]/30 bg-white/60 p-3 text-left relative hover:bg-white/90 transition-colors cursor-pointer" onClick={() => setView('portals')}>
-              <div className="absolute -top-[9px] left-3 bg-[#3373AB] text-white px-1.5 py-0.5 text-[10px] font-mono uppercase font-bold">
-                ROLE WORKSPACES
-              </div>
-              <div className="flex justify-between items-center">
-                <div>
-                  <h4 className="font-mono text-xs font-extrabold text-[#3373AB] uppercase">RT-PORTAL CORE</h4>
-                  <p className="text-xs text-gray-500 mt-0.5 font-sans font-medium leading-none">Diagnostic dashboards for all user types</p>
-                </div>
-                <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Mini info overlay bar */}
-          <div className="h-10 border-t border-gray-200 hidden sm:flex items-center justify-between text-[10px] font-mono text-gray-400">
-            <span className="text-[#3373AB]">STATUS: ESTABLISHED</span>
-            <span>ENCRYPTION: SHIELD-CORE</span>
-            <span>REGION: GBL-1</span>
-          </div>
-        </div>
-      </div>
+      {/* System status panel — removed */}
     </section>
   );
 }

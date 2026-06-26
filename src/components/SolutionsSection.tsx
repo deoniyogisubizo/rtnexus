@@ -194,7 +194,7 @@ export default function SolutionsSection({ setView, theme = 'light', standalone 
           />
         )}
         <div className="text-center mb-8">
-          <p className="text-[9px] font-mono tracking-[0.25em] text-[#3373AB] uppercase font-bold">WHO WE SERVE</p>
+          <p className="text-xs font-mono tracking-[0.25em] text-[#3373AB] uppercase font-bold">WHO WE SERVE</p>
           <h2 className="text-lg sm:text-xl font-bold uppercase tracking-tight mt-1">FIND YOUR PATH</h2>
         </div>
 
@@ -209,13 +209,13 @@ export default function SolutionsSection({ setView, theme = 'light', standalone 
               <div className="sol-card-inner p-3 flex flex-col gap-2">
                 <div className="flex items-center gap-2">
                   <span className="p-1.5 bg-[#3373AB]/10 text-[#3373AB] rounded">{user.icon}</span>
-                  <h3 className="font-bold text-[10px] uppercase tracking-wider text-gray-800">{user.label}</h3>
+                  <h3 className="font-bold text-xs uppercase tracking-wider text-gray-800">{user.label}</h3>
                 </div>
                 <p className="text-xs font-black leading-snug text-gray-900">{user.painPoint}</p>
-                <p className="text-[10px] leading-relaxed text-gray-500">{user.story}</p>
+                <p className="text-xs leading-relaxed text-gray-500">{user.story}</p>
                 <div className="border-t border-gray-200 pt-2">
                   <span className="text-lg font-black font-mono text-gray-900">{user.count}</span>
-                  <span className="text-[9px] text-gray-400 font-mono ml-1 uppercase">{user.countLabel}</span>
+                  <span className="text-xs text-gray-400 font-mono ml-1 uppercase">{user.countLabel}</span>
                 </div>
                 <button onClick={() => setView(user.ctaView)} className="sol-btn">
                   <span className="top-key" />

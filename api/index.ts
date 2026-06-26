@@ -23,7 +23,7 @@ async function getDb(): Promise<Db> {
   if (!uri) throw new Error('MONGODB_URI not set in environment variables');
   cachedClient = new MongoClient(uri);
   await cachedClient.connect();
-  cachedDb = cachedClient.db('rtnexus');
+  cachedDb = cachedClient.db('rtgroup');
   console.log('Connected to MongoDB');
   return cachedDb;
 }

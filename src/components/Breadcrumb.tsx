@@ -12,7 +12,7 @@ interface BreadcrumbProps {
 
 export default function Breadcrumb({ segments, theme = 'light' }: BreadcrumbProps) {
   return (
-    <nav className="flex items-center gap-1 text-[9px] font-mono py-2 px-0 -mt-2">
+    <nav className="flex items-center gap-1 text-xs font-mono py-2 px-0 -mt-2">
       {segments.map((seg, i) => {
         const isLast = i === segments.length - 1;
         return (

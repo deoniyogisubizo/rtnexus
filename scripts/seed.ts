@@ -3,7 +3,7 @@ import { config } from 'dotenv';
 import { createHash } from 'crypto';
 config({ path: '.env.local' });
 
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/rtnexus';
+const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/rtgroup';
 const client = new MongoClient(uri, {
   serverSelectionTimeoutMS: 20000,
   connectTimeoutMS: 20000,
@@ -22,18 +22,18 @@ async function upsertOne(collection: any, filter: any, doc: any) {
 
 async function seed() {
   await client.connect();
-  const db = client.db('rtnexus');
+  const db = client.db('rtgroup');
 
   // ── Users (only if missing) ──
-  const existingUser = await db.collection('Users').findOne({ username: 'rtnexus' });
+  const existingUser = await db.collection('Users').findOne({ username: 'rtgroup' });
   if (!existingUser) {
     await db.collection('Users').createIndex({ username: 1 }, { unique: true });
     await db.collection('Users').createIndex({ email: 1 }, { unique: true });
     await db.collection('Users').insertOne({
-      username: 'rtnexus',
-      email: 'admin@rtnexus.enterprise',
+      username: 'rtgroup',
+      email: 'admin@rtgroup.enterprise',
       password: hashPassword('123456'),
-      fullName: 'RT Nexus Admin',
+      fullName: 'RT Group Admin',
       role: 'admin',
       createdAt: new Date(),
     });
@@ -207,8 +207,8 @@ async function seed() {
   const podcastsExist = await db.collection('Podcasts').countDocuments();
   if (!podcastsExist) {
     await db.collection('Podcasts').insertMany([
-      { title: 'Embedded Futures Ep. 42 — AI at the Edge', host: 'RT Nexus Media', duration: '52:15', publishedAt: new Date() },
-      { title: 'Embedded Futures Ep. 43 — Supply Chain Resilience', host: 'RT Nexus Media', duration: '48:30', publishedAt: new Date() },
+      { title: 'Embedded Futures Ep. 42 — AI at the Edge', host: 'RT Group Media', duration: '52:15', publishedAt: new Date() },
+      { title: 'Embedded Futures Ep. 43 — Supply Chain Resilience', host: 'RT Group Media', duration: '48:30', publishedAt: new Date() },
     ]);
   }
 
@@ -227,7 +227,7 @@ async function seed() {
   await db.collection('SupportTickets').createIndex({ status: 1 });
 
   console.log('Seed complete — collections populated (existing data preserved).');
-  console.log('Admin user: username=rtnexus, password=123456');
+  console.log('Admin user: username=rtgroup, password=123456');
   await client.close();
 }
 

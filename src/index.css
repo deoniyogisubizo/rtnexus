@@ -1,7 +1,120 @@
 @import "tailwindcss";
 
+/* ── Chirp Font Family (system default) ── */
+@font-face {
+  font-family: 'Chirp';
+  src: url('/Chirp-Font-X-Twitter-main/Chirp Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chirp';
+  src: url('/Chirp-Font-X-Twitter-main/Chirp Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chirp';
+  src: url('/Chirp-Font-X-Twitter-main/Chirp Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Chirp';
+  src: url('/Chirp-Font-X-Twitter-main/Chirp Heavy.woff') format('woff');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── SF Pro Display (headings / UI accents) ── */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Display-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Display-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Display-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Display-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── SF Pro Text (body / UI details) ── */
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Text-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Text-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Text-Semibold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Text';
+  src: url('/San-Francisco-Pro-Fonts-master/SF-Pro-Text-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Chirp", "Helvetica Neue", sans-serif;
+  --font-pro: "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+  /* Increased subline sizes — body/subtitle text bumped up */
+  --text-xs: 0.9375rem;
+  --text-sm: 1.0625rem;
+  --text-base: 1.1875rem;
+  --text-lg: 1.375rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2.25rem;
+}
+
 html {
   scroll-behavior: smooth;
+  font-family: "Chirp", "Helvetica Neue", sans-serif;
 }
 
 @keyframes anim-glow {
@@ -96,4 +209,23 @@ html {
 .thin-scrollbar::-webkit-scrollbar-thumb {
   background: #bbb;
   border-radius: 2px;
+}
+
+* {
+  border-radius: 5px;
+}
+
+.rounded-none,
+.rounded-\[0\] {
+  border-radius: 5px;
+}
+
+img, picture, video, canvas, svg,
+header, header > div:first-child,
+footer {
+  border-radius: 0;
+}
+
+[class*="bottom-nav"] {
+  border-radius: 0;
 }

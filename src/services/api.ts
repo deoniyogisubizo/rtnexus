@@ -17,10 +17,10 @@ function getUsers(): StoredUser[] {
     if (!raw) {
       const admins: StoredUser[] = [{
         id: 'u_admin',
-        fullName: 'RT Nexus Admin',
-        email: 'admin@rtnexus.enterprise',
+        fullName: 'RT Group Admin',
+        email: 'admin@rtgroup.enterprise',
         phone: '+250788000000',
-        username: 'rtnexus',
+        username: 'rtgroup',
         password: '123456',
         role: 'admin',
         createdAt: new Date().toISOString(),

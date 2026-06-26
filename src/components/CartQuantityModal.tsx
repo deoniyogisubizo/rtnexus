@@ -53,7 +53,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
           className="bg-white text-left border border-gray-200 shadow-2xl flex flex-col"
         >
           <div className="bg-[#111111] text-white px-5 py-3 flex items-center justify-between border-b border-gray-800">
-            <span className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">ESCROW PLACEMENT CONSOLE</span>
+            <span className="text-xs font-mono font-bold text-[#3373AB] uppercase tracking-widest">ESCROW PLACEMENT CONSOLE</span>
             <button onClick={onClose} className="text-gray-400 hover:text-white outline-none cursor-pointer">
               <X size={16} />
             </button>
@@ -65,16 +65,16 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
               </div>
               <div className="min-w-0">
                 <h3 className="text-sm font-bold text-gray-900 leading-tight">{product.name}</h3>
-                <p className="text-[10px] font-mono text-gray-400 mt-0.5">OEM: {product.vendorName}</p>
+                <p className="text-xs font-mono text-gray-400 mt-0.5">OEM: {product.vendorName}</p>
               </div>
             </div>
 
             {specs.length > 0 && (
               <div>
-                <p className="text-[10px] font-mono font-bold text-gray-400 uppercase mb-2">Specifications</p>
+                <p className="text-xs font-mono font-bold text-gray-400 uppercase mb-2">Specifications</p>
                 <div className="bg-gray-50 border border-gray-100 divide-y divide-gray-100">
                   {specs.map(([key, value]) => (
-                    <div key={key} className="flex justify-between px-3 py-1.5 text-[11px]">
+                    <div key={key} className="flex justify-between px-3 py-1.5 text-xs">
                       <span className="text-gray-500 font-mono">{key}</span>
                       <span className="text-gray-800 font-semibold font-mono text-right max-w-[60%] truncate">{value}</span>
                     </div>
@@ -83,7 +83,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
                 {hasMoreSpecs && (
                   <button
                     onClick={() => { onClose(); onViewDetails(product.id); }}
-                    className="text-[10px] font-mono font-bold text-[#3373AB] hover:text-[#255C8E] mt-1.5"
+                    className="text-xs font-mono font-bold text-[#3373AB] hover:text-[#255C8E] mt-1.5"
                   >
                     [view more specs →]
                   </button>
@@ -108,7 +108,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
             </div>
 
             <div className="bg-gray-50 border border-gray-200 px-4 py-3 space-y-1 text-center">
-              <p className="text-[11px] font-mono text-gray-500">
+              <p className="text-xs font-mono text-gray-500">
                 Unit Price: <span className="font-bold text-gray-800">RWF {product.price.toFixed(2)}</span>
               </p>
               <p className="text-base font-bold font-mono text-gray-900">
@@ -127,7 +127,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
                 onClick={() => { onAddToCart(product, quantity); onClose(); }}
                 className="flex-1 bg-[#3373AB] hover:bg-[#255C8E] text-white font-bold py-2 text-xs uppercase tracking-wider outline-none transition-colors flex items-center justify-center gap-2"
               >
-                <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'11px'}}></i>
+                <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
                 <span>Update Cart</span>
               </button>
             </div>
@@ -137,7 +137,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
         <div className="flex items-start justify-center pt-16 sm:pt-24 overflow-y-auto min-h-full">
           <div ref={cardRef} onClick={(e) => e.stopPropagation()} className="bg-white max-w-md w-full text-left border border-gray-200 shadow-2xl flex flex-col my-4">
             <div className="bg-[#111111] text-white px-5 py-3 flex items-center justify-between border-b border-gray-800">
-              <span className="text-[10px] font-mono font-bold text-[#3373AB] uppercase tracking-widest">ESCROW PLACEMENT CONSOLE</span>
+              <span className="text-xs font-mono font-bold text-[#3373AB] uppercase tracking-widest">ESCROW PLACEMENT CONSOLE</span>
               <button onClick={onClose} className="text-gray-400 hover:text-white outline-none cursor-pointer">
                 <X size={16} />
               </button>
@@ -149,16 +149,16 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
                 </div>
                 <div className="min-w-0">
                   <h3 className="text-sm font-bold text-gray-900 leading-tight">{product.name}</h3>
-                  <p className="text-[10px] font-mono text-gray-400 mt-0.5">OEM: {product.vendorName}</p>
+                  <p className="text-xs font-mono text-gray-400 mt-0.5">OEM: {product.vendorName}</p>
                 </div>
               </div>
 
               {specs.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-mono font-bold text-gray-400 uppercase mb-2">Specifications</p>
+                  <p className="text-xs font-mono font-bold text-gray-400 uppercase mb-2">Specifications</p>
                   <div className="bg-gray-50 border border-gray-100 divide-y divide-gray-100">
                     {specs.map(([key, value]) => (
-                      <div key={key} className="flex justify-between px-3 py-1.5 text-[11px]">
+                      <div key={key} className="flex justify-between px-3 py-1.5 text-xs">
                         <span className="text-gray-500 font-mono">{key}</span>
                         <span className="text-gray-800 font-semibold font-mono text-right max-w-[60%] truncate">{value}</span>
                       </div>
@@ -167,7 +167,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
                   {hasMoreSpecs && (
                     <button
                       onClick={() => { onClose(); onViewDetails(product.id); }}
-                      className="text-[10px] font-mono font-bold text-[#3373AB] hover:text-[#255C8E] mt-1.5"
+                      className="text-xs font-mono font-bold text-[#3373AB] hover:text-[#255C8E] mt-1.5"
                     >
                       [view more specs →]
                     </button>
@@ -192,7 +192,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
               </div>
 
               <div className="bg-gray-50 border border-gray-200 px-4 py-3 space-y-1 text-center">
-                <p className="text-[11px] font-mono text-gray-500">
+                <p className="text-xs font-mono text-gray-500">
                   Unit Price: <span className="font-bold text-gray-800">RWF {product.price.toFixed(2)}</span>
                 </p>
                 <p className="text-base font-bold font-mono text-gray-900">
@@ -211,7 +211,7 @@ export default function CartQuantityModal({ product, onClose, onAddToCart, onVie
                   onClick={() => { onAddToCart(product, quantity); onClose(); }}
                   className="flex-1 bg-[#3373AB] hover:bg-[#255C8E] text-white font-bold py-2 text-xs uppercase tracking-wider outline-none transition-colors flex items-center justify-center gap-2"
                 >
-                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'11px'}}></i>
+                  <i className="fa-solid fa-cart-arrow-down" style={{fontSize:'12px'}}></i>
                   <span>Update Cart</span>
                 </button>
               </div>

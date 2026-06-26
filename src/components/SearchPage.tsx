@@ -86,7 +86,7 @@ export default function SearchPage({ onBack, onSearch, onViewProduct, setView }:
             <div>
               {cats.length > 0 && (
                 <div className="mb-4">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Categories</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Categories</p>
                   {cats.map(r => (
                     <button key={r.label} onClick={() => handleSubmit(r.label)} className="flex items-center justify-between w-full px-3 py-2.5 text-sm hover:bg-gray-50 rounded-lg">
                       <span>{r.label}</span>
@@ -97,13 +97,13 @@ export default function SearchPage({ onBack, onSearch, onViewProduct, setView }:
               )}
               {prods.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">Products</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Products</p>
                   {prods.slice(0, 8).map(r => (
                     <button key={r.product.id} onClick={() => { onViewProduct?.(r.product.id); }} className="flex items-center gap-3 w-full px-3 py-2.5 text-sm hover:bg-gray-50 rounded-lg">
                       <img src={r.product.image} alt={r.product.name} className="h-10 w-10 object-cover rounded border border-gray-100" />
                       <div className="flex-1 text-left">
                         <p className="text-xs font-medium text-gray-900 truncate">{r.product.label}</p>
-                        <p className="text-[10px] text-gray-400">RWF {r.product.price.toFixed(2)}</p>
+                        <p className="text-xs text-gray-400">RWF {r.product.price.toFixed(2)}</p>
                       </div>
                     </button>
                   ))}
@@ -118,34 +118,34 @@ export default function SearchPage({ onBack, onSearch, onViewProduct, setView }:
           )
         ) : (
           <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">Quick Access</p>
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Quick Access</p>
             <div className="grid grid-cols-2 gap-3">
               <button onClick={() => { setView('shop'); }} className="flex items-center gap-3 p-4 border border-gray-200 hover:border-[#3373AB] hover:bg-gray-50 rounded-xl transition-all">
                 <Package size={24} className="text-[#3373AB]" />
                 <div className="text-left">
                   <p className="text-xs font-bold text-gray-900">RT Shop</p>
-                  <p className="text-[10px] text-gray-500">Browse products</p>
+                  <p className="text-xs text-gray-500">Browse products</p>
                 </div>
               </button>
               <button onClick={() => { setView('rtti'); }} className="flex items-center gap-3 p-4 border border-gray-200 hover:border-[#3373AB] hover:bg-gray-50 rounded-xl transition-all">
                 <BookOpen size={24} className="text-[#3373AB]" />
                 <div className="text-left">
                   <p className="text-xs font-bold text-gray-900">RTTI Courses</p>
-                  <p className="text-[10px] text-gray-500">Learn & certify</p>
+                  <p className="text-xs text-gray-500">Learn & certify</p>
                 </div>
               </button>
               <button onClick={() => { setView('mttv'); }} className="flex items-center gap-3 p-4 border border-gray-200 hover:border-[#3373AB] hover:bg-gray-50 rounded-xl transition-all">
                 <Monitor size={24} className="text-[#3373AB]" />
                 <div className="text-left">
                   <p className="text-xs font-bold text-gray-900">MTTV Videos</p>
-                  <p className="text-[10px] text-gray-500">Watch broadcasts</p>
+                  <p className="text-xs text-gray-500">Watch broadcasts</p>
                 </div>
               </button>
               <button onClick={() => { setView('solutions'); }} className="flex items-center gap-3 p-4 border border-gray-200 hover:border-[#3373AB] hover:bg-gray-50 rounded-xl transition-all">
                 <Sparkles size={24} className="text-[#3373AB]" />
                 <div className="text-left">
                   <p className="text-xs font-bold text-gray-900">Solutions</p>
-                  <p className="text-[10px] text-gray-500">Explore services</p>
+                  <p className="text-xs text-gray-500">Explore services</p>
                 </div>
               </button>
             </div>

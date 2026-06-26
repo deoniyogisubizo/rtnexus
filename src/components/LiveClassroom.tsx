@@ -155,16 +155,16 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
         {/* Section Header */}
         <div className="border-l-4 border-[#3373AB] pl-5 mb-10 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
           <div>
-            <p className="text-[10px] font-mono tracking-widest text-[#3373AB] uppercase font-bold">VIRTUAL BROADCAST SIMULATOR</p>
+            <p className="text-xs font-mono tracking-widest text-[#3373AB] uppercase font-bold">VIRTUAL BROADCAST SIMULATOR</p>
             <h2 className="text-xl lg:text-2xl font-bold uppercase tracking-tight mt-1">HD LIVE CLASSROOM RTTI SANDBOX</h2>
           </div>
           
           <div className="flex gap-3">
-            <span className="flex items-center gap-1.5 font-mono text-[11px] bg-red-600/20 text-red-400 border border-red-500/30 px-2.5 py-1">
+            <span className="flex items-center gap-1.5 font-mono text-xs bg-red-600/20 text-red-400 border border-red-500/30 px-2.5 py-1">
               <span className="h-1.5 w-1.5 bg-red-500 rounded-full animate-ping"></span>
               {recording ? 'RECORDING SESSION' : 'PLAYBACK SESSION'}
             </span>
-            <span className="font-mono text-[11px] bg-neutral-800 border border-neutral-700 px-2.5 py-1">
+            <span className="font-mono text-xs bg-neutral-800 border border-neutral-700 px-2.5 py-1">
               LATENCY: 42ms
             </span>
           </div>
@@ -181,7 +181,7 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
               
               {/* Left feed: Instructor main stream */}
               <div className="md:col-span-8 bg-neutral-950 min-h-[220px] relative overflow-hidden flex flex-col justify-between p-4">
-                <div className="flex justify-between items-center text-[10px] font-mono z-10">
+                <div className="flex justify-between items-center text-xs font-mono z-10">
                   <span className="bg-[#3373AB] text-white px-1.5 py-0.5 uppercase tracking-wide">Instructor Feed (Primary)</span>
                   <span className="text-gray-400">1080p60 • HD STREAMING</span>
                 </div>
@@ -200,25 +200,25 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
               {/* Right secondary feed: Team attendees (Grid of 2 smaller boxes) */}
               <div className="md:col-span-4 grid grid-rows-2 divide-y divide-neutral-800">
                 <div className="bg-neutral-900 p-3 flex flex-col justify-between relative overflow-hidden">
-                  <div className="flex items-center justify-between text-[8px] font-mono z-10">
+                  <div className="flex items-center justify-between text-[14px] font-mono z-10">
                     <span className="text-gray-300">Clara Dupont (Guest)</span>
                     <span className="text-emerald-400">● LIVE</span>
                   </div>
                   <div className="flex justify-center items-center opacity-20">
                     <Users size={42} />
                   </div>
-                  <span className="text-[10px] font-mono text-gray-500 z-10">Muted by Administrator</span>
+                  <span className="text-xs font-mono text-gray-500 z-10">Muted by Administrator</span>
                 </div>
 
                 <div className="bg-neutral-900 p-3 flex flex-col justify-between relative overflow-hidden">
-                  <div className="flex items-center justify-between text-[8px] font-mono z-10">
+                  <div className="flex items-center justify-between text-[14px] font-mono z-10">
                     <span className="text-gray-300">Sarah Jenkins (Threat Lead)</span>
                     <span className="text-emerald-400">● LIVE</span>
                   </div>
                   <div className="flex justify-center items-center opacity-20">
                     <Activity size={42} className="text-[#3373AB]" />
                   </div>
-                  <span className="text-[10px] font-mono text-gray-400 z-10">Active Telemetry Connected</span>
+                  <span className="text-xs font-mono text-gray-400 z-10">Active Telemetry Connected</span>
                 </div>
               </div>
 
@@ -242,7 +242,7 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
                   </div>
                   <button 
                     onClick={clearCanvas} 
-                    className="text-[9px] font-mono bg-neutral-800 border border-neutral-700 font-bold px-2 py-1 text-gray-300 hover:text-white"
+                    className="text-xs font-mono bg-neutral-800 border border-neutral-700 font-bold px-2 py-1 text-gray-300 hover:text-white"
                   >
                     [ERASE MATRIX]
                   </button>
@@ -261,7 +261,7 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
                   onMouseLeave={stopDrawing}
                   className="w-full block"
                 ></canvas>
-                <div className="absolute top-1 left-2 pointer-events-none select-none text-[8px] font-mono text-gray-400">
+                <div className="absolute top-1 left-2 pointer-events-none select-none text-[14px] font-mono text-gray-400">
                   DRAG CURSOR HERE TO DRAW SCHEMATICS METRICS
                 </div>
               </div>
@@ -293,7 +293,7 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
                 <select 
                   value={activeBreakout} 
                   onChange={(e) => setActiveBreakout(e.target.value)}
-                  className="bg-neutral-800 border border-neutral-700 text-[10px] text-gray-200 px-2.5 py-1 focus:outline-none"
+                  className="bg-neutral-800 border border-neutral-700 text-xs text-gray-200 px-2.5 py-1 focus:outline-none"
                 >
                   <option value="Main Assembly">Main Assembly (24 Nodes)</option>
                   <option value="Breakout Block A">Breakout Block A (4 Nodes)</option>
@@ -309,10 +309,10 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
             
             {/* Top AI live logger */}
             <div className="p-4 border-b border-neutral-800 bg-[#141414]">
-              <span className="text-[10px] bg-[#3373AB] text-white px-1.5 py-0.5 uppercase tracking-widest font-bold block w-max font-mono mb-2">RTTI AI Copilot</span>
+              <span className="text-xs bg-[#3373AB] text-white px-1.5 py-0.5 uppercase tracking-widest font-bold block w-max font-mono mb-2">RTTI AI Copilot</span>
               <h4 className="font-bold font-sans text-xs uppercase tracking-wide">Live Diagnostics Summary</h4>
               
-              <ul className="space-y-2 mt-3 text-[10px] font-sans font-light leading-relaxed text-gray-300">
+              <ul className="space-y-2 mt-3 text-xs font-sans font-light leading-relaxed text-gray-300">
                 {aiNotes.map((note, idx) => (
                   <li key={idx} className="flex gap-2 items-start border-l border-[#3373AB] pl-2">
                     <span>{note}</span>
@@ -326,10 +326,10 @@ export default function LiveClassroom({ theme = 'light' }: LiveClassroomProps) {
               {messages.map((msg, idx) => (
                 <div key={idx} className="text-left">
                   <div className="flex items-end justify-between">
-                    <span className="text-[11px] font-bold text-white font-sans">{msg.user}</span>
-                    <span className="text-[9px] font-mono text-gray-500">{msg.time}</span>
+                    <span className="text-xs font-bold text-white font-sans">{msg.user}</span>
+                    <span className="text-xs font-mono text-gray-500">{msg.time}</span>
                   </div>
-                  <p className="text-[10px] font-mono text-[#3373AB] leading-none uppercase font-semibold mt-0.5">{msg.role}</p>
+                  <p className="text-xs font-mono text-[#3373AB] leading-none uppercase font-semibold mt-0.5">{msg.role}</p>
                   <p className="text-xs text-gray-300 mt-1 pl-2 border-l border-gray-700 leading-relaxed font-sans">{msg.text}</p>
                 </div>
               ))}
