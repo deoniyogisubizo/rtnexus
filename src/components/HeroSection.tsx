@@ -205,8 +205,6 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
   return (
     <section
       aria-label="Featured highlights"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
       className="relative w-full h-[75vh] lg:h-screen border-b-4 border-[#3373AB] overflow-hidden select-none pt-[var(--rtn-header-height,0px)]"
     >
       <style>{`
@@ -359,6 +357,8 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
             <div className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-full px-4 md:px-0 z-20">
               <div
                 key={i === slide ? `active-${i}` : `inactive-${i}`}
+                onMouseEnter={() => setPaused(true)}
+                onMouseLeave={() => setPaused(false)}
                 className={`relative w-full max-w-3xl mx-auto md:mx-0 bg-[#0B1727]/90 border-l-4 border-[#E8C547] px-6 py-7 md:px-9 md:py-8 text-center ${i === slide && !reducedMotion ? 'hero-overlay-in' : ''
                   }`}
               >
