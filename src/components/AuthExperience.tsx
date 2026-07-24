@@ -7,10 +7,9 @@ import { signup, signin, checkUserExists, checkUsername, sendOtp, verifyOtp, res
 interface AuthExperienceProps {
   onLoginSuccess: (session: UserSession) => void;
   initialTab?: 'login' | 'register';
-  closeAuth?: () => void;
 }
 
-export default function AuthExperience({ onLoginSuccess, initialTab = 'login', closeAuth }: AuthExperienceProps) {
+export default function AuthExperience({ onLoginSuccess, initialTab = 'login' }: AuthExperienceProps) {
   const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
 
   // Login state
@@ -106,7 +105,6 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
     setSuccessMsg('Access granted. Redirecting to your workspace...');
     setTimeout(() => {
       onLoginSuccess(session);
-      if (closeAuth) closeAuth();
     }, 1200);
   };
 
@@ -264,10 +262,10 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
   };
 
   return (
-    <div className="w-full max-w-4xl bg-white border border-gray-200 grid grid-cols-1 md:grid-cols-12 rounded-none overflow-y-auto md:overflow-hidden select-none font-sans text-left text-gray-900 shadow-2xl max-h-[90vh] md:max-h-none">
+    <div className="w-full h-[120vh] bg-white border-0 grid grid-cols-1 md:grid-cols-12 rounded-none overflow-y-auto md:overflow-hidden select-none font-sans text-left text-gray-900">
       
       {/* LEFT COLUMN: BRAND + SOCIAL SSO */}
-      <div className="md:col-span-5 bg-[#111111] text-white p-4 sm:p-8 flex flex-col justify-between border-r border-[#3373AB] relative">
+      <div className="md:col-span-5 bg-[#111111] text-white p-4 sm:p-8 flex flex-col justify-between border-r border-[#3373AB] relative rounded-none">
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div className="absolute inset-0" style={{ 
             backgroundImage: 'radial-gradient(circle, #3373AB 1px, transparent 1px)', 
@@ -310,7 +308,8 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
       </div>
 
       {/* RIGHT COLUMN: LOGIN / REGISTER / OAUTH ROLE PICKER */}
-      <div className="md:col-span-7 p-4 sm:p-8 flex flex-col justify-between">
+      <div className="md:col-span-7 p-6 sm:p-10 flex flex-col justify-center overflow-y-auto">
+        <div className="w-full max-w-sm mx-auto">
         {pendingOAuth && (
           <div className="flex-1 flex flex-col justify-center">
             <div className="mb-6 text-center">
@@ -335,7 +334,6 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                   onClick={() => {
                     const session: UserSession = { email: pendingOAuth.email, name: pendingOAuth.name, role: opt.role };
                     onLoginSuccess(session);
-                    if (closeAuth) closeAuth();
                   }}
                   className="w-full bg-white border border-gray-200 hover:border-[#3373AB] hover:bg-[#3373AB]/5 px-4 py-3 flex items-center gap-3 transition-all text-left outline-none group"
                 >
@@ -384,10 +382,10 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
             {/* LOGIN TAB */}
             {activeTab === 'login' && !showForgot && (
-              <form onSubmit={handleLogin} className="space-y-4">
+              <form onSubmit={handleLogin} className="space-y-3">
                 <div>
-                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">
-                    <Mail size={11} className="inline mr-1" />
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">
+                    <Mail size={10} className="inline mr-1" />
                     Email / Username / Phone
                   </label>
                   <input 
@@ -395,14 +393,14 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                     placeholder="e.g. user@email.com or username"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
-                    className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB]"
+                    className="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#3373AB]"
                     required
                   />
                 </div>
 
                 <div>
-                  <label className="text-sm font-mono font-bold text-gray-400 uppercase block mb-1">
-                    <Lock size={11} className="inline mr-1" />
+                  <label className="text-xs font-mono font-bold text-gray-400 uppercase block mb-1">
+                    <Lock size={10} className="inline mr-1" />
                     Password
                   </label>
                   <div className="relative">
@@ -411,11 +409,11 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full bg-white border border-gray-200 px-3 py-2 text-sm text-gray-800 outline-none focus:border-[#3373AB] pr-8"
+                      className="w-full bg-white border border-gray-200 px-3 py-1.5 text-xs text-gray-800 outline-none focus:border-[#3373AB] pr-8"
                       required
                     />
                     <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 outline-none">
-                      {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
+                      {showPassword ? <EyeOff size={13} /> : <Eye size={13} />}
                     </button>
                   </div>
                 </div>
@@ -759,24 +757,25 @@ export default function AuthExperience({ onLoginSuccess, initialTab = 'login', c
 
         {/* Mobile social login — bottom */}
         {!pendingOAuth && !successMsg && (
-          <div className="md:hidden mt-6 pt-6 border-t border-gray-200">
-            <span className="text-sm font-mono text-gray-400 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
-            <div className="space-y-3">
-              <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-yellow-100 hover:bg-yellow-200 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-yellow-800 font-sans border border-yellow-300 rounded-none shadow-sm hover:shadow-md">
-                <Chrome size={15} className="text-yellow-700" />
+          <div className="md:hidden mt-6 pt-6 border-t border-gray-200 max-w-sm mx-auto w-full">
+            <span className="text-xs font-mono text-gray-400 uppercase font-bold block mb-3">Sovereign Social Single Sign-on</span>
+            <div className="space-y-2">
+              <button onClick={() => handleSocialLogin('GOOGLE')} className="w-full bg-white hover:bg-gray-50 text-xs px-3 py-2 flex items-center gap-2 transition-all text-gray-600 font-sans border border-gray-200 rounded-none">
+                <Chrome size={13} className="text-[#4285F4]" />
                 <span className="font-semibold">Continue with Google</span>
               </button>
-              <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-100 text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-gray-700 font-sans border border-gray-200 rounded-none shadow-sm hover:shadow-md">
-                <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15"><path fill="#F25022" d="M11.37 12.73H2.67V4.03h8.7v8.7z"/><path fill="#00A4EF" d="M21.37 12.73h-8.7V4.03h8.7v8.7z"/><path fill="#FFB900" d="M11.37 22.03H2.67v-8.7h8.7v8.7z"/><path fill="#7FBA00" d="M21.37 22.03h-8.7v-8.7h8.7v8.7z"/></svg>
+              <button onClick={() => handleSocialLogin('MICROSOFT')} className="w-full bg-white hover:bg-gray-50 text-xs px-3 py-2 flex items-center gap-2 transition-all text-gray-600 font-sans border border-gray-200 rounded-none">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="13" height="13"><path fill="#F25022" d="M11.37 12.73H2.67V4.03h8.7v8.7z"/><path fill="#00A4EF" d="M21.37 12.73h-8.7V4.03h8.7v8.7z"/><path fill="#FFB900" d="M11.37 22.03H2.67v-8.7h8.7v8.7z"/><path fill="#7FBA00" d="M21.37 22.03h-8.7v-8.7h8.7v8.7z"/></svg>
                 <span className="font-semibold">Continue with Microsoft</span>
               </button>
-              <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-sm px-3.5 py-2.5 flex items-center gap-2.5 transition-all text-white font-sans border border-[#0A66C2] rounded-none shadow-sm hover:shadow-md">
-                <Linkedin size={15} className="text-white" />
+              <button onClick={() => handleSocialLogin('LINKEDIN')} className="w-full bg-[#0A66C2] hover:bg-[#004182] text-xs px-3 py-2 flex items-center gap-2 transition-all text-white font-sans border border-[#0A66C2] rounded-none">
+                <Linkedin size={13} className="text-white" />
                 <span className="font-semibold">Continue with LinkedIn</span>
               </button>
             </div>
           </div>
         )}
+        </div>
       </div>
 
     </div>

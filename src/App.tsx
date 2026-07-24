@@ -59,8 +59,6 @@ export default function App() {
     return saved ? 'portals' : 'home';
   });
   const [user, setUser] = useState<UserSession | null>(() => loadSession());
-  const [authOverlay, setAuthOverlay] = useState(false);
-  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const [splashFadeOut, setSplashFadeOut] = useState(false);
   const [showSplash, setShowSplash] = useState(() => !sessionStorage.getItem('rtn_splash_shown'));
 
@@ -161,7 +159,8 @@ export default function App() {
     if (main === 'adcenter') return { v: 'adcenter' };
     if (main === 'search') return { v: 'search' };
     if (main === 'portals') return { v: 'portals' };
-    if (main === 'login' || main === 'signup') return { v: 'login' };
+    if (main === 'login') return { v: 'login' };
+    if (main === 'signup') return { v: 'signup' };
     return { v: 'home' };
   }
 
@@ -177,13 +176,7 @@ export default function App() {
     const handlePop = () => {
       const parsed = parseViewFromPath(window.location.pathname);
       navRef.current = true;
-      if (parsed.v === 'login') {
-        setView('home');
-        setAuthTab('login');
-        setAuthOverlay(true);
-      } else {
-        setView(parsed.v);
-      }
+      setView(parsed.v);
       setProductDetailId(parsed.pid ?? null);
       setShopPreselectCategory(parsed.cat ?? null);
     };
@@ -341,14 +334,14 @@ export default function App() {
   return (
     <div className={`min-h-screen flex flex-col justify-between font-sans selection:bg-[#3373AB]/30 tracking-normal antialiased ${theme === 'dark' ? 'bg-[#111111]' : 'bg-gray-100'}`}>
       
-      {/* GLOBAL 3-LAYER NAVIGATION — hidden on admin dashboard */}
-      {!(view === 'portals' && user?.role === 'admin') && (
+      {/* GLOBAL 3-LAYER NAVIGATION — hidden on admin dashboard & auth pages */}
+      {!(view === 'portals' && user?.role === 'admin') && view !== 'login' && view !== 'signup' && (
         <Navigation 
           currentView={view}
           setView={navigateTo}
           user={user}
           logout={handleLogout}
-          openAuth={(tab) => { setAuthTab(tab); setAuthOverlay(true); }}
+          openAuth={(tab) => { navigateTo(tab === 'register' ? 'signup' : 'login'); }}
           cart={cart}
           openCartDrawer={() => { setCartOpen(true); setCheckoutStep('cart'); }}
           triggerSearch={handleSearchTrigger}
@@ -361,27 +354,11 @@ export default function App() {
 
 
 
-      {/* AUTH OVERLAY */}
-      {authOverlay && (
-        <div
-          className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-          onClick={() => setAuthOverlay(false)}
-        >
-          <div onClick={(e) => e.stopPropagation()}>
-            <AuthExperience
-              initialTab={authTab}
-              onLoginSuccess={(session) => { setAuthOverlay(false); handleLoginSuccess(session); }}
-              closeAuth={() => setAuthOverlay(false)}
-            />
-          </div>
-        </div>
-      )}
-
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full ${view !== 'portals' ? 'pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}
-        style={view !== 'portals' ? { paddingTop: 'var(--rtn-header-height, 176px)' } : undefined}
+      <main className={`flex-1 w-full ${(view !== 'portals' && view !== 'login' && view !== 'signup') ? 'pb-16 md:pb-0' : ''} ${(view === 'login' || view === 'signup') ? 'h-[120vh]' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}
+        style={(view !== 'portals' && view !== 'login' && view !== 'signup') ? { paddingTop: 'var(--rtn-header-height, 176px)' } : undefined}
       >
-        <div key={view} className="animate-fade-in-up w-full">
+        <div key={view} className={`animate-fade-in-up w-full ${(view === 'login' || view === 'signup') ? 'h-full' : ''}`}>
         {view === 'home' && (
           <div className="w-full">
             <HeroSection setView={navigateTo} theme={theme} />
@@ -481,7 +458,7 @@ export default function App() {
                 </p>
 
                 <button 
-                  onClick={() => { setAuthTab('login'); setAuthOverlay(true); }}
+                  onClick={() => navigateTo('login')}
                   className="bg-[#3373AB] hover:bg-[#255C8E] text-white text-xs font-bold uppercase tracking-widest py-3 px-6 w-full rounded-none transition-colors outline-none"
                 >
                   Onboard Session Portal
@@ -490,11 +467,29 @@ export default function App() {
             </div>
           )
         )}
+
+        {view === 'login' && (
+          <div className="w-full h-full">
+            <AuthExperience
+              initialTab="login"
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </div>
+        )}
+
+        {view === 'signup' && (
+          <div className="w-full h-full">
+            <AuthExperience
+              initialTab="register"
+              onLoginSuccess={handleLoginSuccess}
+            />
+          </div>
+        )}
         </div>
       </main>
 
-      {/* DETAILED BRUTALIST ENTERPRISE FOOTER — hidden on admin dashboard */}
-      {!(view === 'portals' && user?.role === 'admin') && (
+      {/* DETAILED BRUTALIST ENTERPRISE FOOTER — hidden on admin dashboard & auth pages */}
+      {!(view === 'portals' && user?.role === 'admin') && view !== 'login' && view !== 'signup' && (
       <footer className="w-full bg-[#111111] text-gray-400 text-xs py-12 px-6 border-t border-neutral-800 select-none font-pro text-left">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-8">
           
