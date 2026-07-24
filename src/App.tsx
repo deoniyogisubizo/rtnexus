@@ -21,7 +21,6 @@ import SearchPage from './components/SearchPage';
 import NexusHub from './components/NexusHub';
 import MacbookLoader from './components/MacbookLoader';
 import './components/MacbookLoader.css';
-import NavLoader from './components/NavLoader';
 import { X, ShieldCheck, CreditCard, ChevronRight, Check, Sparkles, User, LogIn, Bot, Send } from 'lucide-react';
 import { encodeId, decodeId } from './utils/idUtils';
 
@@ -85,16 +84,7 @@ export default function App() {
   // Global search bridging
   const [globalSearchQuery, setGlobalSearchQuery] = useState<string>('');
 
-  // Navigation loading bar + scroll-to-top on view change
-  const [isNavigating, setIsNavigating] = useState(false);
-  const initialRender = useRef(true);
-  useEffect(() => {
-    if (initialRender.current) { initialRender.current = false; return; }
-    setIsNavigating(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    const t = setTimeout(() => setIsNavigating(false), 1800);
-    return () => clearTimeout(t);
-  }, [view]);
+
 
   const navigateTo = (v: string) => {
     setView(v);
@@ -370,7 +360,6 @@ export default function App() {
 
 
 
-      <NavLoader visible={isNavigating} />
 
       {/* AUTH OVERLAY */}
       {authOverlay && (
@@ -389,7 +378,9 @@ export default function App() {
       )}
 
       {/* CORE ROUTING SECTION SWITCHES */}
-      <main className={`flex-1 w-full ${view !== 'portals' ? 'pt-[128px] lg:pt-[176px] pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}>
+      <main className={`flex-1 w-full ${view !== 'portals' ? 'pb-16 md:pb-0' : ''} ${theme === 'dark' ? 'bg-[#111111]' : 'bg-white'}`}
+        style={view !== 'portals' ? { paddingTop: 'var(--rtn-header-height, 176px)' } : undefined}
+      >
         <div key={view} className="animate-fade-in-up w-full">
         {view === 'home' && (
           <div className="w-full">

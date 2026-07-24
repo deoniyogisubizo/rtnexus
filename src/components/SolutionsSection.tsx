@@ -59,11 +59,10 @@ export default function SolutionsSection({ setView, theme = 'light', standalone 
   const bg = isDark ? 'bg-[#1a1a1a] text-gray-200 border-gray-800' : 'bg-[#FAFAFA] text-gray-900 border-gray-200';
 
   return (
-    <section className={`w-full select-none py-10 px-4 sm:px-6 font-sans border-b ${bg}`}>
+    <section id="who-we-serve" className={`w-full select-none py-10 px-4 sm:px-6 font-sans border-b ${bg}`}>
       <style>{`
         .sol-card {
           width: 100%;
-          height: 148px;
           padding: 0.5rem;
           background: rgba(255, 255, 255, 0.92);
           border-radius: 8px;
@@ -71,21 +70,10 @@ export default function SolutionsSection({ setView, theme = 'light', standalone 
           border-bottom: 3px solid rgba(200, 200, 200, 0.5);
           border-left: 2px rgba(200, 200, 200, 0.6) outset;
           box-shadow: -40px 50px 30px rgba(0, 0, 0, 0.12);
-          transform: skewX(10deg);
-          transition: .4s;
-          overflow: hidden;
           color: #111;
         }
-        .sol-card:hover {
-          height: 280px;
-          transform: skew(0deg);
-        }
-          .sol-card-inner {
-          transform: skewX(-10deg);
-          transition: .4s;
-        }
-        .sol-card:hover .sol-card-inner {
-          transform: skewX(0deg);
+        .sol-card-inner {
+          /* no skew needed */
         }
 
         .sol-btn {

@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Workflow,
-  GraduationCap,
-  Radio,
-  LayoutDashboard,
-  type LucideIcon,
-} from 'lucide-react';
+import { Home, ShoppingCart, GraduationCap, Tv, User } from 'lucide-react';
 
 interface HeroSectionProps {
   setView: (view: string) => void;
@@ -27,7 +21,7 @@ const HERO_SLIDES: HeroSlide[] = [
     image: '/animation/rtshop.png',
     mobileImage: '/animation/rtshopmobile.png',
     eyebrow: 'RT SHOP — COMPONENTS & IOT HARDWARE',
-    headline: 'Premium Components. Shelf-Beating Prices.',
+    headline: 'SHOP EMMBEDED SYSTEM ON SHELF-BEATING PRICES ',
     subtext:
       'Microcontrollers, IoT shields, sensors and biometrics — sourced and stocked for makers and businesses across Rwanda.',
     primary: { label: 'Shop IoT Devices', view: 'shop' },
@@ -45,56 +39,6 @@ const HERO_SLIDES: HeroSlide[] = [
   },
 ];
 
-interface SystemModule {
-  tag: string;
-  tagClass: string;
-  title: string;
-  desc: string;
-  icon: LucideIcon;
-  view: string;
-  dashed?: boolean;
-  mono?: boolean;
-}
-
-const SHOP_MODULE: SystemModule = {
-  tag: 'COMMERCE GRID',
-  tagClass: 'bg-[#3373AB]',
-  title: 'RT Shop',
-  desc: 'Microcontrollers, IoT shields, biometrics',
-  icon: Workflow,
-  view: 'shop',
-};
-
-const SECONDARY_MODULES: SystemModule[] = [
-  {
-    tag: 'EDUCATION SYSTEM',
-    tagClass: 'bg-gray-500',
-    title: 'RTTI Learn',
-    desc: 'Certifications & labs',
-    icon: GraduationCap,
-    view: 'rtti',
-  },
-  {
-    tag: 'BROADCASTING NODE',
-    tagClass: 'bg-gray-500',
-    title: 'MTTV Media',
-    desc: 'Webinars & podcasts',
-    icon: Radio,
-    view: 'mttv',
-  },
-];
-
-const PORTAL_MODULE: SystemModule = {
-  tag: 'ROLE WORKSPACES',
-  tagClass: 'bg-[#3373AB]',
-  title: 'RT-Portal Core',
-  desc: 'Dashboards for every role',
-  icon: LayoutDashboard,
-  view: 'portals',
-  dashed: true,
-  mono: true,
-};
-
 function usePrefersReducedMotion() {
   const [reduced, setReduced] = useState(false);
   useEffect(() => {
@@ -107,83 +51,20 @@ function usePrefersReducedMotion() {
   return reduced;
 }
 
-function FancyButton({
-  label,
-  solid,
-  onClick,
-}: {
-  label: string;
-  solid?: boolean;
-  onClick: () => void;
-}) {
+function TypewriterLine({ text, isActive, style }: { text: string; isActive: boolean; style?: React.CSSProperties }) {
   return (
-    <button
-      onClick={onClick}
-      className={`fancy-btn shadow-lg ${solid ? 'fancy-btn-solid' : ''}`}
-    >
-      <span className="f-top-key" />
-      <span className="f-text">{label}</span>
-      <span className="f-bot-key-1" />
-      <span className="f-bot-key-2" />
-    </button>
-  );
-}
-
-function ModuleTile({
-  mod,
-  busDot,
-  onClick,
-}: {
-  mod: SystemModule;
-  busDot?: boolean;
-  onClick: () => void;
-}) {
-  const Icon = mod.icon;
-  return (
-    <div
-      onClick={onClick}
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') onClick();
-      }}
-      className={`relative w-full p-3 text-left cursor-pointer transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#E8C547] focus-visible:outline-offset-2 ${mod.dashed
-          ? 'border border-dashed border-[#3373AB]/30 bg-white/60 hover:bg-white/90'
-          : 'border border-gray-200 bg-white/60 hover:border-[#3373AB]/50'
-        }`}
-    >
-      {busDot && (
+    <span style={style}>
+      {text.split('').map((char, i) => (
         <span
-          aria-hidden
-          className="hidden md:block absolute -left-[19px] top-1/2 -translate-y-1/2 w-[7px] h-[7px] rotate-45 bg-[#3373AB]"
-        />
-      )}
-      <div
-        className={`absolute -top-[9px] left-3 ${mod.tagClass} text-white px-1.5 py-0.5 text-xs font-mono uppercase font-bold`}
-      >
-        {mod.tag}
-      </div>
-      <div className="flex justify-between items-center">
-        <div>
-          <h4
-            className={`font-extrabold uppercase tracking-wide ${mod.mono
-                ? 'font-mono text-xs text-[#3373AB]'
-                : 'font-sans text-sm text-gray-900'
-              }`}
-          >
-            {mod.title}
-          </h4>
-          <p className="text-xs text-gray-500 mt-0.5 font-medium leading-snug">
-            {mod.desc}
-          </p>
-        </div>
-        {mod.dashed ? (
-          <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-        ) : (
-          <Icon className="text-[#3373AB]" size={16} />
-        )}
-      </div>
-    </div>
+          key={`${text}-${i}`}
+          className={`type-char ${isActive ? 'active' : ''}`}
+          style={{ animationDelay: `${i * 0.03}s` }}
+        >
+          {char === ' ' ? '\u00A0' : char}
+        </span>
+      ))}
+      {isActive && <span className="type-cursor" />}
+    </span>
   );
 }
 
@@ -204,8 +85,10 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
 
   return (
     <section
+      id="hero-section"
       aria-label="Featured highlights"
-      className="relative w-full h-[75vh] lg:h-screen border-b-4 border-[#3373AB] overflow-hidden select-none pt-[var(--rtn-header-height,0px)]"
+      className="relative w-full -mt-[5px] border-b-0 overflow-hidden select-none"
+      style={{ height: '90vh' }}
     >
       <style>{`
         @font-face {
@@ -215,123 +98,44 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
           font-weight: normal;
           font-style: normal;
         }
-        @keyframes heroOverlayIn {
-          from { opacity: 0; transform: translateY(14px); }
-          to { opacity: 1; transform: translateY(0); }
+        @keyframes typeChar {
+          from { opacity: 0; }
+          to { opacity: 1; }
         }
-        .hero-overlay-in { animation: heroOverlayIn 0.5s ease-out both; }
-
-        @keyframes busPulse {
-          0% { top: 4%; opacity: 0; }
-          12% { opacity: 1; }
-          50% { top: 92%; opacity: 1; }
-          62% { opacity: 0; }
-          100% { top: 92%; opacity: 0; }
-        }
-        .bus-pulse { animation: busPulse 4.5s ease-in-out infinite; }
-
-        .fancy-btn {
-          background-color: transparent;
-          border: 2px solid #fff;
-          box-sizing: border-box;
-          cursor: pointer;
+        .type-char {
+          opacity: 0;
           display: inline-block;
-          font-weight: 700;
-          letter-spacing: 0.05em;
-          outline: none;
-          overflow: visible;
-          padding: 1em 1.5em;
-          position: relative;
-          text-align: center;
-          text-decoration: none;
-          text-transform: uppercase;
-          transition: all 0.3s ease-in-out;
-          user-select: none;
-          font-size: 12px;
-          box-shadow: 0 4px 14px rgba(0,0,0,0.3);
         }
-        .fancy-btn::before {
-          content: " ";
-          width: 1.25rem;
-          height: 2px;
-          background: white;
-          top: 50%;
-          left: 1.2em;
-          position: absolute;
-          transform: translateY(-50%);
-          transition: background 0.3s linear, width 0.3s linear;
+        .type-char.active {
+          animation: typeChar 0.02s forwards;
         }
-        .fancy-btn .f-text {
-          font-size: 1em;
-          line-height: 1.3;
-          padding-left: 1.8em;
-          display: block;
-          text-align: left;
-          transition: all 0.3s ease-in-out;
-          color: white;
+        @keyframes cursorBlink {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0; }
         }
-        .fancy-btn .f-top-key {
-          height: 2px;
-          width: 1.25rem;
-          top: -2px;
-          left: 0.5rem;
-          position: absolute;
-          background: rgba(255,255,255,0.5);
-          transition: width 0.5s ease-out, left 0.3s ease-out;
+        .type-cursor {
+          display: inline-block;
+          width: 2px;
+          height: 1em;
+          background: #E8C547;
+          margin-left: 2px;
+          vertical-align: text-bottom;
+          animation: cursorBlink 0.7s step-end infinite;
         }
-        .fancy-btn .f-bot-key-1 {
-          height: 2px;
-          width: 1.25rem;
-          right: 1.5rem;
-          bottom: -2px;
-          position: absolute;
-          background: rgba(255,255,255,0.5);
-          transition: width 0.5s ease-out, right 0.3s ease-out;
+
+        @keyframes heroTextIn {
+          from { opacity: 0; transform: translateX(-30px); }
+          to { opacity: 1; transform: translateX(0); }
         }
-        .fancy-btn .f-bot-key-2 {
-          height: 2px;
-          width: 0.5rem;
-          right: 0.5rem;
-          bottom: -2px;
-          position: absolute;
-          background: rgba(255,255,255,0.5);
-          transition: width 0.5s ease-out, right 0.3s ease-out;
-        }
-        .fancy-btn:hover {
-          background: rgba(255,255,255,0.08);
-          border-color: rgba(255,255,255,0.9);
-          box-shadow: 0 0 16px rgba(232,197,71,0.12), 0 6px 18px rgba(0,0,0,0.35);
-          transform: translateY(-2px);
-        }
-        .fancy-btn:hover::before { width: 0.75rem; background: #E8C547; }
-        .fancy-btn:hover .f-text { color: #E8C547; padding-left: 1.5em; }
-        .fancy-btn:hover .f-top-key { left: -2px; width: 0px; }
-        .fancy-btn:hover .f-bot-key-1, .fancy-btn:hover .f-bot-key-2 { right: 0; width: 0; }
-        .fancy-btn:focus-visible {
-          outline: 2px solid #E8C547;
-          outline-offset: 3px;
-        }
-        .fancy-btn-solid {
-          background-color: #3373AB;
-          border-color: #3373AB;
-          box-shadow: 0 4px 16px rgba(51,115,171,0.3), 0 6px 18px rgba(0,0,0,0.25);
-        }
-        .fancy-btn-solid:hover {
-          background: rgba(255,255,255,0.1);
-          border-color: #E8C547;
-          box-shadow: 0 0 24px rgba(232,197,71,0.25), 0 8px 22px rgba(0,0,0,0.4);
-          transform: translateY(-3px);
-        }
-        .fancy-btn-solid:hover::before { background: #E8C547; }
-        .fancy-btn-solid:hover .f-text { color: #E8C547; }
+        .hero-text-in { animation: heroTextIn 0.6s ease-out both; }
 
         @media (prefers-reduced-motion: reduce) {
-          .hero-overlay-in { animation: none; }
-          .bus-pulse { animation: none; opacity: 0; }
+          .type-char { opacity: 1 !important; animation: none !important; }
+          .hero-text-in { animation: none; }
         }
       `}</style>
 
-      {/* Full‑width background crossfade */}
+      {/* Full-width background crossfade */}
       <div className={`absolute inset-0 ${isDark ? 'bg-black' : 'bg-white'}`}>
         {HERO_SLIDES.map((s, i) => (
           <div
@@ -339,78 +143,65 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
             className={`absolute inset-0 transition-opacity ${reducedMotion ? 'duration-150' : 'duration-700'
               } ${i === slide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
           >
-            <picture className="absolute inset-0">
-              {s.mobileImage && (
-                <source media="(max-width: 1023px)" srcSet={s.mobileImage} />
-              )}
-              <img
-                src={s.image}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover object-top"
-              />
-            </picture>
-            {/* Brand-tinted overlay for text legibility */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0B1727]/75 via-[#0B1727]/15 to-transparent" />
-            {/* Left-to-right dimming overlay for desktop */}
-            <div className="absolute inset-0 hidden md:block bg-[linear-gradient(to_right,black_0%,rgba(0,0,0,0.90)_25%,rgba(0,0,0,0.45)_50%,rgba(0,0,0,0.18)_75%,rgba(0,0,0,0.08)_100%)] pointer-events-none" />
+            <img
+              src={window.innerWidth < 1024 && s.mobileImage ? s.mobileImage : s.image}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover object-center"
+              style={{ filter: 'brightness(0.9)' }}
+            />
 
-            <div className="absolute left-4 md:left-6 top-1/2 -translate-y-1/2 w-full px-4 md:px-0 z-20">
+            {/* Text positioned on the left, from left edge to near middle */}
+            <div className="absolute inset-0 flex items-center">
               <div
                 key={i === slide ? `active-${i}` : `inactive-${i}`}
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
-                className={`relative w-full max-w-3xl mx-auto md:mx-0 bg-[#0B1727]/90 border-l-4 border-[#E8C547] px-6 py-7 md:px-9 md:py-8 text-center ${i === slide && !reducedMotion ? 'hero-overlay-in' : ''
+                className={`w-full max-w-2xl px-6 md:px-10 lg:pl-24 lg:pr-14 ${i === slide && !reducedMotion ? 'hero-text-in' : ''
                   }`}
               >
-                <span
-                  aria-hidden
-                  className="hidden md:block absolute -top-px -right-px w-3 h-3 border-t border-r border-white/25"
-                />
-                <span
-                  aria-hidden
-                  className="hidden md:block absolute -bottom-px -right-px w-3 h-3 border-b border-r border-white/25"
-                />
-
                 <p className="font-mono text-[11px] tracking-[0.2em] text-[#E8C547] mb-3 uppercase">
                   {s.eyebrow}
                 </p>
                 <h2
-                  className="[font-family:'Jarvane',serif] text-2xl sm:text-3xl md:text-4xl text-white leading-[1.15] tracking-wide"
-                  style={{ textShadow: '0 2px 12px rgba(0,0,0,0.6)' }}
+                  className="leading-[1.15] uppercase"
+                  style={{
+                    fontFamily: "'Jarvane', serif",
+                    fontSize: 'clamp(1rem, 3vw, 2.25rem)',
+                    letterSpacing: '0.08em',
+                    color: isDark ? '#ffffff' : '#111111',
+                    textShadow: '0 2px 16px rgba(0,0,0,0.4)',
+                  }}
                 >
-                  {s.headline}
+                  <TypewriterLine text={s.headline} isActive={i === slide && !reducedMotion} />
                 </h2>
-                <p className="mt-3 text-sm text-slate-300/90 max-w-md mx-auto font-medium leading-relaxed">
+                <p
+                  className="mt-3 text-sm md:text-base max-w-md font-medium leading-relaxed"
+                  style={{
+                    color: isDark ? '#d1d5db' : '#374151',
+                    textShadow: '0 1px 8px rgba(0,0,0,0.25)',
+                  }}
+                >
                   {s.subtext}
                 </p>
 
-                <div className="flex flex-wrap gap-3 mt-6 justify-center">
-                  <FancyButton
-                    label={s.primary.label}
-                    solid
+                <div className="flex flex-wrap gap-3 mt-6">
+                  <button
                     onClick={() => setView(s.primary.view)}
-                  />
-                  <FancyButton
-                    label={s.secondary.label}
+                    className="px-6 py-2.5 bg-[#3373AB] text-white text-sm font-semibold uppercase tracking-wide hover:bg-[#285a8a] transition-colors"
+                  >
+                    {s.primary.label}
+                  </button>
+                  <button
                     onClick={() => setView(s.secondary.view)}
-                  />
+                    className="px-6 py-2.5 border-2 border-[#3373AB] text-[#3373AB] text-sm font-semibold uppercase tracking-wide hover:bg-[#3373AB] hover:text-white transition-colors"
+                  >
+                    {s.secondary.label}
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         ))}
-
-        <div
-          className={`absolute inset-0 ${isDark ? 'bg-black/40' : 'bg-black/10'} pointer-events-none`}
-        />
-        <div
-          className="absolute inset-0 opacity-10 pointer-events-none"
-          style={{
-            backgroundImage:
-              'radial-gradient(circle, #3373AB 1px, transparent 1px)',
-            backgroundSize: '24px 24px',
-          }}
-        />
       </div>
 
       {/* Slide progress ticks */}
@@ -431,7 +222,50 @@ export default function HeroSection({ setView, theme }: HeroSectionProps) {
         ))}
       </div>
 
-      {/* System status panel — removed */}
+      {/* Left sidebar — icon strip */}
+      <div className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 z-20 flex-col items-center justify-between py-6 px-2 bg-white/100 backdrop-blur-sm shadow-lg border border-white/20" style={{ borderRadius: '9999px', height: '420px' }}>
+        <button
+          onClick={() => setView('home')}
+          className="w-9 h-9 flex items-center justify-center bg-[#222222] text-white transition-transform hover:scale-110"
+          style={{ borderRadius: '50%' }}
+          aria-label="Home"
+        >
+          <Home size={16} />
+        </button>
+        <button
+          onClick={() => setView('shop')}
+          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all hover:scale-110"
+          style={{ borderRadius: '50%' }}
+          aria-label="RT Shop"
+        >
+          <ShoppingCart size={16} />
+        </button>
+        <button
+          onClick={() => setView('rtti')}
+          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all hover:scale-110"
+          style={{ borderRadius: '50%' }}
+          aria-label="RTTI Learn"
+        >
+          <GraduationCap size={16} />
+        </button>
+        <button
+          onClick={() => setView('mttv')}
+          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all hover:scale-110"
+          style={{ borderRadius: '50%' }}
+          aria-label="MTTV"
+        >
+          <Tv size={16} />
+        </button>
+        <div className="w-5 h-px bg-gray-300" />
+        <button
+          onClick={() => setView('home')}
+          className="w-9 h-9 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-all hover:scale-110"
+          style={{ borderRadius: '50%' }}
+          aria-label="Account"
+        >
+          <User size={16} />
+        </button>
+      </div>
     </section>
   );
 }

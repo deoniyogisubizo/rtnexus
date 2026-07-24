@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import {
-  Search, Sun, Moon, Bell, ChevronDown, ChevronLeft, ChevronRight, Mail, Heart, User,
-  LogOut, CheckCircle, Package, ArrowRight, Menu, X, Home, Bot,
+  Search, Sun, Moon, Bell, ChevronDown, ChevronLeft, ChevronRight, Heart, User, Mail, CheckCircle,
+  LogOut, Package, ArrowRight, Menu, X, Home, Bot,
   ShoppingCart, LayoutDashboard,
 } from 'lucide-react';
 import { UserSession, CartItem, Product } from '../types';
@@ -50,13 +50,14 @@ export default function Navigation({
 }: NavigationProps) {
   const [activeMegaMenu, setActiveMegaMenu] = useState<string | null>(null);
   const [searchVal, setSearchVal] = useState('');
-  const [showNotifications, setShowNotifications] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showCategoryBar, setShowCategoryBar] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchProducts, setSearchProducts] = useState<Product[]>([]);
+  const [showAppMenu, setShowAppMenu] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
 
   // ---- Layer 0: Promo / advertisement bar ----
   const [adVisible, setAdVisible] = useState(() => {
@@ -79,11 +80,22 @@ export default function Navigation({
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current && currentScrollY > 80) {
+      const heroEl = document.getElementById('hero-section');
+      const whoWeServeEl = document.getElementById('who-we-serve');
+      const heroInView = heroEl ? heroEl.getBoundingClientRect().bottom > 0 : false;
+      setHeroInView(heroInView);
+      const whoWeServeInView = whoWeServeEl ? whoWeServeEl.getBoundingClientRect().top < window.innerHeight : false;
+
+      if (heroInView) {
         setShowCategoryBar(false);
-      } else if (currentScrollY < lastScrollY.current) {
+      } else if (whoWeServeInView) {
+        setShowCategoryBar(true);
+      } else if (currentScrollY > lastScrollY.current) {
+        setShowCategoryBar(false);
+      } else {
         setShowCategoryBar(true);
       }
+
       setScrolled(currentScrollY > 0);
       lastScrollY.current = currentScrollY;
     };
@@ -93,7 +105,6 @@ export default function Navigation({
         setSearchFocused(false);
       }
       if (!target.closest('.account-dropdown')) setShowAccountMenu(false);
-      if (!target.closest('.notification-dropdown')) setShowNotifications(false);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     document.addEventListener('mousedown', handleClickOutside);
@@ -102,6 +113,18 @@ export default function Navigation({
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (showAppMenu) {
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+    }
+    return () => { document.body.style.overflow = ''; document.body.style.paddingRight = ''; };
+  }, [showAppMenu]);
 
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -119,12 +142,6 @@ export default function Navigation({
     setActiveMegaMenu(null);
     setMobileMenuOpen(false);
   };
-
-  const systemNotifications = [
-    { id: 1, title: 'Hardware Dispatch', text: 'IoT Gateway order has been packed and dispatched.', time: '10m ago' },
-    { id: 2, title: 'New Certification Track', text: 'RTTI Cyber-Physical SCADA Course is officially live.', time: '1h ago' },
-    { id: 3, title: 'Campaign Assessment', text: 'MTTV Campaign assessment is ready for review.', time: '3h ago' },
-  ];
 
   const accountMenuItems = [
     { icon: LayoutDashboard, label: 'Access Dashboard' },
@@ -210,11 +227,13 @@ export default function Navigation({
     <>
       <header
         ref={headerRef}
-        className={`w-full fixed top-0 z-50 select-none font-pro text-sm transition-all duration-300 ${scrolled ? 'shadow-lg' : 'shadow-none'
-          } ${theme === 'dark'
-            ? scrolled ? 'bg-[#1a1a1a]/95 backdrop-blur-md' : 'bg-[#1a1a1a]'
-            : scrolled ? 'bg-white/95 backdrop-blur-md' : 'bg-white'
-          }`}
+        className={`w-full fixed top-0 z-50 select-none font-pro text-sm transition-all duration-300 ${
+          heroInView
+            ? 'bg-[#E6E6E6] shadow-none backdrop-blur-[2px]'
+            : scrolled
+              ? `shadow-lg ${theme === 'dark' ? 'bg-[#1a1a1a]/95 backdrop-blur-md' : 'bg-white/95 backdrop-blur-md'}`
+              : `shadow-none ${theme === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white'}`
+        }`}
       >
         <style>{`
         @keyframes navFadeSlide { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
@@ -223,6 +242,7 @@ export default function Navigation({
         .mega-menu-enter { animation: navFadeSlide 200ms ease-out; }
         .badge-pulse { animation: badgePulse 2.2s infinite; }
         .ad-slide-enter { animation: adFade 220ms ease-out; }
+        .nav-search-pill { border-radius: 9999px !important; }
       `}</style>
 
         {/* ============================================================ */}
@@ -230,7 +250,7 @@ export default function Navigation({
         {/* ============================================================ */}
         {adVisible && (
           <div
-            className="relative w-full bg-gradient-to-r from-[#111111] via-[#1a1a1a] to-[#111111] text-white overflow-hidden max-lg:[background:linear-gradient(to_right,#3a3218,#2d2612,#3a3218)]"
+            className={`relative w-full overflow-hidden ${heroInView ? 'bg-[#222222]' : 'bg-gradient-to-r from-[#111111] via-[#1a1a1a] to-[#111111] max-lg:[background:linear-gradient(to_right,#3a3218,#2d2612,#3a3218)]'}`}
             onMouseEnter={() => setAdPaused(true)}
             onMouseLeave={() => setAdPaused(false)}
           >
@@ -248,10 +268,10 @@ export default function Navigation({
                 aria-live="polite"
               >
                 <div key={adItems[adIndex].id} className="ad-slide-enter flex items-center gap-2.5 min-w-0">
-                  <span className={`shrink-0 text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 ${adItems[adIndex].badgeClass}`}>
+                  <span className={`shrink-0 text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 text-white ${adItems[adIndex].badgeClass}`}>
                     {adItems[adIndex].badge}
                   </span>
-                  <span className="text-xs font-medium truncate">{adItems[adIndex].text}</span>
+                  <span className="text-xs font-medium truncate text-white">{adItems[adIndex].text}</span>
                   <button
                     onClick={adItems[adIndex].onActivate}
                     className={`hidden sm:inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-[#5B9BD5] hover:text-white transition-colors ${focusRing}`}
@@ -293,12 +313,12 @@ export default function Navigation({
         )}
 
         {/* Brand accent strip */}
-        <div className="h-[3px] w-full bg-gradient-to-r from-[#3373AB] via-[#5B9BD5] to-[#3373AB]" />
+        <div className={`h-[3px] w-full bg-gradient-to-r from-[#3373AB] via-[#5B9BD5] to-[#3373AB] transition-opacity duration-300 ${heroInView ? 'opacity-0' : 'opacity-100'}`} />
 
         {/* ============================================================ */}
         {/* LAYER 1 — Brand bar: logo, search, account & cart controls    */}
         {/* ============================================================ */}
-        <div className={`w-full border-b ${theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
+        <div className={`w-full border-b ${heroInView ? 'border-transparent' : theme === 'dark' ? 'border-gray-800' : 'border-gray-200'}`}>
           <div className="lg:h-[88px] h-14 px-4 md:px-6 flex items-center">
             {/* MOBILE LAYOUT — left: menu, center: logo, right: notif+cart */}
             <div className="flex lg:hidden items-center w-full">
@@ -321,68 +341,102 @@ export default function Navigation({
                 <img
                   src="/logo/logo.png"
                   alt="RT Group"
-                  className="h-10 scale-180 w-auto object-contain"
+                  className="h-10 scale-150 w-auto object-contain"
                 />
               </div>
 
-              <div className="flex items-center gap-0 shrink-0">
-                <div className="relative notification-dropdown">
-                  <button
-                    onClick={() => setShowNotifications((v) => !v)}
-                    className={`relative flex items-center justify-center p-2 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
-                    aria-label="Notifications"
-                  >
-                    <Bell size={22} />
-                    <span className="badge-pulse absolute -top-0.5 -right-0.5 h-4 w-4 flex items-center justify-center bg-[#3373AB] text-white text-[9px] font-mono font-black rounded-full ring-2 ring-white">
-                      3
-                    </span>
-                  </button>
-                  {showNotifications && (
-                    <div className="mega-menu-enter absolute right-0 mt-2 w-80 bg-white text-gray-800 border border-gray-200 shadow-2xl z-[60] overflow-hidden">
-                      <div className="bg-[#111111] text-white py-2 px-4 flex justify-between items-center border-b border-gray-700">
-                        <span className="font-mono text-xs tracking-wider uppercase">System Operations Log</span>
-                        <span className="text-xs text-gray-400">3 Alerts</span>
-                      </div>
-                      <div className="divide-y divide-gray-100 max-h-64 overflow-y-auto">
-                        {systemNotifications.map((item) => (
-                          <div key={item.id} className="p-3 hover:bg-gray-50 flex items-start gap-2.5">
-                            <div className="h-1.5 w-1.5 bg-[#3373AB] mt-1.5 shrink-0" />
-                            <div>
-                              <p className="font-medium text-xs text-gray-900">{item.title}</p>
-                              <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{item.text}</p>
-                              <span className="text-xs text-gray-400 font-mono mt-1 block">{item.time}</span>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="bg-gray-50 p-2 text-center border-t border-gray-100">
-                        <button
-                          onClick={() => { goTo('portals'); setShowNotifications(false); }}
-                          className="text-xs text-[#3373AB] font-semibold hover:underline"
-                        >
-                          Launch Diagnostic Portal
-                        </button>
-                      </div>
+              <div className="flex items-center gap-0 shrink-0 relative">
+                <button
+                  onClick={() => setShowAppMenu((v) => !v)}
+                  className={`flex items-center justify-center p-1.5 rounded-none ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}
+                  aria-label="App menu"
+                >
+                  {showAppMenu ? (
+                    <X size={16} />
+                  ) : (
+                    <div className="grid grid-cols-3 gap-[2px]">
+                      {[...Array(9)].map((_, i) => (
+                        <span key={i} className="h-1 w-1 bg-current rounded-full" />
+                      ))}
                     </div>
                   )}
-                </div>
-
-                <button
-                  onClick={openCartDrawer}
-                  className={`relative flex items-center justify-center p-2 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
-                  title="Open RT Cart"
-                  aria-label="Cart"
-                >
-                  <ShoppingCart size={22} className="drop-shadow-sm" />
-                  {totalCartCount > 0 && (
-                    <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#3373AB] text-white text-[9px] font-mono font-black flex items-center justify-center rounded-full shadow-lg ring-2 ring-white">
-                      {totalCartCount}
-                    </span>
-                  )}
-                  {totalCartCount === 0 && (
-                    <span className="absolute -top-0.5 -right-0.5 h-2.5 w-2.5 bg-emerald-400 rounded-full shadow-sm ring-1 ring-white" />
-                  )}
                 </button>
+
+                {/* Mobile App Dropdown */}
+                {showAppMenu && (
+                  <div className="mega-menu-enter fixed right-0 top-[52px] bottom-0 w-80 bg-white shadow-2xl z-[99999] rounded-none border border-gray-100 app-menu-scroll overflow-y-auto"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="px-5 pt-5 pb-4 flex items-center justify-between">
+                      <span className="font-mono text-[9px] tracking-[0.2em] uppercase font-bold text-gray-900">RT Group Menu</span>
+                      <button onClick={() => setShowAppMenu(false)} className="text-gray-400 hover:text-gray-700 outline-none"><X size={14} /></button>
+                    </div>
+                    <div className="p-4 grid grid-cols-3 gap-3">
+                      <button onClick={() => { goTo('shop'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <ShoppingCart size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Shop</span>
+                      </button>
+                      <button onClick={() => { goTo('portals'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <LayoutDashboard size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Dashboard</span>
+                      </button>
+                      <button onClick={() => { goTo('rtti'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <Package size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">RTTI</span>
+                      </button>
+                      <button onClick={() => { goTo('mttv'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <div className="relative">
+                          <Bell size={26} className="text-gray-400" />
+                          <span className="absolute -top-1 -right-1.5 h-4 w-4 bg-red-500 text-white text-[8px] font-mono font-black flex items-center justify-center rounded-full">3</span>
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">Alerts</span>
+                      </button>
+                      <button onClick={() => { openCartDrawer(); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <div className="relative">
+                          <ShoppingCart size={26} className="text-gray-400" />
+                          {totalCartCount > 0 && (
+                            <span className="absolute -top-1 -right-1.5 h-4 w-4 bg-[#3373AB] text-white text-[8px] font-mono font-black flex items-center justify-center rounded-full">{totalCartCount}</span>
+                          )}
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">Cart</span>
+                      </button>
+                      <button onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        {theme === 'dark' ? <Sun size={26} className="text-gray-400" /> : <Moon size={26} className="text-gray-400" />}
+                        <span className="text-xs font-semibold text-gray-700">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+                      </button>
+                      <button onClick={() => { goTo('solutions'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <CheckCircle size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Solutions</span>
+                      </button>
+                      <button onClick={() => { goTo('adcenter'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <ArrowRight size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Ad Center</span>
+                      </button>
+                      <button onClick={() => { goTo('contact'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <Mail size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Help</span>
+                      </button>
+                    </div>
+                    <div className="border-t border-gray-100 px-4 py-4 space-y-1">
+                      <button onClick={() => { goTo('home'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">Home</button>
+                      <button onClick={() => { goTo('nexushub'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">NEXUS HUB</button>
+                      <button onClick={() => { goTo('about'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">About Us</button>
+                      <button onClick={() => { goTo('careers'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">Careers</button>
+                    </div>
+                    {user && (
+                      <div className="border-t border-gray-100 px-4 py-3">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-8 h-8 bg-[#3373AB] text-white flex items-center justify-center text-[10px] font-bold rounded-none">{user.name.charAt(0).toUpperCase()}</div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-[10px] text-gray-900 truncate">{user.name}</p>
+                            <p className="text-[9px] text-gray-500 font-mono truncate">{user.email}</p>
+                          </div>
+                          <button onClick={() => { logout(); setShowAppMenu(false); goTo('home'); }} className="text-[10px] text-red-500 font-semibold hover:text-red-700">Logout</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -398,14 +452,15 @@ export default function Navigation({
               <img
                 src="/logo/logo.png"
                 alt="RT Group"
-                className="h-16 scale-200 ml-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-16 scale-180 ml-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </div>
 
             {/* Search — primary, flex-grow */}
             <div ref={searchRef} className="relative flex-1 hidden md:flex max-w-2xl mx-auto">
               <div
-                className={`flex items-center w-full px-4 h-11 border-2 rounded-none transition-all duration-200 focus-within:border-[#3373AB] focus-within:shadow-[0_0_0_3px_rgba(51,115,171,0.15)] ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-200'
+                style={{ borderRadius: '9999px' }}
+                className={`nav-search-pill flex items-center w-full px-4 h-11 border-2 transition-all duration-200 focus-within:border-[#3373AB] focus-within:shadow-[0_0_0_3px_rgba(51,115,171,0.15)] ${theme === 'dark' ? 'bg-gray-800 border-gray-700' : 'bg-gray-100 border-gray-300'
                   }`}
               >
                 <Search size={18} className={theme === 'dark' ? 'text-gray-400' : 'text-gray-500'} />
@@ -521,80 +576,106 @@ export default function Navigation({
               })()}
             </div>
 
-            {/* Right cluster: theme, notifications, cart, account */}
+            {/* Right cluster: app menu, account */}
             <div className="flex items-center gap-2 md:gap-3 ml-auto shrink-0">
-              <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className={`p-3 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                aria-label="Toggle color theme"
-                title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              >
-                {theme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </button>
-
-              {/* Notifications */}
-              <div className="relative notification-dropdown">
+              {/* App Menu (9-dot) */}
+              <div className="relative">
                 <button
-                  onClick={() => setShowNotifications((v) => !v)}
-                  className={`relative p-3 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
+                  onClick={() => setShowAppMenu((v) => !v)}
+                  className={`p-1.5 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
                     }`}
-                  aria-label="Notifications"
+                  aria-label="App menu"
+                  title="Open app menu"
                 >
-                  <Bell size={20} />
-                  <span className="badge-pulse absolute -top-0.5 -right-0.5 h-5 w-5 flex items-center justify-center bg-[#3373AB] text-white text-[10px] font-mono font-black rounded-full ring-2 ring-white">
-                    3
-                  </span>
-                </button>
-
-                {showNotifications && (
-                  <div className="mega-menu-enter absolute right-0 mt-2 w-80 bg-white text-gray-800 border border-gray-200 shadow-2xl z-[60] overflow-hidden">
-                    <div className="bg-[#111111] text-white py-2 px-4 flex justify-between items-center border-b border-gray-700">
-                      <span className="font-mono text-xs tracking-wider uppercase">System Operations Log</span>
-                      <span className="text-xs text-gray-400">3 Alerts</span>
-                    </div>
-                    <div className="divide-y divide-gray-100 max-h-64 overflow-y-auto">
-                      {systemNotifications.map((item) => (
-                        <div key={item.id} className="p-3 hover:bg-gray-50 flex items-start gap-2.5">
-                          <div className="h-1.5 w-1.5 bg-[#3373AB] mt-1.5 shrink-0" />
-                          <div>
-                            <p className="font-medium text-xs text-gray-900">{item.title}</p>
-                            <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{item.text}</p>
-                            <span className="text-xs text-gray-400 font-mono mt-1 block">{item.time}</span>
-                          </div>
-                        </div>
+                  {showAppMenu ? (
+                    <X size={16} />
+                  ) : (
+                    <div className="grid grid-cols-3 gap-[2px] items-center">
+                      {[...Array(9)].map((_, i) => (
+                        <span key={i} className="h-1 w-1 bg-current rounded-full" />
                       ))}
                     </div>
-                    <div className="bg-gray-50 p-2 text-center border-t border-gray-100">
-                      <button
-                        onClick={() => { goTo('portals'); setShowNotifications(false); }}
-                        className="text-xs text-[#3373AB] font-semibold hover:underline"
-                      >
-                        Launch Diagnostic Portal
+                  )}
+                </button>
+
+                {/* Desktop App Dropdown */}
+                {showAppMenu && (
+                  <div className="mega-menu-enter fixed right-0 top-[96px] bottom-0 w-96 bg-white shadow-2xl z-[99999] rounded-none border border-gray-100 app-menu-scroll overflow-y-auto"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="px-5 pt-5 pb-4 flex items-center justify-between">
+                      <span className="font-mono text-[9px] tracking-[0.2em] uppercase font-bold text-gray-900">RT Group Menu</span>
+                      <button onClick={() => setShowAppMenu(false)} className="text-gray-400 hover:text-gray-700 outline-none"><X size={14} /></button>
+                    </div>
+                    <div className="p-5 grid grid-cols-3 gap-4">
+                      <button onClick={() => { goTo('shop'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <ShoppingCart size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">RT Shop</span>
+                      </button>
+                      <button onClick={() => { goTo('portals'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <LayoutDashboard size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Dashboard</span>
+                      </button>
+                      <button onClick={() => { goTo('rtti'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <Package size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">RTTI</span>
+                      </button>
+                      <button onClick={() => { goTo('mttv'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <div className="relative">
+                          <Bell size={26} className="text-gray-400" />
+                          <span className="absolute -top-1 -right-1.5 h-4 w-4 bg-red-500 text-white text-[8px] font-mono font-black flex items-center justify-center rounded-full">3</span>
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">Alerts</span>
+                      </button>
+                      <button onClick={() => { openCartDrawer(); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <div className="relative">
+                          <ShoppingCart size={26} className="text-gray-400" />
+                          {totalCartCount > 0 && (
+                            <span className="absolute -top-1 -right-1.5 h-4 w-4 bg-[#3373AB] text-white text-[8px] font-mono font-black flex items-center justify-center rounded-full">{totalCartCount}</span>
+                          )}
+                        </div>
+                        <span className="text-xs font-semibold text-gray-700">Cart</span>
+                      </button>
+                      <button onClick={() => { setTheme(theme === 'dark' ? 'light' : 'dark'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        {theme === 'dark' ? <Sun size={26} className="text-gray-400" /> : <Moon size={26} className="text-gray-400" />}
+                        <span className="text-xs font-semibold text-gray-700">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+                      </button>
+                      <button onClick={() => { goTo('solutions'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <CheckCircle size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Solutions</span>
+                      </button>
+                      <button onClick={() => { goTo('adcenter'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <ArrowRight size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Ad Center</span>
+                      </button>
+                      <button onClick={() => { goTo('contact'); setShowAppMenu(false); }} className="flex flex-col items-center gap-2.5 p-4 rounded-none hover:bg-[#3373AB]/15 transition-colors">
+                        <Mail size={26} className="text-gray-400" />
+                        <span className="text-xs font-semibold text-gray-700">Help</span>
                       </button>
                     </div>
+                    <div className="border-t border-gray-100 px-5 py-4 space-y-1">
+                      <button onClick={() => { goTo('home'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">Home</button>
+                      <button onClick={() => { goTo('nexushub'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">NEXUS HUB</button>
+                      <button onClick={() => { goTo('about'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">About Us</button>
+                      <button onClick={() => { goTo('careers'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">Careers</button>
+                      <button onClick={() => { goTo('classroom'); setShowAppMenu(false); }} className="w-full text-left px-3 py-2.5 text-sm font-medium text-gray-600 hover:bg-[#3373AB]/15 rounded-none">Live Classroom</button>
+                    </div>
+                    {user && (
+                      <div className="border-t border-gray-100 px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 bg-[#3373AB] text-white flex items-center justify-center text-sm font-bold rounded-none">{user.name.charAt(0).toUpperCase()}</div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-semibold text-sm text-gray-900 truncate">{user.name}</p>
+                            <p className="text-xs text-gray-500 font-mono truncate">{user.email}</p>
+                          </div>
+                          <button onClick={() => { logout(); setShowAppMenu(false); goTo('home'); }} className="text-xs text-red-500 font-semibold hover:text-red-700">Logout</button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>
 
-              {/* Cart */}
-              <button
-                onClick={openCartDrawer}
-                className={`relative p-3 rounded-none transition-all duration-150 hover:scale-105 active:scale-95 ${focusRing} ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-600 hover:bg-gray-100'
-                  }`}
-                title="Open RT Cart"
-                aria-label="Cart"
-              >
-                <ShoppingCart size={20} className="drop-shadow-sm" />
-                {totalCartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-[#3373AB] text-white text-[10px] font-mono font-black flex items-center justify-center rounded-full shadow-lg ring-2 ring-white">
-                    {totalCartCount}
-                  </span>
-                )}
-                {totalCartCount === 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 h-3 w-3 bg-emerald-400 rounded-full shadow-sm ring-1 ring-white" />
-                )}
-              </button>
+              </div>
 
               {/* Account */}
               {user ? (
@@ -667,14 +748,19 @@ export default function Navigation({
         </div>
 
         {/* ============================================================ */}
-        {/* LAYER 2 — Three-column category bar: primary nav | platform | secondary */}
+        {/* LAYER 2 — Category bar: whats new | primary nav | secondary */}
         {/* ============================================================ */}
         <div
           className={`hidden lg:block w-full bg-[#111111] overflow-hidden transition-all duration-200 ${showCategoryBar ? 'h-12' : 'h-0'
             }`}
         >
           <div className="h-12 px-5 flex items-center justify-between">
-            {/* LEFT — primary navigation (Home, RT Shop, RTTI, MTTV, Solutions) */}
+            {/* LEFT — What's new label */}
+            <span className="text-xs font-mono font-bold uppercase tracking-widest text-[#3373AB] shrink-0">
+              What&apos;s new in RT GROUP?
+            </span>
+
+            {/* MIDDLE — primary navigation (Home, RT Shop, RTNEXUS HUB, Solutions) */}
             <nav className="flex items-center h-full">
               {NAV_LINKS.filter((link) => !['adcenter', 'about', 'contact'].includes(link.key)).map((link) => {
                 const isActive = currentView === link.key;
@@ -706,31 +792,6 @@ export default function Navigation({
                 );
               })}
             </nav>
-
-            {/* MIDDLE — platform highlights that make users stop and explore */}
-            <div className="flex items-center gap-1.5 text-[11px] text-gray-400 font-mono">
-              <span className="flex items-center gap-1 text-[#5B9BD5] font-bold">
-                <span className="text-white text-[11px]">⚙</span>
-                <span className="text-white text-xs">250K+</span> Builders
-              </span>
-              <span className="text-gray-700">|</span>
-              <span className="flex items-center gap-1 text-gray-300">
-                <Mail size={10} className="text-[#3373AB]" />
-                telemetry@rtgroup.enterprise
-              </span>
-              <span className="text-gray-700">|</span>
-              <button
-                onClick={() => goTo('careers')}
-                className={`hover:text-white transition-colors flex items-center gap-1 ${focusRing}`}
-              >
-                Careers
-                <span className="text-[10px] bg-green-700 text-white px-1 py-0.5 font-bold leading-none">HIRING</span>
-              </button>
-              <span className="text-gray-700">|</span>
-              <button onClick={() => goTo('about')} className={`hover:text-white transition-colors ${focusRing}`}>
-                Investor Relations
-              </button>
-            </div>
 
             {/* RIGHT — secondary navigation (Ad Center, About Us, Contact) */}
             <nav className="flex items-center h-full">
@@ -831,6 +892,14 @@ export default function Navigation({
         )}
 
       </header>
+
+      {/* Blur backdrop when app menu is open */}
+      {showAppMenu && (
+        <div
+          className="fixed inset-0 z-[40] bg-black/20 backdrop-blur-sm"
+          onClick={() => setShowAppMenu(false)}
+        />
+      )}
 
       {/* ===================================================================== */}
       <div
